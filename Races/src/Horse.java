@@ -13,12 +13,12 @@ public class Horse extends Thread{
     
     @Override
     public void run(){
-        i_stable_horse.proceedToStable();
+        i_stable_horse.proceedToStable(id);
         i_paddock_horse.proceedToPaddock();
         i_racingTrack_horse.proceedToStartLine();
         while( !i_racingTrack_horse.hasFinishLineBeenCrossed() ){
             i_racingTrack_horse.makeAMove();
         }
-        i_stable_horse.proceedToStable();
+        i_stable_horse.proceedToStable(id);
     }
 }

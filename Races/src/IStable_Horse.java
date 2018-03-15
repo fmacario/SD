@@ -1,3 +1,3 @@
 public interface IStable_Horse {
-    void proceedToStable();
+    void proceedToStable(int horseID);
 }
