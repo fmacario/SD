@@ -34,11 +34,13 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                 Horse.state = HorseState.AT_THE_PADDOCK;
                 
                 while( nHorses != NO_COMPETITORS ){
+                    //System.out.println("nHorses " + nHorses); // se ficar este print, o programa (aparentemente) funciona
                     condSpectators.await();
                 }
                 
+                //System.out.println(nHorses);
                 allHorsesAtPaddok = true;
-                                
+                             
                 
                 condSpectators.signalAll();
             }catch( Exception e ){
@@ -55,13 +57,13 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
         try{
             try{
                 nSpectators++;
-                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
-                               
+                                               
                 //esperar enquanto o ultimo espetador nao chega ao paddok
                 
                 while( nSpectators < NO_SPECTATORS ){
                     condHorses.await();
                 }
+                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
                 /*
                 while ( !allHorsesAtPaddok ) {
                     condSpectators.await();
