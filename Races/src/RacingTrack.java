@@ -10,7 +10,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
 
     @Override
     public void proceedToStartLine() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            
+        } catch (Exception e) {
+        }
     }
 
     @Override

@@ -5,6 +5,8 @@ public class Broker extends Thread{
     private final IRacingTrack_Broker i_racingTrack_broker;
     private final IStable_Broker i_stable_broker;
     
+    public static volatile BrokerState state;
+    
     public Broker(int NO_RACES, IBettingCentre_Broker i_bettingCentre_broker, IControlCentre_Broker i_controlCentre_broker, IRacingTrack_Broker i_racingTrack_broker, IStable_Broker i_stable_broker){
         this.NO_RACES = NO_RACES;
         this.i_bettingCentre_broker = i_bettingCentre_broker;
@@ -15,15 +17,20 @@ public class Broker extends Thread{
     
     @Override
     public void run(){
+        
+        this.state = BrokerState.OPENING_THE_EVENT;
+        System.out.println("Broker " + state);
+        
         for (int k = 0; k < NO_RACES; k++) {
             i_stable_broker.summonHorsesToPaddock();
-            i_bettingCentre_broker.acceptTheBets();
-            i_racingTrack_broker.startTheRace();
-            i_controlCentre_broker.reportResults();
-            if ( i_controlCentre_broker.areThereAnyWinners() ) {
-                i_bettingCentre_broker.honourTheBets();
-            }
+            System.out.println("Broker " + state);
+            //i_bettingCentre_broker.acceptTheBets();
+            //i_racingTrack_broker.startTheRace();
+            //i_controlCentre_broker.reportResults();
+            //if ( i_controlCentre_broker.areThereAnyWinners() ) {
+              //  i_bettingCentre_broker.honourTheBets();
+            //}
         }
-        i_controlCentre_broker.entertainTheGuests();
+        //i_controlCentre_broker.entertainTheGuests();
     }
 }

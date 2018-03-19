@@ -1,5 +1,7 @@
 public class Spectator extends Thread{
+    public static volatile SpectatorState state;
     private final int id;
+    private int bet;
     private final int NO_RACES;
     private final IBettingCentre_Spectator i_bettingCentre_spectator;
     private final IControlCentre_Spectator i_controlCentre_spectator;
@@ -16,14 +18,18 @@ public class Spectator extends Thread{
     @Override
     public void run(){
         for (int k = 0; k < NO_RACES; k++) {
-            i_controlCentre_spectator.waitForNextRace();
+            System.out.println("Spectator " + id + " " + state);
+            // i_controlCentre_spectator.waitForNextRace();
+            i_paddock_spectator.waitForNextRace();
+            System.out.println("Spectator " + id + " " + state);
             i_paddock_spectator.goCheckHorses();
-            i_bettingCentre_spectator.placeABet();
-            i_controlCentre_spectator.goWatchTheRace();
-            if ( i_controlCentre_spectator.haveIWon() ) {
-                i_bettingCentre_spectator.goCollectTheGains();
-            }
+            System.out.println("Spectator " + id + " " + state);
+            //i_bettingCentre_spectator.placeABet();
+            //i_controlCentre_spectator.goWatchTheRace();
+            //if ( i_controlCentre_spectator.haveIWon() ) {
+              //  i_bettingCentre_spectator.goCollectTheGains();
+            //}
         }
-        i_controlCentre_spectator.relaxABit();
+        //i_controlCentre_spectator.relaxABit();
     }
 }

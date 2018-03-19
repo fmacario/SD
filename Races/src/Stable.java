@@ -4,61 +4,69 @@ import java.util.concurrent.locks.*;
         
 public class Stable implements IStable_Broker, IStable_Horse{
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
-    private final ReentrantLock r1;
+    private final ReentrantLock rl;
     private final Condition condHorses;
+    private final Condition condBroker;
     private int nHorses = 0;
-    private final int NO_COMPETITORS;
+    private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     private boolean GO = false;
     
-    public Stable (int NO_COMPETITORS){
-        r1 = new ReentrantLock(true);
-        condHorses = r1.newCondition();
-        this.NO_COMPETITORS = NO_COMPETITORS;
+    public Stable (){
+        rl = new ReentrantLock(true);
+        condHorses = rl.newCondition();
+        condBroker = rl.newCondition();
     }
     
     @Override
     public void proceedToStable(int horseID) {
-        out.println("IN proceedToStable");
-        r1.lock();
-        nHorses++;
-        
+        //out.println("IN proceedToStable " + horseID);
+        rl.lock();
         //condBroker.signal();
         try{
-            while(GO == false){
-                condHorses.await();
+            try{
+                nHorses++;
+                
+                condBroker.signal();
+                
+                while(GO == false){
+                    condHorses.await();
+                }
+                nHorses--;
+
+                if(nHorses == 0)
+                    GO = false;
+                Horse.state = HorseState.AT_THE_STABLE;
+
+            } catch (Exception e) { 
+                e.printStackTrace();
             }
-            nHorses--;
-        
-            if(nHorses == 0)
-                GO = false;
-            
-        } catch (Exception e) { 
-            e.printStackTrace();
         } finally {
-            r1.unlock();
-            out.println("OUT proceedToStable");
+            rl.unlock();
+            //out.println("OUT proceedToStable " + horseID);
         }
     }
     
     @Override
     public void summonHorsesToPaddock() {
-        out.println("IN summonHorsesToPaddock");
-        r1.lock();
+        //out.println("IN summonHorsesToPaddock");
+        rl.lock();
         
-        /*
-        try{
-            while(nHorses < NO_COMPETITORS){
-                condBroker.await();
+        try {
+            try{
+                while(nHorses != NO_COMPETITORS){
+                    condBroker.await();
+                }
+            } catch (Exception e) { 
+                e.printStackTrace();
             }
-        } catch (Exception e) { 
-            e.printStackTrace();
+
+            GO = true;
+            Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
+            condHorses.signalAll();
+        }finally{
+            rl.unlock();
         }
-        */
-        
-        GO = true;
-        condHorses.signalAll();
-        r1.unlock();
-        out.println("OUT summonHorsesToPaddock");
+        //out.println("OUT summonHorsesToPaddock");
     }
 
 }
