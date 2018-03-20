@@ -19,11 +19,11 @@ public class Broker extends Thread{
     public void run(){
         
         this.state = BrokerState.OPENING_THE_EVENT;
-        System.out.println("Broker " + state);
+        //System.out.println("Broker " + state);
         
         for (int k = 0; k < NO_RACES; k++) {
             i_stable_broker.summonHorsesToPaddock();
-            System.out.println("Broker " + state);
+            //System.out.println("Broker " + state);
             //i_bettingCentre_broker.acceptTheBets();
             //i_racingTrack_broker.startTheRace();
             //i_controlCentre_broker.reportResults();

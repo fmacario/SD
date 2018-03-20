@@ -13,10 +13,11 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     
     private int nSpectators = 0;
     private int nHorses = 0;
+    private boolean allSpectatorsAtPaddock = false;
+    private boolean allHorsesAtPaddock = false;
+    
     private final int NO_SPECTATORS = Main.NO_SPECTATORS;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
-    
-    private boolean allHorsesAtPaddok = false;
     
     public Paddock(){
         rl = new ReentrantLock(true);
@@ -26,23 +27,28 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     }
     
     @Override
-    public void proceedToPaddock() {
+    public void proceedToPaddock( int horseID) {
         rl.lock();
         try{
             try{
                 nHorses++;
-                Horse.state = HorseState.AT_THE_PADDOCK;
+                                
+                System.out.println(nHorses +" "+ NO_COMPETITORS);
                 
-                while( nHorses != NO_COMPETITORS ){
-                    //System.out.println("nHorses " + nHorses); // se ficar este print, o programa (aparentemente) funciona
+                while ( nHorses != NO_COMPETITORS ) {
                     condSpectators.await();
                 }
                 
-                //System.out.println(nHorses);
-                allHorsesAtPaddok = true;
-                             
+                Horse.state = HorseState.AT_THE_PADDOCK;
+                System.out.println("Horse " + horseID + " " + Horse.state);
                 
+                allHorsesAtPaddock = true;
                 condSpectators.signalAll();
+                
+                if (!allSpectatorsAtPaddock) {
+                    condHorses.await();
+                }
+                                
             }catch( Exception e ){
                 e.printStackTrace();
             }
@@ -52,26 +58,30 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     }
 
     @Override
-    public void goCheckHorses() {
+    public void goCheckHorses( int spectatorID) {
         rl.lock();
         try{
             try{
+                while ( !allHorsesAtPaddock ) {                    
+                    condSpectators.await();
+                }
+                
+                System.out.println("TESTEE");
+                
                 nSpectators++;
+                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
+                System.out.println("Spectator " + spectatorID + " " + Spectator.state);
                      
                 //esperar enquanto o ultimo espetador nao chega ao paddok
-                
-                while( nSpectators != NO_SPECTATORS ){
+                while ( nSpectators != NO_SPECTATORS ) {
                     condHorses.await();
                 }
                 
-                /*
-                while ( !allHorsesAtPaddok ) {
-                    condSpectators.await();
-                }
-                */
-                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
-                condBroker.signal();
+                allSpectatorsAtPaddock = true;
                 condHorses.signalAll();
+                condBroker.signal();
+                
+
             }catch( Exception e ){
                 e.printStackTrace();
             }
@@ -81,8 +91,9 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     }
     
     @Override
-    public void waitForNextRace(){
-        rl.lock();
+    public void waitForNextRace( int spectatorID ){
+        return;
+       /* rl.lock();
         
         try {
             try{
@@ -96,7 +107,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
             }
         }finally{
             rl.unlock();
-        }
+        }*/
     }
     
     

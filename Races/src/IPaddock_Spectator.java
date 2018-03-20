@@ -1,4 +1,4 @@
 public interface IPaddock_Spectator {
-    void goCheckHorses();
-    void waitForNextRace();
+    void goCheckHorses( int spectatorID );
+    void waitForNextRace( int spectatorID );
 }

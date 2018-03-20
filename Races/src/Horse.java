@@ -21,10 +21,10 @@ public class Horse extends Thread{
     public void run(){
         
         i_stable_horse.proceedToStable(id);
-        System.out.println("Horse " + id + " " + state);
-        i_paddock_horse.proceedToPaddock();
-        System.out.println("Horse " + id + " " + state);
-        i_racingTrack_horse.proceedToStartLine();
+        //System.out.println("Horse " + id + " " + state);
+        i_paddock_horse.proceedToPaddock(id);
+        //System.out.println("Horse " + id + " " + state);
+        //i_racingTrack_horse.proceedToStartLine();
         //while( !i_racingTrack_horse.hasFinishLineBeenCrossed() ){
           //  i_racingTrack_horse.makeAMove();
         //}

@@ -1,3 +1,3 @@
 public interface IPaddock_Horse {
-    void proceedToPaddock();
+    void proceedToPaddock( int horseID);
 }

@@ -18,12 +18,12 @@ public class Spectator extends Thread{
     @Override
     public void run(){
         for (int k = 0; k < NO_RACES; k++) {
-            System.out.println("Spectator " + id + " " + state);
+            //System.out.println("Spectator " + id + " " + state);
             // i_controlCentre_spectator.waitForNextRace();
-            i_paddock_spectator.waitForNextRace();
-            System.out.println("Spectator " + id + " " + state);
-            i_paddock_spectator.goCheckHorses();
-            System.out.println("Spectator " + id + " " + state);
+            i_paddock_spectator.waitForNextRace( id );
+            //System.out.println("Spectator " + id + " " + state);
+            i_paddock_spectator.goCheckHorses( id );
+            //System.out.println("Spectator " + id + " " + state);
             //i_bettingCentre_spectator.placeABet();
             //i_controlCentre_spectator.goWatchTheRace();
             //if ( i_controlCentre_spectator.haveIWon() ) {
