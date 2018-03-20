@@ -51,13 +51,15 @@ public class Stable implements IStable_Broker, IStable_Horse{
         
         try {
             try{
+                System.out.println("testeeee");
                 while(nHorses != NO_COMPETITORS){
                     condBroker.await();
+                    Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
+                    System.out.println("Broker " + Broker.state);
                 }
                 
                 GO = true;
-                Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
-                System.out.println("Broker " + Broker.state);
+                
                 condHorses.signalAll();
                 
             } catch (Exception e) { 

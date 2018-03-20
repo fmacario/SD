@@ -13,11 +13,11 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     
     private int nSpectators = 0;
     private int nHorses = 0;
-    private boolean allSpectatorsAtPaddock = false;
-    private boolean allHorsesAtPaddock = false;
-    
+    private static boolean GO = false;
     private final int NO_SPECTATORS = Main.NO_SPECTATORS;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
+    
+    private boolean allHorsesAtPaddok = false;
     
     public Paddock(){
         rl = new ReentrantLock(true);
@@ -27,28 +27,21 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     }
     
     @Override
-    public void proceedToPaddock( int horseID) {
+    public void proceedToPaddock(int horseID) {
         rl.lock();
         try{
             try{
                 nHorses++;
-                                
-                System.out.println(nHorses +" "+ NO_COMPETITORS);
-                
-                while ( nHorses != NO_COMPETITORS ) {
-                    condSpectators.await();
-                }
-                
                 Horse.state = HorseState.AT_THE_PADDOCK;
                 System.out.println("Horse " + horseID + " " + Horse.state);
                 
-                allHorsesAtPaddock = true;
-                condSpectators.signalAll();
-                
-                if (!allSpectatorsAtPaddock) {
+                while( GO == false ){
+                    //System.out.println("nHorses " + nHorses); // se ficar este print, o programa (aparentemente) funciona
                     condHorses.await();
                 }
-                                
+                
+                allHorsesAtPaddok = true;
+                
             }catch( Exception e ){
                 e.printStackTrace();
             }
@@ -58,30 +51,23 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     }
 
     @Override
-    public void goCheckHorses( int spectatorID) {
+    public void goCheckHorses(int spectatorID) {
         rl.lock();
         try{
             try{
-                while ( !allHorsesAtPaddock ) {                    
-                    condSpectators.await();
-                }
-                
-                System.out.println("TESTEE");
-                
                 nSpectators++;
                 Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
                 System.out.println("Spectator " + spectatorID + " " + Spectator.state);
-                     
                 //esperar enquanto o ultimo espetador nao chega ao paddok
-                while ( nSpectators != NO_SPECTATORS ) {
-                    condHorses.await();
+                
+                while( nSpectators < NO_SPECTATORS - 1 ){
+                    condSpectators.await();
                 }
                 
-                allSpectatorsAtPaddock = true;
-                condHorses.signalAll();
+                GO = true;
                 condBroker.signal();
-                
-
+                condHorses.signalAll();
+                                
             }catch( Exception e ){
                 e.printStackTrace();
             }
@@ -91,28 +77,24 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     }
     
     @Override
-    public void waitForNextRace( int spectatorID ){
-        return;
-       /* rl.lock();
+    public void waitForNextRace(int spectatorID){
+        rl.lock();
         
         try {
             try{
-                while ( !allHorsesAtPaddok ) {
-                    condSpectators.await();
-                    Spectator.state = SpectatorState.WAITING_FOR_A_RACE_TO_START;
-                }
+                Spectator.state = SpectatorState.WAITING_FOR_A_RACE_TO_START;
+                System.out.println("Spectator " + spectatorID + " " + Spectator.state);
                 
+                while ( !allHorsesAtPaddok ) {
+                    
+                }
+                condSpectators.signalAll();
             } catch (Exception e) { 
                 e.printStackTrace();
             }
         }finally{
             rl.unlock();
-        }*/
+        }
     }
-    
-    
-    
-    // proceedToStartLine
-    
 
 }
