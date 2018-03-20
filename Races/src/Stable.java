@@ -25,7 +25,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
         try{
             try{
                 nHorses++;
-                
+                Horse.state = HorseState.AT_THE_STABLE;
                 condBroker.signal();
                 
                 while(GO == false){
@@ -35,7 +35,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
 
                 if(nHorses == 0)
                     GO = false;
-                Horse.state = HorseState.AT_THE_STABLE;
+                
 
             } catch (Exception e) { 
                 e.printStackTrace();

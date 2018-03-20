@@ -57,19 +57,19 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
         try{
             try{
                 nSpectators++;
-                                               
+                     
                 //esperar enquanto o ultimo espetador nao chega ao paddok
                 
-                while( nSpectators < NO_SPECTATORS ){
+                while( nSpectators != NO_SPECTATORS ){
                     condHorses.await();
                 }
-                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
+                
                 /*
                 while ( !allHorsesAtPaddok ) {
                     condSpectators.await();
                 }
                 */
-                
+                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
                 condBroker.signal();
                 condHorses.signalAll();
             }catch( Exception e ){

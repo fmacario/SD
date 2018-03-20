@@ -24,7 +24,7 @@ public class Horse extends Thread{
         System.out.println("Horse " + id + " " + state);
         i_paddock_horse.proceedToPaddock();
         System.out.println("Horse " + id + " " + state);
-       // i_racingTrack_horse.proceedToStartLine();
+        i_racingTrack_horse.proceedToStartLine();
         //while( !i_racingTrack_horse.hasFinishLineBeenCrossed() ){
           //  i_racingTrack_horse.makeAMove();
         //}
