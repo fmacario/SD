@@ -7,6 +7,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
+    private final Condition condSpectators;
     
     private int nHorses = 0;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
@@ -15,6 +16,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl = new ReentrantLock();
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();
+        condSpectators = rl.newCondition();
     }
     
     @Override
@@ -23,14 +25,25 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     }
 
     @Override
-    public void proceedToStartLine() {
+    public void proceedToStartLine(int horseID) {
         rl.lock();
-        
+        System.out.println("proceedStartLine - "+horseID);
         try{
             try {
                 nHorses++;
+                Horse.state = HorseState.AT_THE_START_LINE;
+                System.out.println("Horse " + horseID + " " + Horse.state);
+                
+                if(nHorses == NO_COMPETITORS){
+                    condSpectators.signalAll();
+                }
+                
+                /*while( GO == false){
+                    condHorses.await();
+                }*/
                 
             } catch (Exception e) {
+                e.printStackTrace();
             } 
         }finally {
             rl.unlock();

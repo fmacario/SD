@@ -1,5 +1,5 @@
 public interface IRacingTrack_Horse {
-    void proceedToStartLine();
+    void proceedToStartLine(int horseID);
     boolean hasFinishLineBeenCrossed();
     void makeAMove();
 

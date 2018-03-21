@@ -20,7 +20,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
     @Override
     public void proceedToStable(int horseID) {
         rl.lock();
-        //condBroker.signal();
+        System.out.println("proceedStable - "+horseID);
         try{
             try{
                 nHorses++;
@@ -31,12 +31,13 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 while(GO == false){
                     condHorses.await();
                 }
+               
                 nHorses--;
 
                 if(nHorses == 0)
                     GO = false;
                 
-
+                
             } catch (Exception e) { 
                 e.printStackTrace();
             }
@@ -48,14 +49,14 @@ public class Stable implements IStable_Broker, IStable_Horse{
     @Override
     public void summonHorsesToPaddock() {
         rl.lock();
-        
+        System.out.println("summonHorses");
         try {
             try{
-                System.out.println("testeeee");
+                Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
+                System.out.println("Broker " + Broker.state);
+                
                 while(nHorses != NO_COMPETITORS){
                     condBroker.await();
-                    Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
-                    System.out.println("Broker " + Broker.state);
                 }
                 
                 GO = true;
