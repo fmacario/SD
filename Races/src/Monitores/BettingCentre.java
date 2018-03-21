@@ -38,7 +38,10 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
             try {
                 nSpectators++;
                 fifoSpectators.add(spec);
+                
                 spec.setSpecState(SpectatorState.PLACING_A_BET);
+                gri.setSpectatorState(spec.getSpecId(), SpectatorState.PLACING_A_BET);
+                gri.updateStatus();
                 System.out.println("Spectator " + spec.getSpecId() + " " + spec.getSpecState());
                 
             } catch (Exception e) {
@@ -60,10 +63,9 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         try{
             try{
                 broker.setBroState(BrokerState.WAITING_FOR_BETS);
+                gri.setBrokerState(BrokerState.WAITING_FOR_BETS);
+                gri.updateStatus();
                 System.out.println("Broker " + broker.getBroState());
-                
-                
-                
             } catch (Exception e) {
                 e.printStackTrace();
             }

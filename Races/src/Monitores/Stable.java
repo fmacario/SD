@@ -36,8 +36,12 @@ public class Stable implements IStable_Broker, IStable_Horse{
         try{
             try{
                 nHorses++;
+                
                 Horse.state = HorseState.AT_THE_STABLE;
+                gri.setHorseState(horseID, Horse.state);
+                gri.updateStatus();
                 System.out.println("Horse " + horseID + " " + Horse.state);
+                
                 condBroker.signal();
                 
                 while(GO == false){
@@ -65,6 +69,8 @@ public class Stable implements IStable_Broker, IStable_Horse{
         try {
             try{
                 Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
+                gri.setBrokerState(Broker.state);
+                gri.updateStatus();
                 System.out.println("Broker " + Broker.state);
                 
                 while(nHorses != NO_COMPETITORS){

@@ -41,7 +41,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         try{
             try {
                 nHorses++;
+                
                 Horse.state = HorseState.AT_THE_START_LINE;
+                gri.setHorseState(horseID, HorseState.AT_THE_START_LINE);
+                gri.updateStatus();
                 System.out.println("Horse " + horseID + " " + Horse.state);
                 
                 if(nHorses == NO_COMPETITORS){
