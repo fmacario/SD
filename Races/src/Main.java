@@ -9,11 +9,12 @@ public class Main {
 	
     public static void main(String[] args) {
             // monitores 
-            Paddock paddock = new Paddock();
-            Stable stable = new Stable();
-            RacingTrack racingTrack = new RacingTrack();
-            ControlCentre controlCentre = new ControlCentre(NO_COMPETITORS);
-            BettingCentre bettingCentre = new BettingCentre();
+            GRI gri = new GRI();
+            Paddock paddock = new Paddock(gri);
+            Stable stable = new Stable(gri);
+            RacingTrack racingTrack = new RacingTrack(gri);
+            ControlCentre controlCentre = new ControlCentre(gri);
+            BettingCentre bettingCentre = new BettingCentre(gri);
             //GRI gri = new GRI();
             
             // threads

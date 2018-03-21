@@ -4,6 +4,8 @@ import java.util.concurrent.locks.*;
         
 public class Stable implements IStable_Broker, IStable_Horse{
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
+    
+    private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
@@ -11,7 +13,8 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     private boolean GO = false;
     
-    public Stable (){
+    public Stable (GRI gri){
+        this.gri = gri;
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();

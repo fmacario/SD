@@ -4,6 +4,7 @@ import java.util.concurrent.locks.*;
 public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
 
+    private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
@@ -12,7 +13,8 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private int nHorses = 0;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     
-    public RacingTrack(){
+    public RacingTrack(GRI gri){
+        this.gri = gri;
         rl = new ReentrantLock();
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();

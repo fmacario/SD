@@ -5,13 +5,15 @@ import java.util.concurrent.locks.*;
 public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{
     private Queue<Spectator> fifoSpectators = new LinkedList<Spectator>();
     
+    private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
     private final Condition condSpectators;
     private int nSpectators = 0;
     
-    public BettingCentre(){
+    public BettingCentre(GRI gri){
+        this.gri = gri;
         rl = new ReentrantLock();
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();

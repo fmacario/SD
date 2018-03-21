@@ -6,6 +6,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
     private Map<Integer, Spectator> hashSpectators = new HashMap<Integer, Spectator>();
     
+    private GRI gri;
     private final Condition condSpectators;
     private final Condition condHorses;
     private final Condition condBroker;
@@ -19,7 +20,8 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     
     private boolean lastHorse = false;
     
-    public Paddock(){
+    public Paddock(GRI gri){
+        this.gri = gri;
         rl = new ReentrantLock(true);
         condSpectators = rl.newCondition();
         condHorses = rl.newCondition();

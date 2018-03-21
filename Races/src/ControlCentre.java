@@ -3,12 +3,14 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ControlCentre implements IControlCentre_Spectator, IControlCentre_Broker{
+    private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private int NO_COMPETITORS;
     
-    public ControlCentre( int NO_COMPETITORS ){
-        this.NO_COMPETITORS = NO_COMPETITORS;
+    public ControlCentre( GRI gri){
+        this.gri = gri;
+        this.NO_COMPETITORS = Main.NO_COMPETITORS;
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
     }
