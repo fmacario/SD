@@ -1,3 +1,5 @@
+package Enum;
+
 public enum BrokerState {
     OPENING_THE_EVENT,
     ANNOUNCING_NEXT_RACE,

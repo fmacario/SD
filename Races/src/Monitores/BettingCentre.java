@@ -1,3 +1,10 @@
+package Monitores;
+
+import Threads.Spectator;
+import Interfaces.IBettingCentre_Broker;
+import Interfaces.IBettingCentre_Spectator;
+import Enum.*;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.locks.*;

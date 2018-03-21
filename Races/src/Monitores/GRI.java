@@ -1,3 +1,8 @@
+package Monitores;
+
+import Main.Main;
+import Enum.*;
+
 public class GRI {
     private final String logName = "Races.log";
     //private TextFile log;

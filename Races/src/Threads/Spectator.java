@@ -1,3 +1,11 @@
+package Threads;
+
+import Enum.*;
+
+import Interfaces.IPaddock_Spectator;
+import Interfaces.IControlCentre_Spectator;
+import Interfaces.IBettingCentre_Spectator;
+
 public class Spectator extends Thread{
     public static volatile SpectatorState state;
     private final int id;

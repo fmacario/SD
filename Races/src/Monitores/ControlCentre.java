@@ -1,3 +1,11 @@
+package Monitores;
+
+
+import Main.Main;
+import Threads.Spectator;
+import Interfaces.IControlCentre_Broker;
+import Interfaces.IControlCentre_Spectator;
+import Enum.*;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;

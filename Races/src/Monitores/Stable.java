@@ -1,3 +1,12 @@
+package Monitores;
+
+import Main.Main;
+import Threads.Broker;
+import Threads.Horse;
+import Interfaces.IStable_Horse;
+import Interfaces.IStable_Broker;
+import Enum.*;
+
 import java.util.*;
 import static java.lang.System.*;
 import java.util.concurrent.locks.*;

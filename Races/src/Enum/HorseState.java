@@ -1,3 +1,5 @@
+package Enum;
+
 public enum HorseState {
     AT_THE_STABLE,
     AT_THE_PADDOCK,
