@@ -41,20 +41,22 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         }
         
     }
-
+    
     @Override
-    public void goCollectTheGains() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void acceptTheBets() {
+        rl.lock();
+        
+        
     }
 
     @Override
-    public void acceptTheBets() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void goCollectTheGains() {
+
     }
 
     @Override
     public void honourTheBets() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }

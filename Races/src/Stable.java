@@ -23,7 +23,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
     @Override
     public void proceedToStable(int horseID) {
         rl.lock();
-        System.out.println("proceedStable - "+horseID);
+        //System.out.println("proceedStable - "+horseID);
         try{
             try{
                 nHorses++;
@@ -52,7 +52,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
     @Override
     public void summonHorsesToPaddock() {
         rl.lock();
-        System.out.println("summonHorses");
+        //System.out.println("summonHorses");
         try {
             try{
                 Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;

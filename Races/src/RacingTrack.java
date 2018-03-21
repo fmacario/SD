@@ -29,7 +29,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     @Override
     public void proceedToStartLine(int horseID) {
         rl.lock();
-        System.out.println("proceedStartLine - "+horseID);
+        //System.out.println("proceedStartLine - "+horseID);
         try{
             try {
                 nHorses++;
@@ -40,10 +40,11 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     condSpectators.signalAll();
                 }
                 
-                /*while( GO == false){
+                /*
+                while( waiting for broker to start  race ){
                     condHorses.await();
-                }*/
-                
+                }
+                */
             } catch (Exception e) {
                 e.printStackTrace();
             } 
@@ -54,12 +55,12 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
 
     @Override
     public boolean hasFinishLineBeenCrossed() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void makeAMove() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }
