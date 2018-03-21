@@ -222,6 +222,32 @@ public class GRI {
                     s += horseWinningProb[i] + " ";
                 
             }
+            
+            if ( iterationNumber[i] != -1 ){
+                if ( iterationNumber[i] >= 10) {
+                    s += iterationNumber[i] + "  ";
+                }
+                else
+                    s += iterationNumber[i] + "   ";
+            }
+            else
+                s += "--   ";
+            
+            if ( trackPosition[i] != -1 ){
+                if ( trackPosition[i] >= 10) {
+                    s += trackPosition[i] + "  ";
+                }
+                else
+                    s += trackPosition[i] + "   ";
+            }
+            else
+                s += "--  ";
+            
+            if ( standingAtTheEnd[i] != -1 ){
+                s += standingAtTheEnd[i] + " ";
+            }
+            else
+                s += "- ";
         }
         
         
