@@ -146,6 +146,80 @@ public class GRI {
             }else
                 s += "---- ";
         }
+        
+        s += " - ";
+        
+        for (int i = 0; i < NO_COMPETITORS; i++) {
+            if ( horseState[i] != null )
+                switch( horseState[i].ordinal() ){
+                    case 0:     // AT_THE_STABLE
+                        s += "STA ";
+                        break;
+                    case 1:     // AT_THE_PADDOCK
+                        s += "PAD ";
+                        break;  
+                    case 2:     // AT_THE_START_LINE
+                        s += "STL ";
+                        break;
+                    case 3:     // RUNNING
+                        s += "RUN ";
+                        break;
+                    case 4:     // AT_THE_FINNISH_LINE
+                        s += "FIN ";
+                        break;
+                }
+            else
+                s += "--- ";
+            
+            if ( horseMaxDistance[i] != -1){
+                if ( horseMaxDistance[i] > 10 ) 
+                    s += horseMaxDistance + "  ";
+                else
+                    s += horseMaxDistance + "   ";
+            }
+            else
+                s += "--  ";
+        }
+        
+        s += "\n";
+        
+        if ( raceTrackDistance >= 10)
+            s += raceTrackDistance + "  ";
+        else 
+            s += raceTrackDistance + "   ";
+        
+        for (int i = 0; i < NO_SPECTATORS; i++) {
+            if ( betSelection[i] != -1)
+                s += betSelection[i] + " ";
+            else
+                s += "- ";
+            
+            
+            if ( betAmount[i] != -1) {
+                if ( betAmount[i] >= 1000 )
+                    s += betAmount[i] + "  ";
+                else if ( betAmount[i] >= 100 && betAmount[i] < 1000 )
+                    s += betAmount[i] + "   ";
+                else if ( betAmount[i] >= 10 && betAmount[i] < 100 )
+                    s += betAmount[i] + "    ";
+                else 
+                    s += betAmount[i] + "     ";
+            }else
+                s += "----  ";
+            
+        }
+        
+        for (int i = 0; i < NO_COMPETITORS; i++) {
+            if ( horseWinningProb[i] != -1) {
+                if ( horseWinningProb[i] == 1 || horseWinningProb[i] == 0) 
+                    s += horseWinningProb[i] + "   ";
+                else
+                    s += horseWinningProb[i] + " ";
+                
+            }
+        }
+        
+        
     }
     
     public void setBrokerState(BrokerState brokerState) {
@@ -162,6 +236,10 @@ public class GRI {
 
     public void setRn(int rn) {
         this.rn = rn;
+    }
+    
+    public void addRn() {
+        this.rn++;
     }
 
     public void setHorseState(int id, HorseState horseState) {
