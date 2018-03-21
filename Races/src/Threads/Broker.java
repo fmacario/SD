@@ -30,7 +30,7 @@ public class Broker extends Thread{
             i_stable_broker.summonHorsesToPaddock();
             //System.out.println("Broker " + state);
             i_bettingCentre_broker.acceptTheBets();
-            //i_racingTrack_broker.startTheRace();
+            i_racingTrack_broker.startTheRace();
             //i_controlCentre_broker.reportResults();
             //if ( i_controlCentre_broker.areThereAnyWinners() ) {
               //  i_bettingCentre_broker.honourTheBets();

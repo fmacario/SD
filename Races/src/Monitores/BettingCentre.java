@@ -6,13 +6,11 @@ import Interfaces.IBettingCentre_Broker;
 import Interfaces.IBettingCentre_Spectator;
 import Enum.*;
 import Main.*;
-import java.util.Collection;
 import java.util.HashMap;
 
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.locks.*;
 
 public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{
@@ -34,6 +32,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     
     public BettingCentre(GRI gri){
         this.gri = gri;
+        
         betSpec = new boolean[NO_SPECTATORS];
         for(int i=0; i< NO_SPECTATORS; i++){
                 betSpec[i] = false;
@@ -97,8 +96,8 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 System.out.println("Broker " + broker.getBroState());
                 
                 while (bets != NO_SPECTATORS){
-                    System.out.println("bets 2 -- "+bets);
-                    if(wantToBet){
+                    //System.out.println("betStatus -- "+ betStatus[fifoSpectators.peek().getSpecId()]);
+                    if( wantToBet){ //betStatus[fifoSpectators.peek().getSpecId()] == true ){
                         int id = fifoSpectators.peek().getSpecId();
                         System.out.println("WantToBet - " + id);
                         bets++;

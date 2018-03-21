@@ -5,6 +5,7 @@ import Threads.Horse;
 import Interfaces.IRacingTrack_Broker;
 import Interfaces.IRacingTrack_Horse;
 import Enum.*;
+import Threads.Broker;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -31,7 +32,24 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     
     @Override
     public void startTheRace() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        rl.lock();
+        
+        Broker broker = ((Broker)Thread.currentThread());
+        System.out.println("startTheRace");
+        
+        try {
+            try {
+                broker.setBroState(BrokerState.SUPERVISING_THE_RACE);
+                gri.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+                gri.updateStatus();
+                System.out.println("Broker " + broker.getBroState());
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override
