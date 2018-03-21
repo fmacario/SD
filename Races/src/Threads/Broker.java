@@ -29,7 +29,7 @@ public class Broker extends Thread{
         for (int k = 0; k < NO_RACES; k++) {
             i_stable_broker.summonHorsesToPaddock();
             //System.out.println("Broker " + state);
-            //i_bettingCentre_broker.acceptTheBets();
+            i_bettingCentre_broker.acceptTheBets();
             //i_racingTrack_broker.startTheRace();
             //i_controlCentre_broker.reportResults();
             //if ( i_controlCentre_broker.areThereAnyWinners() ) {
@@ -37,5 +37,13 @@ public class Broker extends Thread{
             //}
         }
         //i_controlCentre_broker.entertainTheGuests();
+    }
+    
+    public BrokerState getBroState() {
+        return Broker.state;
+    }
+
+    public void setBroState(BrokerState state) {
+        Broker.state = state;
     }
 }

@@ -1,6 +1,7 @@
 package Monitores;
 
 import Threads.Spectator;
+import Threads.Broker;
 import Interfaces.IBettingCentre_Broker;
 import Interfaces.IBettingCentre_Spectator;
 import Enum.*;
@@ -53,7 +54,22 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     public void acceptTheBets() {
         rl.lock();
         
+        Broker broker = ((Broker)Thread.currentThread());
+        System.out.println("acceptBets");
         
+        try{
+            try{
+                broker.setBroState(BrokerState.WAITING_FOR_BETS);
+                System.out.println("Broker " + broker.getBroState());
+                
+                
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override

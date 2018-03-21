@@ -71,7 +71,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     @Override
     public void goCheckHorses(int spectatorID) {
         rl.lock();
-        //System.out.println("checkHorses - "+spectatorID);
+        System.out.println("checkHorses - "+spectatorID);
         try{
             try{
                 nSpectators++;
@@ -81,12 +81,11 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                 if(nSpectators == NO_SPECTATORS){
                     GO = true;
                     condHorses.signalAll();
+                    condBroker.signal();
                 }
                 while( !lastHorse ){
                     condSpectators.await();
                 }
-                
-                condBroker.signal();
                                 
             }catch( Exception e ){
                 e.printStackTrace();

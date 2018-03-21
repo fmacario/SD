@@ -63,7 +63,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
 
     @Override
     public boolean hasFinishLineBeenCrossed() {
-
+        return false;
     }
 
     @Override
