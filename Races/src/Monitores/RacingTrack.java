@@ -1,3 +1,11 @@
+package Monitores;
+
+import Main.Main;
+import Threads.Horse;
+import Interfaces.IRacingTrack_Broker;
+import Interfaces.IRacingTrack_Horse;
+import Enum.*;
+
 import java.util.*;
 import java.util.concurrent.locks.*;
 

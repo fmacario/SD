@@ -1,3 +1,10 @@
+package Threads;
+
+import Enum.*;
+import Interfaces.IStable_Horse;
+import Interfaces.IPaddock_Horse;
+import Interfaces.IRacingTrack_Horse;
+
 public class Horse extends Thread{
 
     public static volatile HorseState state;

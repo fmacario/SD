@@ -1,3 +1,12 @@
+package Monitores;
+
+import Main.Main;
+import Threads.Horse;
+import Threads.Spectator;
+import Interfaces.IPaddock_Spectator;
+import Interfaces.IPaddock_Horse;
+import Enum.*;
+
 import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;

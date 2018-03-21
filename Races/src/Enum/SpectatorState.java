@@ -1,3 +1,5 @@
+package Enum;
+
 public enum SpectatorState {
     WAITING_FOR_A_RACE_TO_START, 
     APPRAISING_THE_HORSES, 

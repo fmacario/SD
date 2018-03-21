@@ -1,3 +1,9 @@
+package Main;
+
+import Monitores.*;
+import Threads.*;
+import Interfaces.*;
+
 public class Main {
     public static final int NO_RACES = 1;
     public static final int NO_COMPETITORS = 4;
