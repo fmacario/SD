@@ -3,9 +3,12 @@ package Monitores;
 import Main.Main;
 import Enum.*;
 
+import genclass.GenericIO;
+import genclass.TextFile;
+
 public class GRI {
     private final String logName = "Races.log";
-    //private TextFile log;
+    private TextFile log;
     
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     private final int NO_SPECTATORS = Main.NO_SPECTATORS;
@@ -36,6 +39,8 @@ public class GRI {
     
     
     public GRI(){
+        log = new TextFile();
+        
         spectatorState = new SpectatorState[NO_SPECTATORS];
         money = new int[NO_SPECTATORS];
         betSelection = new int[NO_SPECTATORS];
@@ -249,8 +254,7 @@ public class GRI {
             else
                 s += "- ";
         }
-        
-        
+        //System.out.println(s);        
     }
     
     public void setBrokerState(BrokerState brokerState) {
