@@ -113,7 +113,6 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 } 
                 
                 
-                
             } catch (Exception e) {
                 e.printStackTrace();
             }
