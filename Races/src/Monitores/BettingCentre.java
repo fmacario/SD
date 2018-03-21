@@ -30,13 +30,13 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private int NO_SPECTATORS = Main.NO_SPECTATORS;
     private boolean betDone = false;
     private boolean wantToBet = false;
-    private boolean betSoec [];
+    private boolean[] betSpec;
     
     public BettingCentre(GRI gri){
         this.gri = gri;
-        betSoec = new boolean[NO_SPECTATORS];
+        betSpec = new boolean[NO_SPECTATORS];
         for(int i=0; i< NO_SPECTATORS; i++){
-                betSoec[i] = false;
+                betSpec[i] = false;
         }
         rl = new ReentrantLock();
         condHorses = rl.newCondition();
@@ -63,11 +63,12 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 wantToBet = true;
                 condBroker.signal();
                 
-                while (betSoec[spec.getSpecId()] == true){
+                while (betSpec[spec.getSpecId()] == false){
                     condSpectators.await();
                 }
                 System.out.println("sai do while " + spec.getSpecId());
-                //condBroker.await();
+                fifoSpectators.remove();
+                condBroker.signal();
                 //condSpectators.signal();
                 
             } catch (Exception e) {
@@ -94,18 +95,20 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 gri.setBrokerState(BrokerState.WAITING_FOR_BETS);
                 gri.updateStatus();
                 System.out.println("Broker " + broker.getBroState());
-                System.out.println("bets 1 -- "+bets);
+                
                 while (bets != NO_SPECTATORS){
                     System.out.println("bets 2 -- "+bets);
                     if(wantToBet){
-                        System.out.println("WantToBet - " + fifoSpectators.peek().getSpecId());
-                        bets++;
                         int id = fifoSpectators.peek().getSpecId();
-                        betSoec[id] = true;
+                        System.out.println("WantToBet - " + id);
+                        bets++;
+                        betSpec[id] = true;
                         mapSpec_Horse.put(id, 0);
-                        mapSpec_Bet.put(fifoSpectators.remove().getSpecId(), 5.0);
-                        condSpectators.signalAll();
+                        mapSpec_Bet.put(id, 5.0);
+                        
+                        condSpectators.signal();
                     }
+                    
                     condBroker.await();
                 } 
                 
