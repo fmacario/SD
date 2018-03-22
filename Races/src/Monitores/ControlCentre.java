@@ -43,13 +43,14 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     }*/
 
     @Override
-    public void goWatchTheRace() {
+    public void goWatchTheRace(int specId) {
         rl.lock();
         
         try {
             try {
-                
-                while( haveIWon() == false ){
+                gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
+                gri.updateStatus();
+                if( haveIWon(specId) == false ){
                     condSpectators.await();
                 }
                 
@@ -62,12 +63,12 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     }
 
     @Override
-    public boolean haveIWon() {
+    public boolean haveIWon(int specId) {
         return false;
     }
 
     @Override
-    public void relaxABit() {
+    public void relaxABit(int specId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
