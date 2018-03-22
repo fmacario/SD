@@ -48,7 +48,11 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         
         try {
             try {
-                //condSpectators.await();
+                
+                while( haveIWon() == false ){
+                    condSpectators.await();
+                }
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -59,7 +63,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
 
     @Override
     public boolean haveIWon() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override

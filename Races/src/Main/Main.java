@@ -8,7 +8,7 @@ public class Main {
     public static final int NO_RACES = 1;
     public static final int NO_COMPETITORS = 4;
     public static final int NO_SPECTATORS = 4;
-    public static final int TRACK_DISTANCE = 10;
+    public static final int TRACK_DISTANCE = 100;
     
     public static Horse[] horses = new Horse[NO_COMPETITORS];
     public static Spectator[] spectators = new Spectator[NO_SPECTATORS];
