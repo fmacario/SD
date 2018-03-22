@@ -10,7 +10,7 @@ public class Spectator extends Thread{
     public static volatile SpectatorState state;
     private final int id;
     private int bet;
-    private double money;
+    private int money;
     private final int NO_RACES;
     private final IBettingCentre_Spectator i_bettingCentre_spectator;
     private final IControlCentre_Spectator i_controlCentre_spectator;
@@ -55,11 +55,11 @@ public class Spectator extends Thread{
         Spectator.state = state;
     }
     
-    public double getMoney() {
+    public int getMoney() {
         return money;
     }
 
-    public void setMoney(double value) {
+    public void setMoney(int value) {
         this.money += value;
     }
 }

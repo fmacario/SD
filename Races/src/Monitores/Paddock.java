@@ -27,6 +27,8 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
     private final int NO_SPECTATORS = Main.NO_SPECTATORS;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     
+    private boolean allHorses = false;
+    
     private boolean lastHorse = false;
     
     public Paddock(GRI gri){
@@ -51,6 +53,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                 System.out.println("Horse " + horseID + " " + Horse.state);
                 
                 if(nHorses == NO_COMPETITORS){
+                    allHorses = true;
                     condSpectators.signalAll();
                 }
                 
@@ -112,7 +115,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                 gri.updateStatus();
                 System.out.println("Spectator " + spectatorID + " " + Spectator.state);
                 
-                while ( nHorses != NO_COMPETITORS ) {
+                while ( !allHorses ) {
                     condSpectators.await();
                 }
                 

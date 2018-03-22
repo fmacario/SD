@@ -291,8 +291,8 @@ public class GRI {
         this.spectatorState[id] = spectatorState;
     }
 
-    public void setMoney(int[] money) {
-        this.money = money;
+    public void setMoney(int id, int money) {
+        this.money[id] = money;
     }
 
     public void setRn(int rn) {
