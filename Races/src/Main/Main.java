@@ -8,8 +8,12 @@ public class Main {
     public static final int NO_RACES = 1;
     public static final int NO_COMPETITORS = 4;
     public static final int NO_SPECTATORS = 4;
+<<<<<<< HEAD
     public static final int TRACK_DISTANCE = 10;
     public static final double MAX_BET = 1000;
+=======
+    public static final int TRACK_DISTANCE = 100;
+>>>>>>> 9ccd7af8efc1bc1852a8063b9e86c362933acddd
     
     public static Horse[] horses = new Horse[NO_COMPETITORS];
     public static Spectator[] spectators = new Spectator[NO_SPECTATORS];
