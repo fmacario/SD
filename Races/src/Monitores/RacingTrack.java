@@ -44,6 +44,8 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 gri.updateStatus();
                 System.out.println("Broker " + broker.getBroState());
                 
+                //condHorses.signalAll();
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

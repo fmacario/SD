@@ -1,7 +1,6 @@
 package Monitores;
 
-
-import Main.Main;
+import Main.*;
 import Threads.Spectator;
 import Interfaces.IControlCentre_Broker;
 import Interfaces.IControlCentre_Spectator;
@@ -14,6 +13,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
+    private final Condition condSpectators;
     private int NO_COMPETITORS;
     
     public ControlCentre( GRI gri){
@@ -21,9 +21,10 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         this.NO_COMPETITORS = Main.NO_COMPETITORS;
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
+        condSpectators = rl.newCondition();
     }
     
-    @Override
+    /*@Override
     public void waitForNextRace() {
         rl.lock();
         
@@ -39,11 +40,21 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }finally{
             rl.unlock();
         }
-    }
+    }*/
 
     @Override
     public void goWatchTheRace() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        rl.lock();
+        
+        try {
+            try {
+                //condSpectators.await();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override

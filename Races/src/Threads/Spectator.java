@@ -35,7 +35,7 @@ public class Spectator extends Thread{
             i_paddock_spectator.goCheckHorses( id );
             //System.out.println("Spectator xxxx " + id + " " + state);
             i_bettingCentre_spectator.placeABet();
-            //i_controlCentre_spectator.goWatchTheRace();
+            i_controlCentre_spectator.goWatchTheRace();
             //if ( i_controlCentre_spectator.haveIWon() ) {
               //  i_bettingCentre_spectator.goCollectTheGains();
             //}

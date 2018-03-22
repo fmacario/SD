@@ -109,9 +109,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     }
                     
                     condBroker.await();
-                } 
-                
-                
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
