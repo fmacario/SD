@@ -12,7 +12,7 @@ import static java.lang.System.*;
 import java.util.concurrent.locks.*;
         
 public class Stable implements IStable_Broker, IStable_Horse{
-    private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
+    private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
     
     private GRI gri;
     private final ReentrantLock rl;
@@ -30,12 +30,14 @@ public class Stable implements IStable_Broker, IStable_Horse{
     }
     
     @Override
-    public void proceedToStable(int horseID) {
+    public void proceedToStable(int horseID, int agile) {
         rl.lock();
         //System.out.println("proceedStable - "+horseID);
         try{
             try{
                 nHorses++;
+                
+                hashHorsesAgile.put( horseID, agile );
                 
                 //Horse.state = HorseState.AT_THE_STABLE;
                 gri.setHorseState(horseID, HorseState.AT_THE_STABLE);
@@ -63,7 +65,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
     }
     
     @Override
-    public void summonHorsesToPaddock() {
+    public Map<Integer, Integer> summonHorsesToPaddock() {
         rl.lock();
         //System.out.println("summonHorses");
         try {
@@ -79,10 +81,25 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 
                 GO = true;
                 
+                int totalAgile = 0;
+                
+                for (Map.Entry<Integer, Integer> entry : hashHorsesAgile.entrySet())
+                {
+                    totalAgile += entry.getValue();
+                }
+                
+                for (int i = 0; i < NO_COMPETITORS; i++) {
+                    int odd = hashHorsesAgile.get(i)*100 / totalAgile;
+                    hashHorsesAgile.put(i, odd);
+                }
+                                
                 condHorses.signalAll();
+                
+                return hashHorsesAgile;
                 
             } catch (Exception e) { 
                 e.printStackTrace();
+                return null;
             }
         }finally{
             rl.unlock();

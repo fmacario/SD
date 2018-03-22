@@ -34,7 +34,8 @@ public class Spectator extends Thread{
             money -= i_bettingCentre_spectator.placeABet( id, money);
             i_controlCentre_spectator.goWatchTheRace( id );
             if ( i_controlCentre_spectator.haveIWon( id ) ) {
-              //  money += i_bettingCentre_spectator.goCollectTheGains( id );
+                System.out.println("GANHEI a aposta! " + id);
+                money += i_bettingCentre_spectator.goCollectTheGains( id );
             }
             
         }

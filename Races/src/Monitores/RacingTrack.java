@@ -126,10 +126,12 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     iterations[horseID] += 1;
                     //System.out.println("position inc - " + positions[horse.getHorseId()]);
                                         
-                    //System.out.println("horsesfinished " + horsesFinished);
+                    System.out.println("horsesfinished " + horsesFinished);
                     if(horsesFinished != (NO_COMPETITORS-1)){
                         condHorses.await();
                     }
+                    
+                    // falta acordar o broker quando o ultimo cavalo chega À meta
                 }
                 
                 

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
@@ -20,9 +21,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private Queue<Integer> fifoSpectators = new LinkedList<Integer>();
     
     private Map<Integer, Integer> mapSpec_Money = new HashMap<Integer, Integer>();
-    private Map<Integer, Integer> mapSpec_Horse = new HashMap<Integer, Integer>();
-    private Map<Integer, Integer> mapSpec_Bet = new HashMap<Integer, Integer>();
+    private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
+    private Map<Integer, List<Integer>> mapSpec_Horse_Bet = new HashMap<Integer, List<Integer>>();
     
+    private Map<Integer, Integer> mapSpec_MoneyToReceive = new HashMap<Integer, Integer>();
+        
     private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
@@ -35,6 +38,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean betDone = false;
     private boolean wantToBet = false;
     private boolean[] betSpec;
+    private int noSpecWinners = 0;
     
     public BettingCentre(GRI gri){
         this.gri = gri;
@@ -58,6 +62,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         try{
             try {
                 nSpectators++;
+                
                 fifoSpectators.add( spectatorID );
                 mapSpec_Money.put( spectatorID, money );
                 
@@ -71,22 +76,22 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 while ( betSpec[spectatorID] == false ){
                     condSpectators.await();
                 }
-                System.out.println("sai do while " + spectatorID);
+                //System.out.println("sai do while " + spectatorID);
                 
                 
                 int id = fifoSpectators.remove();
-                                
-                gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Bet.get(id));
-                //gri.updateStatus();
+                                                
+                //gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Bet.get(id));
+                gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Horse_Bet.get(id).get(1));
 
-                gri.setBetSelection(id, mapSpec_Horse.get(id) );
-                gri.setBetAmount(id, mapSpec_Bet.get(id) );
+                gri.setBetSelection(id, mapSpec_Horse_Bet.get(id).get(0) );
+                gri.setBetAmount(id, mapSpec_Horse_Bet.get(id).get(1) );
 
                 gri.updateStatus();
                               
                 condBroker.signal();
                 //condSpectators.signal();
-                return mapSpec_Bet.get(id);
+                return mapSpec_Horse_Bet.get(id).get(1);
             } catch (Exception e) {
                 e.printStackTrace();
                 return 0;
@@ -98,11 +103,12 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     }
     
     @Override
-    public void acceptTheBets() {
+    public Map<Integer, List<Integer>> acceptTheBets( Map<Integer, Integer> hashHorsesAgile ) {
         rl.lock();
         
         System.out.println("acceptBets");
-        
+        this.hashHorsesAgile = hashHorsesAgile;
+        System.out.println(hashHorsesAgile);
         int bets = 0;
         
         try{
@@ -131,18 +137,23 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                         }else{
                             bet = (int)(Math.random() * MAX_BET); 
                         }
+                                                          
+                        List<Integer> list = new ArrayList<Integer>();
+                        list.add(0, horse);
+                        list.add(1, bet);
+                        mapSpec_Horse_Bet.put(id, list);
                                                                         
-                        mapSpec_Horse.put(id, horse);
-                        mapSpec_Bet.put(id, bet);
-                                                
                         condSpectators.signal();
                     }
                     
                     condBroker.await();
-                    //return mapSpec_Bet+mapSpec_Horse;
                 }
+                
+                return mapSpec_Horse_Bet;
+                
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
         } finally {
             rl.unlock();
@@ -152,6 +163,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     @Override
     public int goCollectTheGains( int spectatorID ) {
         rl.lock();
+        System.out.println("goCollectTheGains - "+ spectatorID);
         try {
             try {
                 
@@ -166,10 +178,21 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     }
 
     @Override
-    public void honourTheBets( ArrayList<Integer> winnersList ) {
+    public void honourTheBets( ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList ) {
         rl.lock();
+        System.out.println("honourTheBets");
         try {
             try {
+                // calcular valor a distribuir para cada vencedor
+                //noSpecWinners = winnersList.size();
+                System.out.println(horsesWinnersList);
+                //mapSpec_Horse_Bet
+                //mapSpec_MoneyToReceive
+                for ( Integer winner : horsesWinnersList ) {
+                    System.out.println("horsesWinnersList : " + winner);
+                    //mapSpec_MoneyToReceive.put(winner, winner)
+                }
+                                
                 
             } catch (Exception e) {
                 e.printStackTrace();

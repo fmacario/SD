@@ -6,6 +6,8 @@ import Interfaces.IControlCentre_Broker;
 import Interfaces.IControlCentre_Spectator;
 import Enum.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -16,7 +18,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private final Condition condHorses;
     private final Condition condSpectators;
     private int NO_COMPETITORS;
-    private ArrayList<Integer> winnersList = new ArrayList<>();
+    private ArrayList<Integer> horsesWinnersList = new ArrayList<>();
+    private ArrayList<Integer> specsWinnersList = new ArrayList<>();
     
     public ControlCentre( GRI gri){
         this.gri = gri;
@@ -50,6 +53,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         
         try {
             try {
+                System.out.println("VOU VER A CORRIDA " + specId); 
+                
                 gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
                 gri.updateStatus();
                 if( haveIWon(specId) == false ){
@@ -69,7 +74,12 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
-                
+                for ( Integer specsWinner : specsWinnersList ) {
+                    if( specId == specsWinner )
+                        return true;
+                    
+                    return false;
+                }
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -95,16 +105,18 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     }
 
     @Override
-    public void reportResults( ArrayList<Integer> winnersList ) {
+    public ArrayList<Integer> reportResults( ArrayList<Integer> winnersList ) {
         // temos de acordar o espetador
         
         rl.lock();
         try {
             try {
-                this.winnersList = winnersList;
+                this.horsesWinnersList = winnersList;
                 condSpectators.signalAll();
+                return specsWinnersList;
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
         } finally {
             rl.unlock();
@@ -112,17 +124,35 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     }
 
     @Override
-    public boolean areThereAnyWinners( ArrayList<Integer> winnersList ) {
+    public boolean areThereAnyWinners( Map<Integer, List<Integer>> mapSpec_Horse_Bet ) {
         rl.lock();
+        System.out.println("areThereAnyWinners");
         try {
             try {
                 
-                return false;
+                // para cada cavalo vencedor, verifica se há apostadores que ganharam
+                for ( Integer horseWinner : horsesWinnersList ) {
+                    //System.out.println(winner);
+                    
+                    for (Map.Entry<Integer, List<Integer>> entry : mapSpec_Horse_Bet.entrySet())
+                    {
+                        //System.out.println(entry.getKey() + "/" + entry.getValue());
+                        if( horseWinner == entry.getValue().get(0) )
+                            //System.out.println("SII: " + entry.getKey()); 
+                            specsWinnersList.add(entry.getKey());
+                    }
+                }
+                
+                if (specsWinnersList.size() == 0)
+                    return false;
+                
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
         } finally {
+            System.out.println("saí da areThereAnyWinners");
             rl.unlock();
         }
     }

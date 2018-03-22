@@ -1,8 +1,10 @@
 package Interfaces;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public interface IBettingCentre_Broker {
-    void acceptTheBets();
-    void honourTheBets( ArrayList<Integer> winnersList );
+    Map<Integer, List<Integer>> acceptTheBets( Map<Integer, Integer> hashHorsesAgile );
+    void honourTheBets( ArrayList<Integer> winnersList, ArrayList<Integer> specsWinnersList);
 }

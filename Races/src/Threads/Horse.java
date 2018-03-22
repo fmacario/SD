@@ -27,7 +27,7 @@ public class Horse extends Thread{
     @Override
     public void run(){
         
-        i_stable_horse.proceedToStable(id);
+        i_stable_horse.proceedToStable( id, Pnk );
         i_paddock_horse.proceedToPaddock(id);
         i_racingTrack_horse.proceedToStartLine(id);
         while( !i_racingTrack_horse.hasFinishLineBeenCrossed( id ) ){

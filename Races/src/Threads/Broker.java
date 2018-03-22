@@ -3,6 +3,9 @@ package Threads;
 import Interfaces.*;
 import Enum.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Broker extends Thread{
     private final int NO_RACES;
@@ -11,7 +14,11 @@ public class Broker extends Thread{
     private final IRacingTrack_Broker i_racingTrack_broker;
     private final IStable_Broker i_stable_broker;
     
-    private ArrayList<Integer> winnersList = new ArrayList<>();
+    private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
+    
+    private Map<Integer, List<Integer>> mapSpec_Horse_Bet = new HashMap<Integer, List<Integer>>();
+    private ArrayList<Integer> horsesWinnersList = new ArrayList<>();
+    private ArrayList<Integer> specsWinnersList = new ArrayList<>();
     
     public static volatile BrokerState state;
     
@@ -30,13 +37,13 @@ public class Broker extends Thread{
         System.out.println("Broker " + state);
         
         for (int k = 0; k < NO_RACES; k++) {
-            i_stable_broker.summonHorsesToPaddock();
-            i_bettingCentre_broker.acceptTheBets();
-            winnersList = i_racingTrack_broker.startTheRace();
-            //i_controlCentre_broker.reportResults( winnersList );
-            //if ( i_controlCentre_broker.areThereAnyWinners( winnersList ) ) {
-              //  i_bettingCentre_broker.honourTheBets( winnersList );
-            //}
+            hashHorsesAgile = i_stable_broker.summonHorsesToPaddock();
+            mapSpec_Horse_Bet = i_bettingCentre_broker.acceptTheBets(hashHorsesAgile);
+            horsesWinnersList = i_racingTrack_broker.startTheRace();
+            specsWinnersList = i_controlCentre_broker.reportResults( horsesWinnersList );
+            if ( i_controlCentre_broker.areThereAnyWinners( mapSpec_Horse_Bet ) ) {
+                i_bettingCentre_broker.honourTheBets( horsesWinnersList, specsWinnersList );
+            }
         }
         //i_controlCentre_broker.entertainTheGuests();
     }

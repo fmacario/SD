@@ -1,5 +1,7 @@
 package Interfaces;
 
+import java.util.Map;
+
 public interface IStable_Broker {
-    void summonHorsesToPaddock();
+    Map<Integer, Integer> summonHorsesToPaddock();
 }
