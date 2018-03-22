@@ -315,12 +315,12 @@ public class GRI {
         this.raceTrackDistance = raceTrackDistance;
     }
 
-    public void setBetSelection(int[] betSelection) {
-        this.betSelection = betSelection;
+    public void setBetSelection(int id, int betSelection) {
+        this.betSelection[id] = betSelection;
     }
 
-    public void setBetAmount(int[] betAmount) {
-        this.betAmount = betAmount;
+    public void setBetAmount(int id, int betAmount) {
+        this.betAmount[id] = betAmount;
     }
 
     public void setHorseWinningProb(double[] horseWinningProb) {

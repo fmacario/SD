@@ -1,6 +1,6 @@
 package Interfaces;
 
 public interface IBettingCentre_Spectator {
-    void placeABet();
+    int placeABet( int spectatorID, int money);
     void goCollectTheGains();
 }

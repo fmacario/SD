@@ -47,10 +47,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
             try{
                 nHorses++;
                 
-                Horse.state = HorseState.AT_THE_PADDOCK;
+                //Horse.state = HorseState.AT_THE_PADDOCK;
                 gri.setHorseState(horseID, HorseState.AT_THE_PADDOCK);
                 gri.updateStatus();
-                System.out.println("Horse " + horseID + " " + Horse.state);
+                System.out.println("Horse " + horseID + " " + HorseState.AT_THE_PADDOCK);
                 
                 if(nHorses == NO_COMPETITORS){
                     allHorses = true;
@@ -82,10 +82,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
             try{
                 nSpectators++;
                 
-                Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
+                //Spectator.state = SpectatorState.APPRAISING_THE_HORSES;
                 gri.setSpectatorState(spectatorID, SpectatorState.APPRAISING_THE_HORSES);
                 gri.updateStatus();
-                System.out.println("Spectator " + spectatorID + " " + Spectator.state);
+                System.out.println("Spectator " + spectatorID + " " + SpectatorState.APPRAISING_THE_HORSES);
                 
                 if(nSpectators == NO_SPECTATORS){
                     GO = true;
@@ -110,10 +110,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
         
         try {
             try{
-                Spectator.state = SpectatorState.WAITING_FOR_A_RACE_TO_START;
+                //Spectator.state = SpectatorState.WAITING_FOR_A_RACE_TO_START;
                 gri.setSpectatorState(spectatorID, SpectatorState.WAITING_FOR_A_RACE_TO_START);
                 gri.updateStatus();
-                System.out.println("Spectator " + spectatorID + " " + Spectator.state);
+                System.out.println("Spectator " + spectatorID + " " + SpectatorState.WAITING_FOR_A_RACE_TO_START);
                 
                 while ( !allHorses ) {
                     condSpectators.await();

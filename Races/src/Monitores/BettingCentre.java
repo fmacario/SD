@@ -15,8 +15,10 @@ import java.util.Random;
 import java.util.concurrent.locks.*;
 
 public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{
-    private Queue<Spectator> fifoSpectators = new LinkedList<Spectator>();
+    //private Queue<Spectator> fifoSpectators = new LinkedList<Spectator>();
+    private Queue<Integer> fifoSpectators = new LinkedList<Integer>();
     
+    private Map<Integer, Integer> mapSpec_Money = new HashMap<Integer, Integer>();
     private Map<Integer, Integer> mapSpec_Horse = new HashMap<Integer, Integer>();
     private Map<Integer, Integer> mapSpec_Bet = new HashMap<Integer, Integer>();
     
@@ -47,57 +49,51 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     }
     
     @Override
-    public void placeABet() {
+    public int placeABet( int spectatorID, int money) {
         rl.lock();
-        Spectator spec = ((Spectator)Thread.currentThread());
-        System.out.println("placeABet - "+spec.getSpecId());
+        //Spectator spec = ((Spectator)Thread.currentThread());
+        System.out.println("placeABet - "+ spectatorID);
         
         try{
             try {
                 nSpectators++;
-                fifoSpectators.add(spec);
+                fifoSpectators.add( spectatorID );
+                mapSpec_Money.put( spectatorID, money );
                 
-                spec.setSpecState(SpectatorState.PLACING_A_BET);
-                gri.setSpectatorState(spec.getSpecId(), SpectatorState.PLACING_A_BET);
+                gri.setSpectatorState( spectatorID, SpectatorState.PLACING_A_BET);
                 gri.updateStatus();
-                System.out.println("Spectator " + spec.getSpecId() + " " + spec.getSpecState());
+                System.out.println("Spectator " + spectatorID + " " + SpectatorState.PLACING_A_BET);
                 
                 wantToBet = true;
                 condBroker.signal();
                 
-                while (betSpec[spec.getSpecId()] == false){
+                while ( betSpec[spectatorID] == false ){
                     condSpectators.await();
                 }
-                System.out.println("sai do while " + spec.getSpecId());
+                System.out.println("sai do while " + spectatorID);
                 
-                fifoSpectators.remove();
-                if (fifoSpectators.size() == 0){
-                    int index = 0;
-                    
-                    int bets_value[] = new int[NO_COMPETITORS];
-                    int bets_horses[] = new int[NO_COMPETITORS];
-                    
-                    for (Map.Entry<Integer, Integer> mapEntry : mapSpec_Horse.entrySet()) {
-                        bets_horses[index] = mapEntry.getValue();
-                        index++;
-                    }
-                    index = 0;
-                    for (Map.Entry<Integer, Integer> mapEntry : mapSpec_Bet.entrySet()) {
-                        bets_value[index] = mapEntry.getValue();
-                        index++;
-                    }
-                    
-                    gri.setBetSelection( bets_horses );
-                    gri.setBetAmount( bets_value );
-                    
-                    gri.updateStatus();
-                }
                 
+                int id = fifoSpectators.remove();
+                                
+                int index = 0;
+
+                int bets_value[] = new int[NO_COMPETITORS];
+                int bets_horses[] = new int[NO_COMPETITORS];
+                
+                gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Bet.get(id));
+                //gri.updateStatus();
+
+                gri.setBetSelection(id, mapSpec_Horse.get(id) );
+                gri.setBetAmount(id, mapSpec_Bet.get(id) );
+
+                gri.updateStatus();
+                              
                 condBroker.signal();
                 //condSpectators.signal();
-                
+                return bets_value[id];
             } catch (Exception e) {
                 e.printStackTrace();
+                return 0;
             }
         } finally {
             rl.unlock();
@@ -109,50 +105,40 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     public void acceptTheBets() {
         rl.lock();
         
-        Broker broker = ((Broker)Thread.currentThread());
         System.out.println("acceptBets");
         
         int bets = 0;
         
         try{
             try{
-                broker.setBroState(BrokerState.WAITING_FOR_BETS);
                 gri.setBrokerState(BrokerState.WAITING_FOR_BETS);
                 gri.updateStatus();
-                System.out.println("Broker " + broker.getBroState());
+                System.out.println("Broker " + BrokerState.WAITING_FOR_BETS );
                 
                 while (bets != NO_SPECTATORS){
                     //System.out.println("betStatus -- "+ betStatus[fifoSpectators.peek().getSpecId()]);
                     if( wantToBet){ //betStatus[fifoSpectators.peek().getSpecId()] == true ){
                         
-                        Spectator s = fifoSpectators.peek();
-                        int id = s.getSpecId();
+                        int id = fifoSpectators.peek();
+                        
                         System.out.println("WantToBet - " + id);
                         bets++;
                         betSpec[id] = true;
                         
                         int horse = (int)(Math.random() * NO_COMPETITORS); 
-                        
                         int bet;
                         
-                        if ( s.getMoney() == 0 )
+                        if ( mapSpec_Money.get(id) == 0 )
                             bet = 0;
-                        else if ( s.getMoney() <= MAX_BET ) {
-                            bet = (int)(Math.random() * s.getMoney()); 
+                        else if ( mapSpec_Money.get(id) <= MAX_BET ) {
+                            bet = (int)(Math.random() * mapSpec_Money.get(id)); 
                         }else{
                             bet = (int)(Math.random() * MAX_BET); 
                         }
-                        
-                        s.setMoney( -bet );
-                        gri.setMoney(id, s.getMoney());
-                        gri.updateStatus();
-                                                
+                                                                        
                         mapSpec_Horse.put(id, horse);
                         mapSpec_Bet.put(id, bet);
-                        
-                        System.out.println(mapSpec_Horse);
-                        System.out.println(mapSpec_Bet);
-                        
+                                                
                         condSpectators.signal();
                     }
                     
