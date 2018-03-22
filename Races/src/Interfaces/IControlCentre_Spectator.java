@@ -2,8 +2,8 @@ package Interfaces;
 
 public interface IControlCentre_Spectator {
     //void waitForNextRace();
-    void goWatchTheRace();
-    boolean haveIWon();
-    void relaxABit();
+    void goWatchTheRace(int specId);
+    boolean haveIWon(int specId);
+    void relaxABit(int specId);
 
 }

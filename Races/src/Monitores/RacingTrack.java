@@ -45,14 +45,14 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         
         Broker broker = ((Broker)Thread.currentThread());
-        System.out.println("startTheRace");
+        //System.out.println("startTheRace");
         
         try {
             try {
                 broker.setBroState(BrokerState.SUPERVISING_THE_RACE);
                 gri.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
                 gri.updateStatus();
-                System.out.println("Broker " + broker.getBroState());
+                //System.out.println("Broker " + broker.getBroState());
                 
                 raceStart = true;
                 condHorses.signalAll();
@@ -75,7 +75,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         
         Horse horse = ((Horse)Thread.currentThread());
-        System.out.println("proceed to start line");
+        //System.out.println("proceed to start line");
         
         try{
             try {
@@ -84,7 +84,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 horse.setHorseState(HorseState.AT_THE_START_LINE);
                 gri.setHorseState(horse.getHorseId(), HorseState.AT_THE_START_LINE);
                 gri.updateStatus();
-                System.out.println("Horse "+ horse.getHorseId() +" "+  horse.getHorseState());
+                //System.out.println("Horse "+ horse.getHorseId() +" "+  horse.getHorseState());
                 
                 if(nHorses == NO_COMPETITORS){
                     condSpectators.signalAll();
@@ -107,21 +107,26 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         
         Horse horse = ((Horse)Thread.currentThread());
-        System.out.println("makeAMove");
+        //System.out.println("makeAMove");
         
         try {
             try {
                 horse.setHorseState(HorseState.RUNNING);
                 gri.setHorseState(horse.getHorseId(), HorseState.RUNNING);
                 gri.updateStatus();
-                System.out.println("Horse " + horse.getHorseId() +" "+ horse.getHorseState() +" "+ positions[horse.getHorseId()]);
+                //System.out.println("Horse " + horse.getHorseId() +" "+ horse.getHorseState() +" "+ positions[horse.getHorseId()]);
                 
                 condHorses.signalAll();
-                if( positions[horse.getHorseId()] < Main.TRACK_DISTANCE){
+                
+                if( positions[horse.getHorseId()] < Main.TRACK_DISTANCE ){
                     positions[horse.getHorseId()] += (int )(Math.random() * Pnk + 1);
-                    System.out.println("position inc - " + positions[horse.getHorseId()]);
+                    //System.out.println("position inc - " + positions[horse.getHorseId()]);
                     
-                    condHorses.await();
+                    
+                    //System.out.println("horsesfinished " + horsesFinished);
+                    if(horsesFinished != (NO_COMPETITORS-1)){
+                        condHorses.await();
+                    }
                 }
                 
                 
@@ -139,17 +144,23 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         
         Horse horse = ((Horse)Thread.currentThread());
-        System.out.println("finish line check" + horse.getHorseId());
+        //System.out.println("finish line check" + horse.getHorseId());
             
         try{
             try {
                 if( positions[horse.getHorseId()] >= Main.TRACK_DISTANCE){
                     horsesFinished++;
+                    
+                    gri.setHorseState(horse.getHorseId(), HorseState.AT_THE_FINNISH_LINE);
+                    gri.updateStatus();
+                    
+                    //System.out.println("FINISHED - " + horse.getHorseId() + " - " +horsesFinished);
                     if(horsesFinished == NO_COMPETITORS){
                         raceFinished = true;
-                        System.out.println("ALL FINISHED");
+                        //System.out.println("ALL FINISHED");
                         condBroker.signal();
                     }
+                    condHorses.signalAll();
                     return true;
                 }
                 
