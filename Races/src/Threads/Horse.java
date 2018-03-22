@@ -28,27 +28,12 @@ public class Horse extends Thread{
     public void run(){
         
         i_stable_horse.proceedToStable(id);
-        //System.out.println("Horse xxxxx " + id + " " + state);
         i_paddock_horse.proceedToPaddock(id);
-        //System.out.println("Horse " + id + " " + state);
         i_racingTrack_horse.proceedToStartLine(id);
-        while( !i_racingTrack_horse.hasFinishLineBeenCrossed() ){
-            i_racingTrack_horse.makeAMove(Pnk);
+        while( !i_racingTrack_horse.hasFinishLineBeenCrossed( id ) ){
+            i_racingTrack_horse.makeAMove( id, Pnk );
         }
         //i_stable_horse.proceedToStable(id);
     }
-
-    public int getHorseId() {
-        return id;
-    }
-
-    public HorseState getHorseState() {
-        return state;
-    }
-
-    public void setHorseState(HorseState state) {
-        Horse.state = state;
-    }
-    
     
 }

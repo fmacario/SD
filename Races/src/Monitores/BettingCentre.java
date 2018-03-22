@@ -6,6 +6,7 @@ import Interfaces.IBettingCentre_Broker;
 import Interfaces.IBettingCentre_Spectator;
 import Enum.*;
 import Main.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.LinkedList;
@@ -75,11 +76,6 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 int id = fifoSpectators.remove();
                                 
-                int index = 0;
-
-                int bets_value[] = new int[NO_COMPETITORS];
-                int bets_horses[] = new int[NO_COMPETITORS];
-                
                 gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Bet.get(id));
                 //gri.updateStatus();
 
@@ -90,7 +86,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                               
                 condBroker.signal();
                 //condSpectators.signal();
-                return bets_value[id];
+                return mapSpec_Bet.get(id);
             } catch (Exception e) {
                 e.printStackTrace();
                 return 0;
@@ -153,12 +149,12 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     }
 
     @Override
-    public void goCollectTheGains() {
-
+    public int goCollectTheGains( int spectatorID ) {
+        return 0;
     }
 
     @Override
-    public void honourTheBets() {
+    public void honourTheBets( ArrayList<Integer> winnersList ) {
 
     }
 

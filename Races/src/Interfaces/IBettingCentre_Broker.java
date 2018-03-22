@@ -1,6 +1,8 @@
 package Interfaces;
 
+import java.util.ArrayList;
+
 public interface IBettingCentre_Broker {
     void acceptTheBets();
-    void honourTheBets();
+    void honourTheBets( ArrayList<Integer> winnersList );
 }

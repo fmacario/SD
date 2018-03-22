@@ -1,5 +1,7 @@
 package Interfaces;
 
+import java.util.ArrayList;
+
 public interface IRacingTrack_Broker {
-    void startTheRace();
+    ArrayList<Integer> startTheRace();
 }

@@ -31,33 +31,13 @@ public class Spectator extends Thread{
             // i_controlCentre_spectator.waitForNextRace();
             i_paddock_spectator.waitForNextRace( id );
             i_paddock_spectator.goCheckHorses( id );
-            //System.out.println("Spectator xxxx " + id + " " + state);
-            money += i_bettingCentre_spectator.placeABet( id, money);
+            money -= i_bettingCentre_spectator.placeABet( id, money);
             i_controlCentre_spectator.goWatchTheRace( id );
-            //if ( i_controlCentre_spectator.haveIWon() ) {
-              //  i_bettingCentre_spectator.goCollectTheGains();
+            //if ( i_controlCentre_spectator.haveIWon( id ) ) {
+              //  money += i_bettingCentre_spectator.goCollectTheGains( id );
             //}
         }
-        //i_controlCentre_spectator.relaxABit();
+        //i_controlCentre_spectator.relaxABit( id );
     }
 
-    public int getSpecId() {
-        return id;
-    }
-
-    public static SpectatorState getSpecState() {
-        return state;
-    }
-
-    public static void setSpecState(SpectatorState state) {
-        Spectator.state = state;
-    }
-    
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int value) {
-        this.money += value;
-    }
 }

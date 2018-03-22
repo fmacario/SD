@@ -5,6 +5,7 @@ import Threads.Spectator;
 import Interfaces.IControlCentre_Broker;
 import Interfaces.IControlCentre_Spectator;
 import Enum.*;
+import java.util.ArrayList;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -69,22 +70,22 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
 
     @Override
     public void relaxABit(int specId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return;
     }
 
     @Override
-    public void reportResults() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void reportResults( ArrayList<Integer> winnersList ) {
+        return;
     }
 
     @Override
     public boolean areThereAnyWinners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public void entertainTheGuests() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return;
     }
 
 }

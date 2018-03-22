@@ -2,6 +2,7 @@ package Threads;
 
 import Interfaces.*;
 import Enum.*;
+import java.util.ArrayList;
 
 public class Broker extends Thread{
     private final int NO_RACES;
@@ -9,6 +10,8 @@ public class Broker extends Thread{
     private final IControlCentre_Broker i_controlCentre_broker;
     private final IRacingTrack_Broker i_racingTrack_broker;
     private final IStable_Broker i_stable_broker;
+    
+    private ArrayList<Integer> winnersList = new ArrayList<>();
     
     public static volatile BrokerState state;
     
@@ -29,20 +32,13 @@ public class Broker extends Thread{
         for (int k = 0; k < NO_RACES; k++) {
             i_stable_broker.summonHorsesToPaddock();
             i_bettingCentre_broker.acceptTheBets();
-            i_racingTrack_broker.startTheRace();
-            //i_controlCentre_broker.reportResults();
-            //if ( i_controlCentre_broker.areThereAnyWinners() ) {
-              //  i_bettingCentre_broker.honourTheBets();
+            winnersList = i_racingTrack_broker.startTheRace();
+            //i_controlCentre_broker.reportResults( winnersList );
+            //if ( i_controlCentre_broker.areThereAnyWinners( winnersList ) ) {
+              //  i_bettingCentre_broker.honourTheBets( winnersList );
             //}
         }
         //i_controlCentre_broker.entertainTheGuests();
     }
     
-    public BrokerState getBroState() {
-        return Broker.state;
-    }
-
-    public void setBroState(BrokerState state) {
-        Broker.state = state;
-    }
 }

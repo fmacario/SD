@@ -12,7 +12,8 @@ import java.util.concurrent.locks.*;
 
 public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
-
+    private ArrayList<Integer> winnersList = new ArrayList<>();
+            
     private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
@@ -24,6 +25,8 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     boolean raceStart = false;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     private int[] positions = new int[NO_COMPETITORS];
+    private int[] iterations = new int[NO_COMPETITORS];
+    private int noMinIterations = Integer.MAX_VALUE;
     
     private int horsesFinished=0;
     
@@ -34,6 +37,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
             positions[i] = 0;
         }
         
+        for(int i=0; i < NO_COMPETITORS; i++){
+            iterations[i] = 0;
+        }
+        
         rl = new ReentrantLock();
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();
@@ -41,18 +48,17 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     }
     
     @Override
-    public void startTheRace() {
+    public ArrayList<Integer> startTheRace() {
         rl.lock();
         
-        Broker broker = ((Broker)Thread.currentThread());
         //System.out.println("startTheRace");
         
         try {
             try {
-                broker.setBroState(BrokerState.SUPERVISING_THE_RACE);
+                
                 gri.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
                 gri.updateStatus();
-                //System.out.println("Broker " + broker.getBroState());
+                //System.out.println("Broker " + BrokerState.SUPERVISING_THE_RACE);
                 
                 raceStart = true;
                 condHorses.signalAll();
@@ -61,9 +67,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     condBroker.await();
                 }
                                
-                
+                return winnersList;
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
         } finally {
             rl.unlock();
@@ -71,20 +78,18 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     }
 
     @Override
-    public void proceedToStartLine(int horseID) {
+    public void proceedToStartLine( int horseID ) {
         rl.lock();
         
-        Horse horse = ((Horse)Thread.currentThread());
         //System.out.println("proceed to start line");
         
         try{
             try {
                 nHorses++;
-                
-                horse.setHorseState(HorseState.AT_THE_START_LINE);
-                gri.setHorseState(horse.getHorseId(), HorseState.AT_THE_START_LINE);
+                                
+                gri.setHorseState( horseID, HorseState.AT_THE_START_LINE);
                 gri.updateStatus();
-                //System.out.println("Horse "+ horse.getHorseId() +" "+  horse.getHorseState());
+                //System.out.println("Horse "+ horseID +" "+  HorseState.AT_THE_START_LINE);
                 
                 if(nHorses == NO_COMPETITORS){
                     condSpectators.signalAll();
@@ -103,26 +108,24 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     }
     
     @Override
-    public void makeAMove(int Pnk) {
+    public void makeAMove( int horseID, int Pnk ) {
         rl.lock();
         
-        Horse horse = ((Horse)Thread.currentThread());
         //System.out.println("makeAMove");
         
         try {
             try {
-                horse.setHorseState(HorseState.RUNNING);
-                gri.setHorseState(horse.getHorseId(), HorseState.RUNNING);
+                gri.setHorseState(horseID, HorseState.RUNNING);
                 gri.updateStatus();
-                //System.out.println("Horse " + horse.getHorseId() +" "+ horse.getHorseState() +" "+ positions[horse.getHorseId()]);
+                //System.out.println("Horse " + horseID +" "+ HorseState.RUNNING+" "+ positions[horseID]);
                 
                 condHorses.signalAll();
                 
-                if( positions[horse.getHorseId()] < Main.TRACK_DISTANCE ){
-                    positions[horse.getHorseId()] += (int )(Math.random() * Pnk + 1);
+                if( positions[horseID] < Main.TRACK_DISTANCE ){
+                    positions[horseID] += (int )(Math.random() * Pnk + 1);
+                    iterations[horseID] += 1;
                     //System.out.println("position inc - " + positions[horse.getHorseId()]);
-                    
-                    
+                                        
                     //System.out.println("horsesfinished " + horsesFinished);
                     if(horsesFinished != (NO_COMPETITORS-1)){
                         condHorses.await();
@@ -140,24 +143,34 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     }
 
     @Override
-    public boolean hasFinishLineBeenCrossed() {
+    public boolean hasFinishLineBeenCrossed( int horseID ) {
         rl.lock();
         
-        Horse horse = ((Horse)Thread.currentThread());
-        //System.out.println("finish line check" + horse.getHorseId());
+        //System.out.println("finish line check" + horseID);
             
         try{
             try {
-                if( positions[horse.getHorseId()] >= Main.TRACK_DISTANCE){
+                if( positions[horseID] >= Main.TRACK_DISTANCE){
                     horsesFinished++;
                     
-                    gri.setHorseState(horse.getHorseId(), HorseState.AT_THE_FINNISH_LINE);
+                    if ( iterations[horseID] < noMinIterations)
+                        noMinIterations = iterations[horseID];
+                                        
+                    gri.setHorseState(horseID, HorseState.AT_THE_FINNISH_LINE);
                     gri.updateStatus();
-                    
-                    //System.out.println("FINISHED - " + horse.getHorseId() + " - " +horsesFinished);
+                                                         
+                    //System.out.println("FINISHED - " + horseID + " - " +horsesFinished);
                     if(horsesFinished == NO_COMPETITORS){
                         raceFinished = true;
                         //System.out.println("ALL FINISHED");
+                        
+                        
+                        /////// VENCEDORES:                        
+                        for( int i = 0; i < NO_COMPETITORS; i++ ){
+                            if ( iterations[i] == noMinIterations )                                    
+                                winnersList.add(i);
+                        }
+                                            
                         condBroker.signal();
                     }
                     condHorses.signalAll();
