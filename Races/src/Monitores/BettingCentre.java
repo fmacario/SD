@@ -139,6 +139,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     }
                     
                     condBroker.await();
+                    //return mapSpec_Bet+mapSpec_Horse;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -150,12 +151,32 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
 
     @Override
     public int goCollectTheGains( int spectatorID ) {
-        return 0;
+        rl.lock();
+        try {
+            try {
+                
+                return 0;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override
     public void honourTheBets( ArrayList<Integer> winnersList ) {
-
+        rl.lock();
+        try {
+            try {
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
 }

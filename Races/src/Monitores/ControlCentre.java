@@ -16,6 +16,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private final Condition condHorses;
     private final Condition condSpectators;
     private int NO_COMPETITORS;
+    private ArrayList<Integer> winnersList = new ArrayList<>();
     
     public ControlCentre( GRI gri){
         this.gri = gri;
@@ -64,28 +65,80 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     }
 
     @Override
-    public boolean haveIWon(int specId) {
-        return false;
+    public boolean haveIWon( int specId ) {
+        rl.lock();
+        try {
+            try {
+                
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override
     public void relaxABit(int specId) {
-        return;
+        rl.lock();
+        try {
+            try {
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override
     public void reportResults( ArrayList<Integer> winnersList ) {
-        return;
+        // temos de acordar o espetador
+        
+        rl.lock();
+        try {
+            try {
+                this.winnersList = winnersList;
+                condSpectators.signalAll();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override
-    public boolean areThereAnyWinners() {
-        return false;
+    public boolean areThereAnyWinners( ArrayList<Integer> winnersList ) {
+        rl.lock();
+        try {
+            try {
+                
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
     @Override
     public void entertainTheGuests() {
-        return;
+        rl.lock();
+        try {
+            try {
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            rl.unlock();
+        }
     }
 
 }
