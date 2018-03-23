@@ -78,7 +78,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                     if( specId == specsWinner )
                         return true;
                     
-                    return false;
+                    
                 }
                 return false;
             } catch (Exception e) {

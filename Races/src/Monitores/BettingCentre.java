@@ -25,7 +25,8 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private Map<Integer, List<Integer>> mapSpec_Horse_Bet = new HashMap<Integer, List<Integer>>();
     
     private Map<Integer, Integer> mapSpec_MoneyToReceive = new HashMap<Integer, Integer>();
-        
+    private Map<Integer, Boolean> mapSpec_Paid = new HashMap<Integer, Boolean>();
+  
     private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
@@ -39,6 +40,8 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean wantToBet = false;
     private boolean[] betSpec;
     private int noSpecWinners = 0;
+    
+    private boolean[] betsHonoured;
     
     public BettingCentre(GRI gri){
         this.gri = gri;
@@ -166,7 +169,16 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         System.out.println("goCollectTheGains - "+ spectatorID);
         try {
             try {
+                gri.setSpectatorState(spectatorID, SpectatorState.COLLECTING_THE_GAINS);
+                gri.updateStatus();
                 
+                fifoSpectators.add(spectatorID);
+                condBroker.signal();
+                
+              /*  while(!not paid){
+                    condSpectators.await();
+                }
+                */
                 return 0;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -183,16 +195,27 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         System.out.println("honourTheBets");
         try {
             try {
+                gri.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
+                gri.updateStatus();
+                
                 // calcular valor a distribuir para cada vencedor
                 //noSpecWinners = winnersList.size();
                 System.out.println(horsesWinnersList);
                 //mapSpec_Horse_Bet
                 //mapSpec_MoneyToReceive
-                for ( Integer winner : horsesWinnersList ) {
+                for ( Integer winner :  specsWinnersList) {
                     System.out.println("horsesWinnersList : " + winner);
-                    //mapSpec_MoneyToReceive.put(winner, winner)
+                    mapSpec_Paid.put(winner, false);
                 }
-                                
+                
+                betsHonoured = new boolean[mapSpec_MoneyToReceive.size()];
+                for(int i=0; i<betsHonoured.length; i++){
+                    betsHonoured[i]=false;
+                }
+                 
+                while(fifoSpectators.isEmpty()){
+                    condBroker.await();
+                }
                 
             } catch (Exception e) {
                 e.printStackTrace();
