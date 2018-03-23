@@ -45,7 +45,7 @@ public class Broker extends Thread{
                 i_bettingCentre_broker.honourTheBets( horsesWinnersList, specsWinnersList );
             }
         }
-        //i_controlCentre_broker.entertainTheGuests();
+        i_controlCentre_broker.entertainTheGuests();
     }
     
 }

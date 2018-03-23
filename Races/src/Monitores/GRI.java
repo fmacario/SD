@@ -294,6 +294,10 @@ public class GRI {
     public void setMoney(int id, int money) {
         this.money[id] = money;
     }
+    
+    public void addMoney(int id, int money) {
+        this.money[id] += money;
+    }
 
     public void setRn(int rn) {
         this.rn = rn;
