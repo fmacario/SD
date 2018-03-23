@@ -41,7 +41,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean[] betSpec;
     private int noSpecWinners = 0;
     
-    private boolean[] betsHonoured;
+    private int betsHonoured = 0;
     
     public BettingCentre(GRI gri){
         this.gri = gri;
@@ -175,11 +175,20 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
                 
-              /*  while(!not paid){
+                System.out.println("MAP PAID - " + mapSpec_Paid);
+                
+                while( mapSpec_Paid.get(spectatorID) == false ){
                     condSpectators.await();
                 }
-                */
-                return 0;
+                
+                System.out.println("MAP PAID AFTER - " + mapSpec_Paid);
+                
+                System.out.println("I WAS PAID - " + spectatorID);
+                fifoSpectators.remove();
+                condBroker.signal();
+                //gri.setMoney(spectatorID, spectatorID);
+                
+                return 1;
             } catch (Exception e) {
                 e.printStackTrace();
                 return 0;
@@ -207,15 +216,18 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     System.out.println("horsesWinnersList : " + winner);
                     mapSpec_Paid.put(winner, false);
                 }
-                
-                betsHonoured = new boolean[mapSpec_MoneyToReceive.size()];
-                for(int i=0; i<betsHonoured.length; i++){
-                    betsHonoured[i]=false;
-                }
                  
-                while(fifoSpectators.isEmpty()){
+                while( betsHonoured != mapSpec_Paid.size() ){
+                    
+                    if( !fifoSpectators.isEmpty() ){
+                        mapSpec_Paid.put(fifoSpectators.peek(), true);
+                        betsHonoured++;
+                        condSpectators.signalAll();
+                    }
                     condBroker.await();
                 }
+                
+                System.out.println("ALL PAID");
                 
             } catch (Exception e) {
                 e.printStackTrace();

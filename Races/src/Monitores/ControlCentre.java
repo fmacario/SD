@@ -95,6 +95,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
+                gri.setSpectatorState(specId, SpectatorState.CELEBRATING);
+                gri.updateStatus();
                 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -162,6 +164,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
+                gri.setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
+                gri.updateStatus();
                 
             } catch (Exception e) {
                 e.printStackTrace();

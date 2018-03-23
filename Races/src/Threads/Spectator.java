@@ -39,7 +39,7 @@ public class Spectator extends Thread{
             }
             
         }
-        //i_controlCentre_spectator.relaxABit( id );
+        i_controlCentre_spectator.relaxABit( id );
     }
 
 }
