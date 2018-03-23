@@ -204,9 +204,15 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 //mapSpec_Horse_Bet
                 //mapSpec_MoneyToReceive
                 for ( Integer winner :  specsWinnersList) {
-                    System.out.println("horsesWinnersList : " + winner);
+                    int id_cavalo = mapSpec_Horse_Bet.get(winner).get(0);
+                    int aposta = mapSpec_Horse_Bet.get(winner).get(1);
+                    double odd = (double)hashHorsesAgile.get(id_cavalo) / 100;
+                    //System.out.println("APOSTA: " + aposta + ", ODD: " + odd);
+                    mapSpec_MoneyToReceive.put(winner, (int)Math.round(aposta * (1/odd)));
                     mapSpec_Paid.put(winner, false);
                 }
+                
+                System.out.println(mapSpec_MoneyToReceive);
                 
                 betsHonoured = new boolean[mapSpec_MoneyToReceive.size()];
                 for(int i=0; i<betsHonoured.length; i++){
