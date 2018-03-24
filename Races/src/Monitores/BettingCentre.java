@@ -93,6 +93,10 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 gri.updateStatus();
                               
                 condBroker.signal();
+                nSpectators--;
+                if(nSpectators==0){
+                    wantToBet=false;
+                }
                 //condSpectators.signal();
                 return mapSpec_Horse_Bet.get(id).get(1);
             } catch (Exception e) {
@@ -122,6 +126,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 while (bets != NO_SPECTATORS){
                     //System.out.println("betStatus -- "+ betStatus[fifoSpectators.peek().getSpecId()]);
+                          
                     if( wantToBet){ //betStatus[fifoSpectators.peek().getSpecId()] == true ){
                         
                         int id = fifoSpectators.peek();
@@ -175,15 +180,15 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
                 
-                System.out.println("MAP PAID - " + mapSpec_Paid);
+                //System.out.println("MAP PAID - " + mapSpec_Paid);
                 
                 while( mapSpec_Paid.get(spectatorID) == false ){
                     condSpectators.await();
                 }
                 
-                System.out.println("MAP PAID AFTER - " + mapSpec_Paid);
+                //System.out.println("MAP PAID AFTER - " + mapSpec_Paid);
                 
-                System.out.println("I WAS PAID - " + spectatorID);
+                //System.out.println("I WAS PAID - " + spectatorID);
                 fifoSpectators.remove();
                 condBroker.signal();
                 //gri.setMoney(spectatorID, spectatorID);

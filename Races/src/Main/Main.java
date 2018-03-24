@@ -25,7 +25,7 @@ public class Main {
             //GRI gri = new GRI();
             
             // threads
-            Broker broker = new Broker(NO_RACES, (IBettingCentre_Broker)bettingCentre, (IControlCentre_Broker)controlCentre, (IRacingTrack_Broker)racingTrack, (IStable_Broker)stable );
+            Broker broker = new Broker(NO_RACES, (IBettingCentre_Broker)bettingCentre, (IControlCentre_Broker)controlCentre, (IRacingTrack_Broker)racingTrack, (IStable_Broker)stable, (IPaddock_Broker)paddock );
             broker.start();
             
             for (int i = 0; i < NO_COMPETITORS; i++) {

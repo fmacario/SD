@@ -101,6 +101,9 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 while( raceStart == false ){
                     condHorses.await();
                 }
+                nHorses--;
+                if(nHorses==0)
+                    raceStart=false;
                 
             } catch (Exception e) {
                 e.printStackTrace();
