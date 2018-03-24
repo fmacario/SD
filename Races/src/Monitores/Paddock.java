@@ -6,12 +6,13 @@ import Threads.Spectator;
 import Interfaces.IPaddock_Spectator;
 import Interfaces.IPaddock_Horse;
 import Enum.*;
+import Interfaces.IPaddock_Broker;
 
 import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
+public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Broker{
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
     private Map<Integer, Spectator> hashSpectators = new HashMap<Integer, Spectator>();
     
@@ -63,6 +64,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                 nHorses--;
                 if(nHorses == 0){
                     lastHorse = true;
+                    allHorses= false;
                     condSpectators.signalAll();
                 }
                 
@@ -93,9 +95,15 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                     condBroker.signal();
                 }
                 while( !lastHorse ){
+                    System.out.println("À ESPERA DE HORSES NO PADDOCK");
                     condSpectators.await();
                 }
-                                
+                System.out.println("VOU PARA AS APOSTAS");
+                nSpectators--;
+                if(nSpectators==0){
+                    GO = false;
+                    lastHorse=false;
+                }
             }catch( Exception e ){
                 e.printStackTrace();
             }
@@ -123,6 +131,24 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator{
                 e.printStackTrace();
             }
         }finally{
+            rl.unlock();
+        }
+    }
+    
+    public void waitForSpectators(){
+        rl.lock();
+        
+        try {
+            try {
+                while(GO == false){
+                    System.out.println("À ESPERA SPECS");
+                    condBroker.await();
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
             rl.unlock();
         }
     }

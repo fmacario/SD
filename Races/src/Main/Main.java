@@ -5,7 +5,7 @@ import Threads.*;
 import Interfaces.*;
 
 public class Main {
-    public static final int NO_RACES = 1;
+    public static final int NO_RACES = 2;
     public static final int NO_COMPETITORS = 4;
     public static final int NO_SPECTATORS = 4;
     public static final int TRACK_DISTANCE = 100;
@@ -25,7 +25,7 @@ public class Main {
             //GRI gri = new GRI();
             
             // threads
-            Broker broker = new Broker(NO_RACES, (IBettingCentre_Broker)bettingCentre, (IControlCentre_Broker)controlCentre, (IRacingTrack_Broker)racingTrack, (IStable_Broker)stable );
+            Broker broker = new Broker(NO_RACES, (IBettingCentre_Broker)bettingCentre, (IControlCentre_Broker)controlCentre, (IRacingTrack_Broker)racingTrack, (IStable_Broker)stable, (IPaddock_Broker)paddock );
             broker.start();
             
             for (int i = 0; i < NO_COMPETITORS; i++) {

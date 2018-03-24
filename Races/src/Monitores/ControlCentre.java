@@ -57,9 +57,11 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 
                 gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
                 gri.updateStatus();
-                if( haveIWon(specId) == false ){
+                
+                while( !specsWinnersList.contains(specId) ){
                     condSpectators.await();
                 }
+                specsWinnersList.remove(specId);
                 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -77,8 +79,6 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 for ( Integer specsWinner : specsWinnersList ) {
                     if( specId == specsWinner )
                         return true;
-                    
-                    
                 }
                 return false;
             } catch (Exception e) {
@@ -115,7 +115,17 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
             try {
                 this.horsesWinnersList = winnersList;
                 condSpectators.signalAll();
-                return specsWinnersList;
+                System.out.println("------------ " + specsWinnersList);
+                ArrayList<Integer> specsWinnersListTemp = new ArrayList<>();
+                for ( Integer specsWinner : specsWinnersList ) {
+                    
+                    specsWinnersListTemp.add(specsWinner, specsWinnersList.get(specsWinner));
+                }
+                
+                specsWinnersList.clear();
+                System.out.println("------------ " + specsWinnersListTemp);
+                
+                return specsWinnersListTemp;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

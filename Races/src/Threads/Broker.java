@@ -13,6 +13,7 @@ public class Broker extends Thread{
     private final IControlCentre_Broker i_controlCentre_broker;
     private final IRacingTrack_Broker i_racingTrack_broker;
     private final IStable_Broker i_stable_broker;
+    private final IPaddock_Broker i_paddock_broker;
     
     private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
     
@@ -22,12 +23,13 @@ public class Broker extends Thread{
     
     public static volatile BrokerState state;
     
-    public Broker(int NO_RACES, IBettingCentre_Broker i_bettingCentre_broker, IControlCentre_Broker i_controlCentre_broker, IRacingTrack_Broker i_racingTrack_broker, IStable_Broker i_stable_broker){
+    public Broker(int NO_RACES, IBettingCentre_Broker i_bettingCentre_broker, IControlCentre_Broker i_controlCentre_broker, IRacingTrack_Broker i_racingTrack_broker, IStable_Broker i_stable_broker, IPaddock_Broker i_paddock_broker){
         this.NO_RACES = NO_RACES;
         this.i_bettingCentre_broker = i_bettingCentre_broker;
         this.i_controlCentre_broker = i_controlCentre_broker;
         this.i_racingTrack_broker = i_racingTrack_broker;
         this.i_stable_broker = i_stable_broker;
+        this.i_paddock_broker = i_paddock_broker;
     }
     
     @Override
@@ -38,6 +40,7 @@ public class Broker extends Thread{
         
         for (int k = 0; k < NO_RACES; k++) {
             hashHorsesAgile = i_stable_broker.summonHorsesToPaddock();
+            i_paddock_broker.waitForSpectators();
             mapSpec_Horse_Bet = i_bettingCentre_broker.acceptTheBets(hashHorsesAgile);
             horsesWinnersList = i_racingTrack_broker.startTheRace();
             specsWinnersList = i_controlCentre_broker.reportResults( horsesWinnersList );
