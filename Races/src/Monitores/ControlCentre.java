@@ -55,6 +55,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         
         try {
             try {
+                System.out.println("GO WATCH THE RACEEE______");
                 nSpec++;
                 
                 gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
@@ -66,9 +67,9 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                
                 nSpec--;
                 
-                if ( nSpec == Main.NO_SPECTATORS )
+                if ( nSpec == 0 )
                     wakeSpecs = false;
-               
+                System.out.println("ACORDEI!!!!!!!!!!!!!!!!!!!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -133,7 +134,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                             specsWinnersList.add(entry.getKey());
                     }
                 }
-                                
+                
+                wakeSpecs = true;
                 condSpectators.signalAll();
                 System.out.println("REPORT res, specs winner: " + specsWinnersList);
                 return specsWinnersList;
