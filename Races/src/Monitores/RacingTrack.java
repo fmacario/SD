@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.concurrent.locks.*;
 
 public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
-    private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
+    private Map<Integer, Integer> hashHorses = new HashMap<Integer, Integer>();
     private ArrayList<Integer> winnersList = new ArrayList<>();
             
     private GRI gri;

@@ -33,7 +33,7 @@ public class Horse extends Thread{
             while( !i_racingTrack_horse.hasFinishLineBeenCrossed( id ) ){
                 i_racingTrack_horse.makeAMove( id, Pnk );
             }
-            //i_stable_horse.proceedToStable(id, Pnk);
+            i_stable_horse.proceedToStable(id, Pnk);
         }
     }
     

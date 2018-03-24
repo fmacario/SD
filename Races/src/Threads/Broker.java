@@ -40,10 +40,10 @@ public class Broker extends Thread{
         
         for (int k = 0; k < NO_RACES; k++) {
             hashHorsesAgile = i_stable_broker.summonHorsesToPaddock( k+1 );
-            i_paddock_broker.waitForSpectators();
+            //i_paddock_broker.waitForSpectators();
             mapSpec_Horse_Bet = i_bettingCentre_broker.acceptTheBets(hashHorsesAgile);
             horsesWinnersList = i_racingTrack_broker.startTheRace();
-            specsWinnersList = i_controlCentre_broker.reportResults( horsesWinnersList );
+            specsWinnersList = i_controlCentre_broker.reportResults( horsesWinnersList, mapSpec_Horse_Bet );
             if ( i_controlCentre_broker.areThereAnyWinners( mapSpec_Horse_Bet ) ) {
                 i_bettingCentre_broker.honourTheBets( horsesWinnersList, specsWinnersList );
             }

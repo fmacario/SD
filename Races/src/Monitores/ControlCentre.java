@@ -20,6 +20,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private int NO_COMPETITORS;
     private ArrayList<Integer> horsesWinnersList = new ArrayList<>();
     private ArrayList<Integer> specsWinnersList = new ArrayList<>();
+    private boolean wakeSpecs = false;
+    private int nSpec = 0;
     
     public ControlCentre( GRI gri){
         this.gri = gri;
@@ -53,16 +55,20 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         
         try {
             try {
-                System.out.println("VOU VER A CORRIDA " + specId); 
+                nSpec++;
                 
                 gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
                 gri.updateStatus();
                 
-                while( !specsWinnersList.contains(specId) ){
+                while ( !wakeSpecs ) {
                     condSpectators.await();
                 }
-                specsWinnersList.remove(specId);
+               
+                nSpec--;
                 
+                if ( nSpec == Main.NO_SPECTATORS )
+                    wakeSpecs = false;
+               
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -76,6 +82,9 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
+                System.out.println("haveIWON ???? " + specId);
+                System.out.println(specsWinnersList);
+                
                 for ( Integer specsWinner : specsWinnersList ) {
                     if( specId == specsWinner )
                         return true;
@@ -107,25 +116,28 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     }
 
     @Override
-    public ArrayList<Integer> reportResults( ArrayList<Integer> winnersList ) {
+    public ArrayList<Integer> reportResults( ArrayList<Integer> winnersList , Map<Integer, List<Integer>> mapSpec_Horse_Bet) {
         // temos de acordar o espetador
         
         rl.lock();
         try {
-            try {
+            try {              
                 this.horsesWinnersList = winnersList;
-                condSpectators.signalAll();
-                System.out.println("------------ " + specsWinnersList);
-                ArrayList<Integer> specsWinnersListTemp = new ArrayList<>();
-                for ( Integer specsWinner : specsWinnersList ) {
+                               
+                for ( Integer horseWinner : horsesWinnersList ) {
+                    //System.out.println(winner);
                     
-                    specsWinnersListTemp.add(specsWinner, specsWinnersList.get(specsWinner));
+                    for (Map.Entry<Integer, List<Integer>> entry : mapSpec_Horse_Bet.entrySet())
+                    {
+                        if( horseWinner == entry.getValue().get(0) )
+                            specsWinnersList.add(entry.getKey());
+                    }
                 }
+                                
+                condSpectators.signalAll();
+                System.out.println("REPORT res, specs winner: " + specsWinnersList);
+                return specsWinnersList;
                 
-                specsWinnersList.clear();
-                System.out.println("------------ " + specsWinnersListTemp);
-                
-                return specsWinnersListTemp;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -141,19 +153,6 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         System.out.println("areThereAnyWinners");
         try {
             try {
-                
-                // para cada cavalo vencedor, verifica se há apostadores que ganharam
-                for ( Integer horseWinner : horsesWinnersList ) {
-                    //System.out.println(winner);
-                    
-                    for (Map.Entry<Integer, List<Integer>> entry : mapSpec_Horse_Bet.entrySet())
-                    {
-                        //System.out.println(entry.getKey() + "/" + entry.getValue());
-                        if( horseWinner == entry.getValue().get(0) )
-                            //System.out.println("SII: " + entry.getKey()); 
-                            specsWinnersList.add(entry.getKey());
-                    }
-                }
                 
                 if (specsWinnersList.size() == 0)
                     return false;

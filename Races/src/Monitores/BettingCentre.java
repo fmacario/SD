@@ -174,13 +174,15 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         System.out.println("goCollectTheGains - "+ spectatorID);
         try {
             try {
+                nSpectators++;
+                System.out.println("n spectator to collect " + nSpectators);
                 gri.setSpectatorState(spectatorID, SpectatorState.COLLECTING_THE_GAINS);
                 gri.updateStatus();
                 
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
                 
-                //System.out.println("MAP PAID - " + mapSpec_Paid);
+                System.out.println("MAP PAID - " + mapSpec_Paid);
                 
                 while( mapSpec_Paid.get(spectatorID) == false ){
                     condSpectators.await();
@@ -188,7 +190,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 //System.out.println("MAP PAID AFTER - " + mapSpec_Paid);
                 
-                //System.out.println("I WAS PAID - " + spectatorID);
+                System.out.println("I WAS PAID - " + spectatorID);
                 fifoSpectators.remove();
                 condBroker.signal();
                 //gri.setMoney(spectatorID, spectatorID);
@@ -208,7 +210,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     @Override
     public void honourTheBets( ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList ) {
         rl.lock();
-        System.out.println("honourTheBets");
+        System.out.println("honourTheBet------------------------s");
         try {
             try {
                 gri.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
@@ -216,7 +218,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 // calcular valor a distribuir para cada vencedor
                 //noSpecWinners = winnersList.size();
-                System.out.println(horsesWinnersList);
+                //System.out.println(horsesWinnersList);
                 //mapSpec_Horse_Bet
                 //mapSpec_MoneyToReceive
                 for ( Integer winner :  specsWinnersList) {
@@ -228,7 +230,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     mapSpec_Paid.put(winner, false);
                 }
                 
-                System.out.println(mapSpec_MoneyToReceive);
+                System.out.println("MONEY TO RECEIVEEEEE: "  + mapSpec_MoneyToReceive);
                 
                  
                 while( betsHonoured != mapSpec_Paid.size() ){
