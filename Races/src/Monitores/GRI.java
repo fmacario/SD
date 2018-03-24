@@ -74,7 +74,6 @@ public class GRI {
             standingAtTheEnd[i] = -1;   // SD# 
         }
 
-        rn = 1;                             // RN
         raceTrackDistance = TRACK_DISTANCE;  // Dist
 
         init();
@@ -167,7 +166,7 @@ public class GRI {
                     s += "---- ";
             }
 
-            s += " - ";
+            s +=  rn + " ";
 
             for (int i = 0; i < NO_COMPETITORS; i++) {
                 if ( horseState[i] != null )
@@ -193,9 +192,9 @@ public class GRI {
 
                 if ( horseMaxDistance[i] != -1){
                     if ( horseMaxDistance[i] > 10 ) 
-                        s += horseMaxDistance + "  ";
+                        s += horseMaxDistance[i] + "  ";
                     else
-                        s += horseMaxDistance + "   ";
+                        s += horseMaxDistance[i] + "   ";
                 }
                 else
                     s += "--  ";
@@ -311,8 +310,9 @@ public class GRI {
         this.horseState[id] = horseState;
     }
 
-    public void setHorseMaxDistance(int[] horseMaxDistance) {
-        this.horseMaxDistance = horseMaxDistance;
+    public void setHorseMaxDistance(int id, int dist) {
+        this.horseMaxDistance[id] = dist;
+        System.out.println("////////////// " + dist);
     }
 
     public void setRaceTrackDistance(int raceTrackDistance) {
@@ -327,8 +327,8 @@ public class GRI {
         this.betAmount[id] = betAmount;
     }
 
-    public void setHorseWinningProb(double[] horseWinningProb) {
-        this.horseWinningProb = horseWinningProb;
+    public void setHorseWinningProb(int id, double odd) {
+        this.horseWinningProb[id] = odd;
     }
 
     public void setIterationNumber(int[] iterationNumber) {
@@ -339,7 +339,7 @@ public class GRI {
         this.trackPosition = trackPosition;
     }
 
-    public void setStandingAtTheEnd(int[] standingAtTheEnd) {
-        this.standingAtTheEnd = standingAtTheEnd;
+    public void setStandingAtTheEnd(int id, int standingAtTheEnd) {
+        this.standingAtTheEnd[id] = standingAtTheEnd;
     }
 }

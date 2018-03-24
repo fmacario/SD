@@ -37,7 +37,7 @@ public class Broker extends Thread{
         System.out.println("Broker " + state);
         
         for (int k = 0; k < NO_RACES; k++) {
-            hashHorsesAgile = i_stable_broker.summonHorsesToPaddock();
+            hashHorsesAgile = i_stable_broker.summonHorsesToPaddock( k+1 );
             mapSpec_Horse_Bet = i_bettingCentre_broker.acceptTheBets(hashHorsesAgile);
             horsesWinnersList = i_racingTrack_broker.startTheRace();
             specsWinnersList = i_controlCentre_broker.reportResults( horsesWinnersList );

@@ -65,13 +65,14 @@ public class Stable implements IStable_Broker, IStable_Horse{
     }
     
     @Override
-    public Map<Integer, Integer> summonHorsesToPaddock() {
+    public Map<Integer, Integer> summonHorsesToPaddock( int nRace) {
         rl.lock();
         //System.out.println("summonHorses");
         try {
             try{
                 //Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
                 gri.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                gri.setRn( nRace );
                 gri.updateStatus();
                 System.out.println("Broker " + BrokerState.ANNOUNCING_NEXT_RACE);
                 
@@ -90,6 +91,9 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 
                 for (int i = 0; i < NO_COMPETITORS; i++) {
                     int odd = hashHorsesAgile.get(i)*100 / totalAgile;
+                    double o = (double)odd/100;
+                    gri.setHorseMaxDistance(i, hashHorsesAgile.get(i));
+                    gri.setHorseWinningProb(i, o);
                     hashHorsesAgile.put(i, odd);
                 }
                                 

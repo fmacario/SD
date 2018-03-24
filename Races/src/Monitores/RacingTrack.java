@@ -89,6 +89,8 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 nHorses++;
                                 
                 gri.setHorseState( horseID, HorseState.AT_THE_START_LINE);
+                positions[horseID] = 0;
+                gri.setTrackPosition(positions);
                 gri.updateStatus();
                 //System.out.println("Horse "+ horseID +" "+  HorseState.AT_THE_START_LINE);
                 
@@ -126,7 +128,11 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     positions[horseID] += (int )(Math.random() * Pnk + 1);
                     iterations[horseID] += 1;
                     //System.out.println("position inc - " + positions[horse.getHorseId()]);
-                                        
+                    
+                    gri.setTrackPosition(positions);
+                    gri.setIterationNumber(iterations);
+                    gri.updateStatus();
+                    
                     System.out.println("horsesfinished " + horsesFinished);
                     if(horsesFinished != (NO_COMPETITORS-1)){
                         condHorses.await();
@@ -156,6 +162,8 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 if( positions[horseID] >= Main.TRACK_DISTANCE){
                     horsesFinished++;
                     
+                    gri.setStandingAtTheEnd( horseID , horsesFinished );
+                    
                     if ( iterations[horseID] < noMinIterations)
                         noMinIterations = iterations[horseID];
                                         
@@ -165,6 +173,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     //System.out.println("FINISHED - " + horseID + " - " +horsesFinished);
                     if(horsesFinished == NO_COMPETITORS){
                         raceFinished = true;
+                        horsesFinished = 0;
                         //System.out.println("ALL FINISHED");
                         
                         
@@ -177,6 +186,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                         condBroker.signal();
                     }
                     condHorses.signalAll();
+                    
                     return true;
                 }
                 
