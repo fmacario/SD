@@ -12,24 +12,23 @@ import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Broker{
-    private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
-    private Map<Integer, Spectator> hashSpectators = new HashMap<Integer, Spectator>();
-    
+public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Broker{    
     private GRI gri;
     private final Condition condSpectators;
     private final Condition condHorses;
     private final Condition condBroker;
     private final ReentrantLock rl;
     
-    private int nSpectators = 0;
-    private int nHorses = 0;
-    private static boolean GO = false;
     private final int NO_SPECTATORS = Main.NO_SPECTATORS;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     
-    private boolean allHorses = false;
+    private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
+    private Map<Integer, Spectator> hashSpectators = new HashMap<Integer, Spectator>();
     
+    private int nSpectators = 0;
+    private int nHorses = 0;
+    private static boolean GO = false;
+    private boolean allHorses = false;
     private boolean lastHorse = false;
     
     public Paddock(GRI gri){

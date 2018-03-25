@@ -1,27 +1,27 @@
 package Monitores;
 
 import Main.Main;
-import Threads.Broker;
-import Threads.Horse;
 import Interfaces.IStable_Horse;
 import Interfaces.IStable_Broker;
 import Enum.*;
 
 import java.util.*;
-import static java.lang.System.*;
 import java.util.concurrent.locks.*;
         
-public class Stable implements IStable_Broker, IStable_Horse{
-    private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
-    
+public class Stable implements IStable_Broker, IStable_Horse{    
     private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
-    private int nHorses = 0;
+    
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
+    
+    private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
+    
+    private int nHorses = 0;
     private boolean GO = false;
-    private boolean allHorses = false, end = false;
+    private boolean allHorses = false;
+    private boolean end = false;
     
     public Stable (GRI gri){
         this.gri = gri;

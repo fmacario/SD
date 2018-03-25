@@ -3,7 +3,6 @@ package Monitores;
 import Main.Main;
 import Enum.*;
 
-import genclass.GenericIO;
 import genclass.TextFile;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -14,7 +13,6 @@ public class GRI {
     
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     private final int NO_SPECTATORS = Main.NO_SPECTATORS;
-    private final int NO_RACES = Main.NO_RACES;
     private final int TRACK_DISTANCE = Main.TRACK_DISTANCE;
     
     private BrokerState brokerState;        // Stat
@@ -37,8 +35,7 @@ public class GRI {
     private int iterationNumber[];  // N#
     private int trackPosition[];    // Ps#
     private int standingAtTheEnd[]; // SD#    
-    
-    
+       
     
     public GRI(){
         log = new TextFile();

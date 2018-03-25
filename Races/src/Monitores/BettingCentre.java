@@ -1,7 +1,5 @@
 package Monitores;
 
-import Threads.Spectator;
-import Threads.Broker;
 import Interfaces.IBettingCentre_Broker;
 import Interfaces.IBettingCentre_Spectator;
 import Enum.*;
@@ -13,35 +11,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.locks.*;
 
-public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{
-    //private Queue<Spectator> fifoSpectators = new LinkedList<Spectator>();
-    private Queue<Integer> fifoSpectators = new LinkedList<Integer>();
+public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{  
+    private GRI gri;
+    private final ReentrantLock rl;
+    private final Condition condBroker;
+    private final Condition condSpectators;
     
+    private final int NO_SPECTATORS = Main.NO_SPECTATORS;
+    private final int NO_COMPETITORS = Main.NO_COMPETITORS; 
+    private final double MAX_BET = Main.MAX_BET;
+    
+    private Queue<Integer> fifoSpectators = new LinkedList<Integer>();
     private Map<Integer, Integer> mapSpec_Money = new HashMap<Integer, Integer>();
     private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
     private Map<Integer, List<Integer>> mapSpec_Horse_Bet = new HashMap<Integer, List<Integer>>();
-    
     private Map<Integer, Integer> mapSpec_MoneyToReceive = new HashMap<Integer, Integer>();
     private Map<Integer, Boolean> mapSpec_Paid = new HashMap<Integer, Boolean>();
-  
-    private GRI gri;
-    private final ReentrantLock rl;
-    private final Condition condHorses;
-    private final Condition condBroker;
-    private final Condition condSpectators;
+    
     private int nSpectators = 0;
-    private int NO_SPECTATORS = Main.NO_SPECTATORS;
-    private int NO_COMPETITORS = Main.NO_COMPETITORS; 
-    private double MAX_BET = Main.MAX_BET;
+    private int betsHonoured = 0;
     private boolean betDone = false;
     private boolean wantToBet = false;
-    private boolean[] betSpec;
-    private int noSpecWinners = 0;
+    private boolean[] betSpec;    
     
-    private int betsHonoured = 0;
     
     public BettingCentre(GRI gri){
         this.gri = gri;
@@ -51,7 +45,6 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 betSpec[i] = false;
         }
         rl = new ReentrantLock();
-        condHorses = rl.newCondition();
         condBroker = rl.newCondition();
         condSpectators = rl.newCondition();
     }

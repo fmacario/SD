@@ -1,7 +1,5 @@
 package Monitores;
 
-import Main.*;
-import Threads.Spectator;
 import Interfaces.IControlCentre_Broker;
 import Interfaces.IControlCentre_Spectator;
 import Enum.*;
@@ -17,38 +15,20 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condSpectators;
-    private int NO_COMPETITORS;
+    
     private ArrayList<Integer> horsesWinnersList = new ArrayList<>();
     private ArrayList<Integer> specsWinnersList = new ArrayList<>();
+    
     private boolean wakeSpecs = false;
     private int nSpec = 0;
     
     public ControlCentre( GRI gri){
         this.gri = gri;
-        this.NO_COMPETITORS = Main.NO_COMPETITORS;
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
         condSpectators = rl.newCondition();
     }
     
-    /*@Override
-    public void waitForNextRace() {
-        rl.lock();
-        
-        try {
-            try{
-                //while (  ) {
-                    
-                //}
-                Spectator.state = SpectatorState.WAITING_FOR_A_RACE_TO_START;
-            } catch (Exception e) { 
-                e.printStackTrace();
-            }
-        }finally{
-            rl.unlock();
-        }
-    }*/
-
     @Override
     public void goWatchTheRace(int specId) {
         rl.lock();
@@ -145,7 +125,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
-                if (specsWinnersList.size() == 0)
+                if ( specsWinnersList.isEmpty() )
                     return false;
                 
                 return true;

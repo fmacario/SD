@@ -11,25 +11,26 @@ import java.util.*;
 import java.util.concurrent.locks.*;
 
 public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
-    private Map<Integer, Integer> hashHorses = new HashMap<Integer, Integer>();
-    private ArrayList<Integer> winnersList = new ArrayList<>();
-            
     private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
     private final Condition condSpectators;
     
-    private int nHorses = 0;
-    boolean raceFinished = false;
-    boolean raceStart = false;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
-    private int[] positions = new int[NO_COMPETITORS];
+    private final int TRACK_DISTANCE = Main.TRACK_DISTANCE;
+    
+    private Map<Integer, Integer> hashHorses = new HashMap<Integer, Integer>();
+    private ArrayList<Integer> winnersList = new ArrayList<>();
+    
     private int[] iterations = new int[NO_COMPETITORS];
+    private int[] positions = new int[NO_COMPETITORS];
+    private int nHorses = 0;
+    private int horsesFinished = 0;
     private int noMinIterations = Integer.MAX_VALUE;
-    
-    private int horsesFinished=0;
-    
+    private boolean raceFinished = false;
+    private boolean raceStart = false;
+        
     public RacingTrack(GRI gri){
         this.gri = gri;
          
@@ -113,11 +114,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
             try {
                 gri.setHorseState(horseID, HorseState.RUNNING);
                 gri.updateStatus();
-                //System.out.println("Horse " + horseID +" "+ HorseState.RUNNING+" "+ positions[horseID]);
                 
                 condHorses.signalAll();
                 
-                if( positions[horseID] < Main.TRACK_DISTANCE ){
+                if( positions[horseID] < TRACK_DISTANCE ){
                     positions[horseID] += (int )(Math.random() * Pnk + 1);
                     iterations[horseID] += 1;
                     
@@ -145,7 +145,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         try{
             try {
-                if( positions[horseID] >= Main.TRACK_DISTANCE){
+                if( positions[horseID] >= TRACK_DISTANCE){
                     horsesFinished++;
                     
                     gri.setStandingAtTheEnd( horseID , horsesFinished );
