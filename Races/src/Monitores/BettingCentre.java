@@ -228,6 +228,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     //System.out.println("APOSTA: " + aposta + ", ODD: " + odd);
                     mapSpec_MoneyToReceive.put(winner, (int)Math.round(aposta * (1/odd)));
                     mapSpec_Paid.put(winner, false);
+                                        
                 }
                 
                 System.out.println("MONEY TO RECEIVEEEEE: "  + mapSpec_MoneyToReceive);
@@ -241,6 +242,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                         condSpectators.signalAll();
                     }
                     condBroker.await();
+                }
+                
+                for (int i = 0; i < NO_SPECTATORS; i++) {
+                    gri.setBetAmount( i, -1 );
+                    gri.setBetSelection( i , -1 );
                 }
                 
                 System.out.println("ALL PAID");

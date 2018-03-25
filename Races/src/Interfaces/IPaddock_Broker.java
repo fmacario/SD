@@ -10,5 +10,5 @@ package Interfaces;
  * @author brunofmh
  */
 public interface IPaddock_Broker {
-    void waitForSpectators();
+    boolean waitForSpectators();
 }

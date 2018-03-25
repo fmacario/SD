@@ -135,18 +135,19 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         }
     }
     
-    public void waitForSpectators(){
+    public boolean waitForSpectators(){
         rl.lock();
         
         try {
             try {
-                while(GO == false){
-                    System.out.println("À ESPERA SPECS");
+                while( GO == false ){
                     condBroker.await();
                 }
+                return true;
                 
             } catch (Exception e) {
                 e.printStackTrace();
+                return true;
             }
         } finally {
             rl.unlock();

@@ -67,6 +67,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     condBroker.await();
                 }
                 
+                raceFinished = false;
                                
                 return winnersList;
             } catch (Exception e) {
