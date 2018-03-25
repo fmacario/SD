@@ -75,7 +75,6 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
     @Override
     public void goCheckHorses(int spectatorID) {
         rl.lock();
-        System.out.println("checkHorses - "+spectatorID);
         try{
             try{
                 nSpectators++;

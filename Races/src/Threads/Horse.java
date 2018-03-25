@@ -18,7 +18,6 @@ public class Horse extends Thread{
     public Horse(int id, IPaddock_Horse i_paddock_horse, IRacingTrack_Horse i_racingTrack_horse, IStable_Horse i_stable_horse){
         this.id = id;
         this.Pnk = (int )(Math.random() * (Main.TRACK_DISTANCE/4) + 3); // Pnk
-        System.out.println("horse MAX - "+Pnk);
         this.i_paddock_horse = i_paddock_horse;
         this.i_racingTrack_horse = i_racingTrack_horse;
         this.i_stable_horse = i_stable_horse;
@@ -26,7 +25,7 @@ public class Horse extends Thread{
     
     @Override
     public void run(){
-        for (int k = 0; k < Main.NO_RACES; k++) {
+        for (int k = 0; k < Main.NO_RACES ; k++) {
             i_stable_horse.proceedToStable( id, Pnk );
             i_paddock_horse.proceedToPaddock(id);
             i_racingTrack_horse.proceedToStartLine(id);
@@ -35,7 +34,7 @@ public class Horse extends Thread{
             }
         }
         i_stable_horse.proceedToStable(id, Pnk);
-        System.out.println("HORSE " + id + " ACABEI! --------------//////////////");
+        //System.out.println("Bye HORSE " + id);
     }
     
 }

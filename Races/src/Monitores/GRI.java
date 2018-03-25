@@ -312,7 +312,6 @@ public class GRI {
 
     public void setHorseMaxDistance(int id, int dist) {
         this.horseMaxDistance[id] = dist;
-        System.out.println("////////////// " + dist);
     }
 
     public void setRaceTrackDistance(int raceTrackDistance) {

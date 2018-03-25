@@ -35,9 +35,6 @@ public class Broker extends Thread{
     @Override
     public void run(){
         
-        this.state = BrokerState.OPENING_THE_EVENT;
-        System.out.println("Broker " + state);
-        
         for (int k = 0; k < NO_RACES; k++) {
             hashHorsesAgile = i_stable_broker.summonHorsesToPaddock( k+1 );
             while( !i_paddock_broker.waitForSpectators()) {
@@ -51,7 +48,8 @@ public class Broker extends Thread{
             }
         }
         i_controlCentre_broker.entertainTheGuests();
-        System.out.println("BROKKKER ACABEI!");
+        i_stable_broker.end();
+        //System.out.println("Bye BROKER");
     }
     
 }

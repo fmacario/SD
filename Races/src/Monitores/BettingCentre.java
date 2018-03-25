@@ -113,9 +113,9 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
             try{
                 this.hashHorsesAgile = hashHorsesAgile;
                 int bets = 0;
+                
                 gri.setBrokerState(BrokerState.WAITING_FOR_BETS);
                 gri.updateStatus();
-                System.out.println("Broker " + BrokerState.WAITING_FOR_BETS );
                 
                 while (bets != NO_SPECTATORS){
                     if( wantToBet ){ 

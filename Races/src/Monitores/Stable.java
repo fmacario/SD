@@ -21,7 +21,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private int nHorses = 0;
     private final int NO_COMPETITORS = Main.NO_COMPETITORS;
     private boolean GO = false;
-    private boolean allHorses = false;
+    private boolean allHorses = false, end = false;
     
     public Stable (GRI gri){
         this.gri = gri;
@@ -50,14 +50,13 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 while(GO == false){
                     condHorses.await();
                 }
-               
+                
                 nHorses--;
 
                 if(nHorses == 0){
                     GO = false;
                     allHorses=false;
                 }
-                
             } catch (Exception e) { 
                 e.printStackTrace();
             }
@@ -105,6 +104,21 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 return null;
             }
         }finally{
+            rl.unlock();
+        }
+    }
+
+    @Override
+    public void end() {
+        rl.lock();
+        try {
+            try {
+                condHorses.signalAll();
+                GO = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
             rl.unlock();
         }
     }

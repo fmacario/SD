@@ -33,15 +33,12 @@ public class Spectator extends Thread{
             i_paddock_spectator.goCheckHorses( id );
             money -= i_bettingCentre_spectator.placeABet( id, money);
             i_controlCentre_spectator.goWatchTheRace( id );
-            System.out.println("VOU SABER SE GANHEI!!!!! __ _ _ _ _ _");
             if ( i_controlCentre_spectator.haveIWon( id ) ) {
-                System.out.println("GANHEEEEEEEEEEEI a aposta! " + id);
                 money += i_bettingCentre_spectator.goCollectTheGains( id );
             }
-            
         }
         i_controlCentre_spectator.relaxABit( id );
-        System.out.println("spec " + id + " ACABEI!");
+        //System.out.println("Bye SPECTATOR " + id);
     }
 
 }

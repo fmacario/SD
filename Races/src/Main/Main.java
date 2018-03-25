@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
-    public static final int NO_RACES = 4;
-    public static final int NO_COMPETITORS = 4;
-    public static final int NO_SPECTATORS = 4;
-    public static final int TRACK_DISTANCE = 50;
+    public static final int NO_RACES = 400;
+    public static final int NO_COMPETITORS = 400;
+    public static final int NO_SPECTATORS = 400;
+    public static final int TRACK_DISTANCE = 10;
     public static final double MAX_BET = 1000;
     
     public static Horse[] horses = new Horse[NO_COMPETITORS];
@@ -25,7 +25,6 @@ public class Main {
         RacingTrack racingTrack = new RacingTrack(gri);
         ControlCentre controlCentre = new ControlCentre(gri);
         BettingCentre bettingCentre = new BettingCentre(gri);
-        //GRI gri = new GRI();
 
         // threads
         Broker broker = new Broker(NO_RACES, (IBettingCentre_Broker)bettingCentre, (IControlCentre_Broker)controlCentre, (IRacingTrack_Broker)racingTrack, (IStable_Broker)stable, (IPaddock_Broker)paddock );
@@ -49,7 +48,7 @@ public class Main {
                 broker.join();
 
                 for (int i = 0; i < NO_COMPETITORS; i++) {
-                    //horses[i].join();
+                    horses[i].join();
                 }
 
                 for (int i = 0; i < NO_SPECTATORS; i++) {
