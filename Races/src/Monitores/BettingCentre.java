@@ -59,8 +59,6 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     @Override
     public int placeABet( int spectatorID, int money) {
         rl.lock();
-        //Spectator spec = ((Spectator)Thread.currentThread());
-        System.out.println("placeABet - "+ spectatorID);
         
         try{
             try {
@@ -71,7 +69,6 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 gri.setSpectatorState( spectatorID, SpectatorState.PLACING_A_BET);
                 gri.updateStatus();
-                System.out.println("Spectator " + spectatorID + " " + SpectatorState.PLACING_A_BET);
                 
                 wantToBet = true;
                 condBroker.signal();
@@ -79,25 +76,25 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 while ( betSpec[spectatorID] == false ){
                     condSpectators.await();
                 }
-                //System.out.println("sai do while " + spectatorID);
-                
                 
                 int id = fifoSpectators.remove();
                                                 
-                //gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Bet.get(id));
                 gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Horse_Bet.get(id).get(1));
 
                 gri.setBetSelection(id, mapSpec_Horse_Bet.get(id).get(0) );
                 gri.setBetAmount(id, mapSpec_Horse_Bet.get(id).get(1) );
 
                 gri.updateStatus();
-                              
+                --nSpectators;  
                 condBroker.signal();
-                nSpectators--;
+                
                 if(nSpectators==0){
+                    for(int i=0; i< NO_SPECTATORS; i++){
+                        betSpec[i] = false;
+                    }
                     wantToBet=false;
                 }
-                //condSpectators.signal();
+                
                 return mapSpec_Horse_Bet.get(id).get(1);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -112,26 +109,18 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     @Override
     public Map<Integer, List<Integer>> acceptTheBets( Map<Integer, Integer> hashHorsesAgile ) {
         rl.lock();
-        
-        System.out.println("acceptBets");
-        this.hashHorsesAgile = hashHorsesAgile;
-        System.out.println(hashHorsesAgile);
-        int bets = 0;
-        
         try{
             try{
+                this.hashHorsesAgile = hashHorsesAgile;
+                int bets = 0;
                 gri.setBrokerState(BrokerState.WAITING_FOR_BETS);
                 gri.updateStatus();
                 System.out.println("Broker " + BrokerState.WAITING_FOR_BETS );
                 
                 while (bets != NO_SPECTATORS){
-                    //System.out.println("betStatus -- "+ betStatus[fifoSpectators.peek().getSpecId()]);
-                          
-                    if( wantToBet){ //betStatus[fifoSpectators.peek().getSpecId()] == true ){
-                        
+                    if( wantToBet ){ 
                         int id = fifoSpectators.peek();
-                        
-                        System.out.println("WantToBet - " + id);
+                                                
                         bets++;
                         betSpec[id] = true;
                         
@@ -171,29 +160,20 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     @Override
     public int goCollectTheGains( int spectatorID ) {
         rl.lock();
-        System.out.println("goCollectTheGains - "+ spectatorID);
         try {
             try {
-                nSpectators++;
-                System.out.println("n spectator to collect " + nSpectators);
                 gri.setSpectatorState(spectatorID, SpectatorState.COLLECTING_THE_GAINS);
                 gri.updateStatus();
                 
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
-                
-                System.out.println("MAP PAID - " + mapSpec_Paid);
-                
+                                
                 while( mapSpec_Paid.get(spectatorID) == false ){
                     condSpectators.await();
                 }
-                
-                //System.out.println("MAP PAID AFTER - " + mapSpec_Paid);
-                
-                System.out.println("I WAS PAID - " + spectatorID);
+                                
                 fifoSpectators.remove();
                 condBroker.signal();
-                //gri.setMoney(spectatorID, spectatorID);
                 
                 gri.addMoney(spectatorID, mapSpec_MoneyToReceive.get(spectatorID));
                 gri.updateStatus();
@@ -210,30 +190,20 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     @Override
     public void honourTheBets( ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList ) {
         rl.lock();
-        System.out.println("honourTheBet------------------------s");
         try {
             try {
                 gri.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
                 gri.updateStatus();
                 
                 // calcular valor a distribuir para cada vencedor
-                //noSpecWinners = winnersList.size();
-                //System.out.println(horsesWinnersList);
-                //mapSpec_Horse_Bet
-                //mapSpec_MoneyToReceive
                 for ( Integer winner :  specsWinnersList) {
                     int id_cavalo = mapSpec_Horse_Bet.get(winner).get(0);
                     int aposta = mapSpec_Horse_Bet.get(winner).get(1);
                     double odd = (double)hashHorsesAgile.get(id_cavalo) / 100;
-                    //System.out.println("APOSTA: " + aposta + ", ODD: " + odd);
                     mapSpec_MoneyToReceive.put(winner, (int)Math.round(aposta * (1/odd)));
                     mapSpec_Paid.put(winner, false);
-                                        
                 }
-                
-                System.out.println("MONEY TO RECEIVEEEEE: "  + mapSpec_MoneyToReceive);
-                
-                 
+                                
                 while( betsHonoured != mapSpec_Paid.size() ){
                     
                     if( !fifoSpectators.isEmpty() ){
@@ -248,8 +218,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     gri.setBetAmount( i, -1 );
                     gri.setBetSelection( i , -1 );
                 }
-                
-                System.out.println("ALL PAID");
+                betsHonoured = 0;
                 
             } catch (Exception e) {
                 e.printStackTrace();

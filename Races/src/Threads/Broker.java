@@ -51,6 +51,7 @@ public class Broker extends Thread{
             }
         }
         i_controlCentre_broker.entertainTheGuests();
+        System.out.println("BROKKKER ACABEI!");
     }
     
 }

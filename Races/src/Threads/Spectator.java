@@ -41,6 +41,7 @@ public class Spectator extends Thread{
             
         }
         i_controlCentre_spectator.relaxABit( id );
+        System.out.println("spec " + id + " ACABEI!");
     }
 
 }

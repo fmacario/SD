@@ -33,17 +33,14 @@ public class Stable implements IStable_Broker, IStable_Horse{
     @Override
     public void proceedToStable(int horseID, int agile) {
         rl.lock();
-        //System.out.println("proceedStable - "+horseID);
         try{
             try{
                 nHorses++;
                 
                 hashHorsesAgile.put( horseID, agile );
                 
-                //Horse.state = HorseState.AT_THE_STABLE;
                 gri.setHorseState(horseID, HorseState.AT_THE_STABLE);
                 gri.updateStatus();
-                System.out.println("Horse " + horseID + " " + HorseState.AT_THE_STABLE);
                 
                 if(nHorses == NO_COMPETITORS){
                     allHorses=true;
@@ -70,16 +67,13 @@ public class Stable implements IStable_Broker, IStable_Horse{
     }
     
     @Override
-    public Map<Integer, Integer> summonHorsesToPaddock( int nRace) {
+    public Map<Integer, Integer> summonHorsesToPaddock( int nRace ) {
         rl.lock();
-        //System.out.println("summonHorses");
         try {
             try{
-                //Broker.state = BrokerState.ANNOUNCING_NEXT_RACE;
                 gri.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
                 gri.setRn( nRace );
                 gri.updateStatus();
-                System.out.println("Broker " + BrokerState.ANNOUNCING_NEXT_RACE);
                 
                 while(!allHorses){
                     condBroker.await();

@@ -50,15 +50,11 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     @Override
     public ArrayList<Integer> startTheRace() {
         rl.lock();
-        
-        //System.out.println("startTheRace");
-        
         try {
             try {
                 
                 gri.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
                 gri.updateStatus();
-                //System.out.println("Broker " + BrokerState.SUPERVISING_THE_RACE);
                 
                 raceStart = true;
                 condHorses.signalAll();
@@ -82,9 +78,6 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     @Override
     public void proceedToStartLine( int horseID ) {
         rl.lock();
-        
-        //System.out.println("proceed to start line");
-        
         try{
             try {
                 nHorses++;
@@ -93,7 +86,6 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 positions[horseID] = 0;
                 gri.setTrackPosition(positions);
                 gri.updateStatus();
-                //System.out.println("Horse "+ horseID +" "+  HorseState.AT_THE_START_LINE);
                 
                 if(nHorses == NO_COMPETITORS){
                     condSpectators.signalAll();
@@ -117,9 +109,6 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     @Override
     public void makeAMove( int horseID, int Pnk ) {
         rl.lock();
-        
-        //System.out.println("makeAMove");
-        
         try {
             try {
                 gri.setHorseState(horseID, HorseState.RUNNING);
@@ -131,18 +120,14 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 if( positions[horseID] < Main.TRACK_DISTANCE ){
                     positions[horseID] += (int )(Math.random() * Pnk + 1);
                     iterations[horseID] += 1;
-                    //System.out.println("position inc - " + positions[horse.getHorseId()]);
                     
                     gri.setTrackPosition(positions);
                     gri.setIterationNumber(iterations);
                     gri.updateStatus();
                     
-                    System.out.println("horsesfinished " + horsesFinished);
                     if(horsesFinished != (NO_COMPETITORS-1)){
                         condHorses.await();
                     }
-                    
-                    // falta acordar o broker quando o ultimo cavalo chega À meta
                 }
                 
                 
@@ -158,9 +143,6 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     @Override
     public boolean hasFinishLineBeenCrossed( int horseID ) {
         rl.lock();
-        
-        //System.out.println("finish line check" + horseID);
-            
         try{
             try {
                 if( positions[horseID] >= Main.TRACK_DISTANCE){
@@ -174,12 +156,9 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     gri.setHorseState(horseID, HorseState.AT_THE_FINNISH_LINE);
                     gri.updateStatus();
                                                          
-                    //System.out.println("FINISHED - " + horseID + " - " +horsesFinished);
                     if(horsesFinished == NO_COMPETITORS){
                         raceFinished = true;
                         horsesFinished = 0;
-                        //System.out.println("ALL FINISHED");
-                        
                         
                         /////// VENCEDORES:                        
                         for( int i = 0; i < NO_COMPETITORS; i++ ){

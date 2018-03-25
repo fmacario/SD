@@ -55,7 +55,6 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         
         try {
             try {
-                System.out.println("GO WATCH THE RACEEE______");
                 nSpec++;
                 
                 gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
@@ -69,7 +68,6 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 
                 if ( nSpec == 0 )
                     wakeSpecs = false;
-                System.out.println("ACORDEI!!!!!!!!!!!!!!!!!!!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -83,9 +81,6 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
-                System.out.println("haveIWON ???? " + specId);
-                System.out.println(specsWinnersList);
-                
                 for ( Integer specsWinner : specsWinnersList ) {
                     if( specId == specsWinner )
                         return true;
@@ -118,16 +113,12 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
 
     @Override
     public ArrayList<Integer> reportResults( ArrayList<Integer> winnersList , Map<Integer, List<Integer>> mapSpec_Horse_Bet) {
-        // temos de acordar o espetador
-        
         rl.lock();
         try {
             try {              
                 this.horsesWinnersList = winnersList;
                                
-                for ( Integer horseWinner : horsesWinnersList ) {
-                    //System.out.println(winner);
-                    
+                for ( Integer horseWinner : horsesWinnersList ) {                    
                     for (Map.Entry<Integer, List<Integer>> entry : mapSpec_Horse_Bet.entrySet())
                     {
                         if( horseWinner == entry.getValue().get(0) )
@@ -137,7 +128,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 
                 wakeSpecs = true;
                 condSpectators.signalAll();
-                System.out.println("REPORT res, specs winner: " + specsWinnersList);
+                
                 return specsWinnersList;
                 
             } catch (Exception e) {
@@ -152,10 +143,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     @Override
     public boolean areThereAnyWinners( Map<Integer, List<Integer>> mapSpec_Horse_Bet ) {
         rl.lock();
-        System.out.println("areThereAnyWinners");
         try {
             try {
-                
                 if (specsWinnersList.size() == 0)
                     return false;
                 
@@ -165,7 +154,6 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 return false;
             }
         } finally {
-            System.out.println("saí da areThereAnyWinners");
             rl.unlock();
         }
     }
@@ -177,6 +165,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
             try {
                 gri.setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
                 gri.updateStatus();
+                
+                condHorses.signalAll();
                 
             } catch (Exception e) {
                 e.printStackTrace();
