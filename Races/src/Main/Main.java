@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
-    public static final int NO_RACES = 400;
-    public static final int NO_COMPETITORS = 400;
-    public static final int NO_SPECTATORS = 400;
-    public static final int TRACK_DISTANCE = 10;
+    public static final int NO_RACES = 4;
+    public static final int NO_COMPETITORS = 4;
+    public static final int NO_SPECTATORS = 4;
+    public static final int TRACK_DISTANCE = 50;
     public static final double MAX_BET = 1000;
     
     public static Horse[] horses = new Horse[NO_COMPETITORS];
