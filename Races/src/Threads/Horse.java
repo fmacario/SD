@@ -1,20 +1,28 @@
 package Threads;
 
-import Enum.*;
 import Interfaces.IStable_Horse;
 import Interfaces.IPaddock_Horse;
 import Interfaces.IRacingTrack_Horse;
 import Main.*;
 
+/**
+ * Thread Horse
+ * @author fm
+ */
 public class Horse extends Thread{
 
-    public static volatile HorseState state;
     private final int id;
     private final int Pnk;
     private final IPaddock_Horse i_paddock_horse;
     private final IRacingTrack_Horse i_racingTrack_horse;
     private final IStable_Horse i_stable_horse;
     
+    /**
+     * @param id Id do cavalo.
+     * @param i_paddock_horse Interface IPaddock_Horse;
+     * @param i_racingTrack_horse Interface IRacingTrack_Horse.
+     * @param i_stable_horse Interface IStable_Horse.
+     */
     public Horse(int id, IPaddock_Horse i_paddock_horse, IRacingTrack_Horse i_racingTrack_horse, IStable_Horse i_stable_horse){
         this.id = id;
         this.Pnk = (int )(Math.random() * (Main.TRACK_DISTANCE/4) + 3); // Pnk
@@ -23,6 +31,9 @@ public class Horse extends Thread{
         this.i_stable_horse = i_stable_horse;
     }
     
+    /**
+     * run()
+     */
     @Override
     public void run(){
         for (int k = 0; k < Main.NO_RACES ; k++) {

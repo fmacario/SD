@@ -13,6 +13,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.locks.*;
 
+/**
+ * Métodos do Betting Centre.
+ * @author fm
+ */
 public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{  
     private GRI gri;
     private final ReentrantLock rl;
@@ -36,7 +40,10 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean wantToBet = false;
     private boolean[] betSpec;    
     
-    
+    /**
+     * 
+     * @param gri General Repository of Information (GRI).
+     */
     public BettingCentre(GRI gri){
         this.gri = gri;
         
@@ -49,6 +56,12 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         condSpectators = rl.newCondition();
     }
     
+    /**
+     * <b>Espetador</b> realiza uma aposta.
+     * @param spectatorID Id do espetador.
+     * @param money Dinheiro do espetador.
+     * @return Retorna o valor da aposta realizada.
+     */
     @Override
     public int placeABet( int spectatorID, int money) {
         rl.lock();
@@ -99,6 +112,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         
     }
     
+    /**
+     * <b>Broker</b> aceita as apostas.
+     * @param hashHorsesAgile Mapa com o id dos cavalos e a sua agilidade.
+     * @return Retorna um mapa com o id do espetador e uma lista contendo o id do cavalo e a aposta realziada.
+     */
     @Override
     public Map<Integer, List<Integer>> acceptTheBets( Map<Integer, Integer> hashHorsesAgile ) {
         rl.lock();
@@ -150,6 +168,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         }
     }
 
+    /**
+     * <b>Espetador</b> vai receber os lucros da aposta.
+     * @param spectatorID Id do espetador.
+     * @return Dinheiro a receber por parte do espetador.
+     */
     @Override
     public int goCollectTheGains( int spectatorID ) {
         rl.lock();
@@ -180,6 +203,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         }
     }
 
+    /**
+     * <b>Broker</b> liquida as contas.
+     * @param horsesWinnersList ArrayList com os id dos cavalos vencedores da corrida.
+     * @param specsWinnersList ArrayList com o id os espetadores que ganharam a aposta.
+     */
     @Override
     public void honourTheBets( ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList ) {
         rl.lock();

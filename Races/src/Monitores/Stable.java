@@ -8,6 +8,10 @@ import Enum.*;
 import java.util.*;
 import java.util.concurrent.locks.*;
         
+/**
+ * Métodos do Estábulo.
+ * @author fm
+ */
 public class Stable implements IStable_Broker, IStable_Horse{    
     private GRI gri;
     private final ReentrantLock rl;
@@ -23,6 +27,10 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private boolean allHorses = false;
     private boolean end = false;
     
+    /**
+     * 
+     * @param gri General Repository of Information (GRI).
+     */
     public Stable (GRI gri){
         this.gri = gri;
         rl = new ReentrantLock(true);
@@ -30,6 +38,11 @@ public class Stable implements IStable_Broker, IStable_Horse{
         condBroker = rl.newCondition();
     }
     
+    /**
+     * <b>Cavalo</b> vai para o estábulo.
+     * @param horseID Id do cavalo.
+     * @param agile Agilidade do cavalo.
+     */
     @Override
     public void proceedToStable(int horseID, int agile) {
         rl.lock();
@@ -65,6 +78,11 @@ public class Stable implements IStable_Broker, IStable_Horse{
         }
     }
     
+    /**
+     * <b>Broker</b> anuncia a corrida e acorda os cavalos para irem para o Paddock.
+     * @param nRace Número da corrida.
+     * @return Mapa com id dos cavalos e agilidade de cada um.
+     */
     @Override
     public Map<Integer, Integer> summonHorsesToPaddock( int nRace ) {
         rl.lock();
@@ -108,6 +126,9 @@ public class Stable implements IStable_Broker, IStable_Horse{
         }
     }
 
+    /**
+     * <b>Broker</b> termina o evento.
+     */
     @Override
     public void end() {
         rl.lock();

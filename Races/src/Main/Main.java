@@ -7,16 +7,51 @@ import Enum.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author fm
+ */
 public class Main {
+
+    /**
+     * Número de corridas (K).
+     */
     public static final int NO_RACES = 4;
+
+    /**
+     * Número de competidores (N).
+     */
     public static final int NO_COMPETITORS = 4;
+
+    /**
+     * Número de espetadores (M).
+     */
     public static final int NO_SPECTATORS = 4;
+
+    /**
+     * Distância da pista de corrida (D).
+     */
     public static final int TRACK_DISTANCE = 50;
+
+    /**
+     * Aposta máxima.
+     */
     public static final double MAX_BET = 1000;
     
+    /**
+     * Array de cavalos/competidores.
+     */
     public static Horse[] horses = new Horse[NO_COMPETITORS];
+
+    /**
+     * Array de espetadores.
+     */
     public static Spectator[] spectators = new Spectator[NO_SPECTATORS];
 	
+    /**
+     * Instanciação de monitores e threads; espera o fim das threads.
+     * @param args Não usado.
+     */
     public static void main(String[] args) {
         // monitores 
         GRI gri = new GRI();

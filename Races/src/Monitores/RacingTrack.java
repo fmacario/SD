@@ -10,6 +10,10 @@ import Threads.Broker;
 import java.util.*;
 import java.util.concurrent.locks.*;
 
+/**
+ * Métodos da Racing Track.
+ * @author fm
+ */
 public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private GRI gri;
     private final ReentrantLock rl;
@@ -31,6 +35,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private boolean raceFinished = false;
     private boolean raceStart = false;
         
+    /**
+     * 
+     * @param gri General Repository of Information (GRI).
+     */
     public RacingTrack(GRI gri){
         this.gri = gri;
          
@@ -48,6 +56,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         condSpectators = rl.newCondition();
     }
     
+    /**
+     * <b>Broker</b> anuncia o início da corrida.
+     * @return ArrayList com o id dos cavalos vencedores.
+     */
     @Override
     public ArrayList<Integer> startTheRace() {
         rl.lock();
@@ -76,6 +88,10 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         }
     }
 
+    /**
+     * <b>Cavalo</b> vai para a linha de partida.
+     * @param horseID Id do cavalo.
+     */
     @Override
     public void proceedToStartLine( int horseID ) {
         rl.lock();
@@ -107,6 +123,11 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         }
     }
     
+    /**
+     * <b>Cavalo</b> faz um movimento/avança.
+     * @param horseID Id do cavalo.
+     * @param Pnk Valor máximo de movimento numa iteração.
+     */
     @Override
     public void makeAMove( int horseID, int Pnk ) {
         rl.lock();
@@ -140,6 +161,11 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         }
     }
 
+    /**
+     * <b>Cavalo</b> verifica se já passou a linha final.
+     * @param horseID Id do cavalo.
+     * @return true - se o cavalo passou a linha final.<p>false - se o cavalo não passou a linha final.
+     */
     @Override
     public boolean hasFinishLineBeenCrossed( int horseID ) {
         rl.lock();

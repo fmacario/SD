@@ -1,21 +1,29 @@
 package Threads;
 
-import Enum.*;
-
 import Interfaces.IPaddock_Spectator;
 import Interfaces.IControlCentre_Spectator;
 import Interfaces.IBettingCentre_Spectator;
 
+/**
+ * Thread Spectator
+ * @author fm
+ */
 public class Spectator extends Thread{
-    public static volatile SpectatorState state;
+
     private final int id;
-    private int bet;
     private int money;
     private final int NO_RACES;
     private final IBettingCentre_Spectator i_bettingCentre_spectator;
     private final IControlCentre_Spectator i_controlCentre_spectator;
     private final IPaddock_Spectator i_paddock_spectator;
     
+    /**
+     * @param id Id do espetador.
+     * @param NO_RACES Número de corridas.
+     * @param i_bettingCentre_spectator Interface IBettingCentre_Spectator.
+     * @param i_controlCentre_spectator Interface IControlCentre_Spectator.
+     * @param i_paddock_spectator Interface IPaddock_Spectator.
+     */
     public Spectator( int id, int NO_RACES, IBettingCentre_Spectator i_bettingCentre_spectator, IControlCentre_Spectator i_controlCentre_spectator, IPaddock_Spectator i_paddock_spectator){
         this.id = id;
         this.NO_RACES = NO_RACES;
@@ -25,6 +33,9 @@ public class Spectator extends Thread{
         this.money = 500;
     }
 
+    /**
+     * run()
+     */
     @Override
     public void run(){
         for (int k = 0; k < NO_RACES; k++) {

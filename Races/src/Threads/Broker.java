@@ -1,12 +1,15 @@
 package Threads;
 
 import Interfaces.*;
-import Enum.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Thread Broker
+ * @author fm
+ */
 public class Broker extends Thread{
     private final int NO_RACES;
     private final IBettingCentre_Broker i_bettingCentre_broker;
@@ -20,9 +23,16 @@ public class Broker extends Thread{
     private Map<Integer, List<Integer>> mapSpec_Horse_Bet = new HashMap<Integer, List<Integer>>();
     private ArrayList<Integer> horsesWinnersList = new ArrayList<>();
     private ArrayList<Integer> specsWinnersList = new ArrayList<>();
-    
-    public static volatile BrokerState state;
-    
+        
+    /**
+     *
+     * @param NO_RACES Número de corridas.
+     * @param i_bettingCentre_broker Interface IBettingCentre_Broker.
+     * @param i_controlCentre_broker Interface IControlCentre_Broker.
+     * @param i_racingTrack_broker Interface IRacingTrack_Broker.
+     * @param i_stable_broker Interface IStable_Broker.
+     * @param i_paddock_broker Interface IPaddock_Broker.
+     */
     public Broker(int NO_RACES, IBettingCentre_Broker i_bettingCentre_broker, IControlCentre_Broker i_controlCentre_broker, IRacingTrack_Broker i_racingTrack_broker, IStable_Broker i_stable_broker, IPaddock_Broker i_paddock_broker){
         this.NO_RACES = NO_RACES;
         this.i_bettingCentre_broker = i_bettingCentre_broker;
@@ -32,6 +42,9 @@ public class Broker extends Thread{
         this.i_paddock_broker = i_paddock_broker;
     }
     
+    /**
+     * run()
+     */
     @Override
     public void run(){
         

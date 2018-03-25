@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Métodos do Control Centre.
+ * @author fm
+ */
 public class ControlCentre implements IControlCentre_Spectator, IControlCentre_Broker{
     private GRI gri;
     private final ReentrantLock rl;
@@ -22,6 +26,10 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private boolean wakeSpecs = false;
     private int nSpec = 0;
     
+    /**
+     * 
+     * @param gri General Repository of Information (GRI).
+     */
     public ControlCentre( GRI gri){
         this.gri = gri;
         rl = new ReentrantLock(true);
@@ -29,6 +37,10 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         condSpectators = rl.newCondition();
     }
     
+    /**
+     * <b>Espetador</b> vai ver a corrida.
+     * @param specId Id do espetador.
+     */
     @Override
     public void goWatchTheRace(int specId) {
         rl.lock();
@@ -56,6 +68,11 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }
     }
 
+    /**
+     * <b>Espetador</b> verifica se ganhou a aposta.
+     * @param specId Id do espetador.
+     * @return true - se o espetador ganhou a aposta <p>false - se o espetador não ganhou a aposta.
+     */
     @Override
     public boolean haveIWon( int specId ) {
         rl.lock();
@@ -75,6 +92,10 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }
     }
 
+    /**
+     * <b>Espetador</b> relaxa.
+     * @param specId Id do espetador.
+     */
     @Override
     public void relaxABit(int specId) {
         rl.lock();
@@ -91,6 +112,12 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }
     }
 
+    /**
+     * <b>Broker</b> reporta os resultados das apostas.
+     * @param winnersList ArrayList com os id dos cavalos que venceram a corrida.
+     * @param mapSpec_Horse_Bet Mapa com o id do espetador e uma lista com o id do cavalo apostado e a respetiva aposta.
+     * @return Lista de espetadores/apostadores vencedores. 
+     */
     @Override
     public ArrayList<Integer> reportResults( ArrayList<Integer> winnersList , Map<Integer, List<Integer>> mapSpec_Horse_Bet) {
         rl.lock();
@@ -120,6 +147,11 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }
     }
 
+    /**
+     * <b>Broker</b> verifica se houve apostadores vencedores.
+     * @param mapSpec_Horse_Bet Mapa com o id do espetador e uma lista com o id do cavalo apostado e a respetiva aposta. 
+     * @return true - se houve apostadores vencedores.<p>false - se não houve apostadores vencedores.
+     */
     @Override
     public boolean areThereAnyWinners( Map<Integer, List<Integer>> mapSpec_Horse_Bet ) {
         rl.lock();
@@ -138,6 +170,9 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }
     }
 
+    /**
+     * <b>Broker</b> entretem os espetadores.
+     */
     @Override
     public void entertainTheGuests() {
         rl.lock();

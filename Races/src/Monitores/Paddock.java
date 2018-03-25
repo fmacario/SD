@@ -12,6 +12,10 @@ import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Métodos do Paddock.
+ * @author fm
+ */
 public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Broker{    
     private GRI gri;
     private final Condition condSpectators;
@@ -31,6 +35,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
     private boolean allHorses = false;
     private boolean lastHorse = false;
     
+    /**
+     * 
+     * @param gri General Repository of Information (GRI).
+     */
     public Paddock(GRI gri){
         this.gri = gri;
         rl = new ReentrantLock(true);
@@ -39,6 +47,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         condBroker = rl.newCondition();
     }
     
+    /**
+     * <b>Cavalo</b> vai para o Paddock.
+     * @param horseID Id do cavalo.
+     */
     @Override
     public void proceedToPaddock(int horseID) {
         rl.lock();
@@ -71,6 +83,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         }
     }
 
+    /**
+     * <b>Espetador</b> vai analisar os cavalos.
+     * @param spectatorID Id do espetador.
+     */
     @Override
     public void goCheckHorses(int spectatorID) {
         rl.lock();
@@ -103,6 +119,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         }
     }
     
+    /**
+     * <b>Espetador</b> espera pela próxima corrida.
+     * @param spectatorID Id do espetador.
+     */
     @Override
     public void waitForNextRace(int spectatorID){
         rl.lock();
@@ -124,6 +144,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         }
     }
     
+    /**
+     * <b>Broker</b> espera que os espetadores cheguem ao Paddock.
+     * @return true - quando todos os espetadores chegam ao Paddock.
+     */
     public boolean waitForSpectators(){
         rl.lock();
         

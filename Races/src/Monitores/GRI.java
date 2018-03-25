@@ -6,6 +6,10 @@ import Enum.*;
 import genclass.TextFile;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Métodos do GRI (General Repository of Information).
+ * @author fm
+ */
 public class GRI {
     private final String logName = "Races.log";
     private TextFile log;
@@ -36,7 +40,9 @@ public class GRI {
     private int trackPosition[];    // Ps#
     private int standingAtTheEnd[]; // SD#    
        
-    
+    /**
+     *
+     */
     public GRI(){
         log = new TextFile();
         rl = new ReentrantLock();
@@ -77,6 +83,9 @@ public class GRI {
         updateStatus();
     }
 
+    /**
+     * Imprime o cabeçalho inicial.
+     */
     private void init() {
         log.openForWriting(".",logName);
         log.writelnString("         AFTERNOON AT THE RACE TRACK - Description of the internal state of the problem\n\n"
@@ -94,6 +103,9 @@ public class GRI {
         
     }
     
+    /**
+     * Imprime o estado atual.
+     */
     public void updateStatus(){
         rl.lock();
         try{
@@ -279,62 +291,123 @@ public class GRI {
         }
     }
     
+    /**
+     * Define o <b>estado</b> do <b>Broker</b>.
+     * @param brokerState Estado do Broker.
+     */
     public void setBrokerState(BrokerState brokerState) {
         this.brokerState = brokerState;
     }
 
+    /**
+     * Define o <b>estado</b> do <b>Espetador</b>.
+     * @param id Id do espetador.
+     * @param spectatorState Estado do espetador.
+     */
     public void setSpectatorState(int id, SpectatorState spectatorState) {
         this.spectatorState[id] = spectatorState;
     }
 
+    /**
+     * Define o <b>dinheiro</b> do <b>Espetador</b>.
+     * @param id Id do espetador.
+     * @param money Dinheiro.
+     */
     public void setMoney(int id, int money) {
         this.money[id] = money;
     }
     
+    /**
+     * Incrementa o <b>dinheiro</b> do <b>Espetador</b>.
+     * @param id Id do espetador.
+     * @param money Dinheiro.
+     */
     public void addMoney(int id, int money) {
         this.money[id] += money;
     }
 
+    /**
+     * Define o <b>número da corrida</b>.
+     * @param rn Número da corrida.
+     */
     public void setRn(int rn) {
         this.rn = rn;
     }
-    
-    public void addRn() {
-        this.rn++;
-    }
 
+    /**
+     * Define o <b>estado</b> do <b>Cavalo</b>.
+     * @param id Id do cavalo.
+     * @param horseState Estado do cavalo.
+     */
     public void setHorseState(int id, HorseState horseState) {
         this.horseState[id] = horseState;
     }
 
+    /**
+     * Define a <b>distância máxima</b> de uma iteração do <b>Cavalo</b>.
+     * @param id Id do cavalo.
+     * @param dist Distância máxima numa iteração.
+     */
     public void setHorseMaxDistance(int id, int dist) {
         this.horseMaxDistance[id] = dist;
     }
 
+    /**
+     * Define a <b>distância</b> da <b>pista de corrida</b>.
+     * @param raceTrackDistance
+     */
     public void setRaceTrackDistance(int raceTrackDistance) {
         this.raceTrackDistance = raceTrackDistance;
     }
 
+    /**
+     * Define a <b>aposta</b> do <b>Espetador</b>.
+     * @param id Id do espetador.
+     * @param betSelection Id do cavalo.
+     */
     public void setBetSelection(int id, int betSelection) {
         this.betSelection[id] = betSelection;
     }
 
+    /**
+     * Define o <b>dinheiro apostado</b> por parte do <b>Espetador</b>.
+     * @param id Id do espetador.
+     * @param betAmount Quantidade de dinheiro apostado.
+     */
     public void setBetAmount(int id, int betAmount) {
         this.betAmount[id] = betAmount;
     }
 
+    /**
+     * Define a <b>probabilidade</b> de vencer do <b>Cavalo</b>.
+     * @param id Id do cavalo.
+     * @param odd Probabilidade.
+     */
     public void setHorseWinningProb(int id, double odd) {
         this.horseWinningProb[id] = odd;
     }
 
+    /**
+     * Define a <b>iteração</b> atual do <b>Cavalo</b>.
+     * @param iterationNumber Array de iterações.
+     */
     public void setIterationNumber(int[] iterationNumber) {
         this.iterationNumber = iterationNumber;
     }
 
+    /**
+     * Define a <b>posição</b> atual do <b>Cavalo</b>.
+     * @param trackPosition Array de posições.
+     */
     public void setTrackPosition(int[] trackPosition) {
         this.trackPosition = trackPosition;
     }
 
+    /**
+     * Define a <b>posição</b> de chegada do <b>Cavalo</b>.
+     * @param id Id do cavalo.
+     * @param standingAtTheEnd Posição de chegada.
+     */
     public void setStandingAtTheEnd(int id, int standingAtTheEnd) {
         this.standingAtTheEnd[id] = standingAtTheEnd;
     }
