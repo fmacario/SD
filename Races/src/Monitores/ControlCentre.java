@@ -122,7 +122,8 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     public ArrayList<Integer> reportResults( ArrayList<Integer> winnersList , Map<Integer, List<Integer>> mapSpec_Horse_Bet) {
         rl.lock();
         try {
-            try {              
+            try {
+                specsWinnersList.clear();
                 this.horsesWinnersList = winnersList;
                                
                 for ( Integer horseWinner : horsesWinnersList ) {                    

@@ -3,7 +3,6 @@ package Monitores;
 import Interfaces.IBettingCentre_Broker;
 import Interfaces.IBettingCentre_Spectator;
 import Enum.*;
-import Main.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,9 +22,9 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private final Condition condBroker;
     private final Condition condSpectators;
     
-    private final int NO_SPECTATORS = Main.NO_SPECTATORS;
-    private final int NO_COMPETITORS = Main.NO_COMPETITORS; 
-    private final double MAX_BET = Main.MAX_BET;
+    private final int NO_SPECTATORS;
+    private final int NO_COMPETITORS; 
+    private final double MAX_BET;
     
     private Queue<Integer> fifoSpectators = new LinkedList<Integer>();
     private Map<Integer, Integer> mapSpec_Money = new HashMap<Integer, Integer>();
@@ -44,8 +43,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public BettingCentre(GRI gri){
+    public BettingCentre(GRI gri, int NO_SPECTATORS, int NO_COMPETITORS, double MAX_BET){
         this.gri = gri;
+        this.NO_SPECTATORS = NO_SPECTATORS;
+        this.NO_COMPETITORS = NO_COMPETITORS; 
+        this.MAX_BET = MAX_BET;
         
         betSpec = new boolean[NO_SPECTATORS];
         for(int i=0; i< NO_SPECTATORS; i++){
@@ -193,6 +195,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 gri.addMoney(spectatorID, mapSpec_MoneyToReceive.get(spectatorID));
                 gri.updateStatus();
+                
                 return mapSpec_MoneyToReceive.get(spectatorID);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -213,6 +216,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         rl.lock();
         try {
             try {
+                mapSpec_Paid.clear();
                 gri.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
                 gri.updateStatus();
                 

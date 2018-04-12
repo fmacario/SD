@@ -1,6 +1,5 @@
 package Monitores;
 
-import Main.Main;
 import Threads.Horse;
 import Threads.Spectator;
 import Interfaces.IPaddock_Spectator;
@@ -23,8 +22,8 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
     private final Condition condBroker;
     private final ReentrantLock rl;
     
-    private final int NO_SPECTATORS = Main.NO_SPECTATORS;
-    private final int NO_COMPETITORS = Main.NO_COMPETITORS;
+    private final int NO_SPECTATORS;
+    private final int NO_COMPETITORS;
     
     private Map<Integer, Horse> hashHorses = new HashMap<Integer, Horse>();
     private Map<Integer, Spectator> hashSpectators = new HashMap<Integer, Spectator>();
@@ -39,8 +38,11 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public Paddock(GRI gri){
+    public Paddock(GRI gri, int NO_COMPETITORS, int NO_SPECTATORS){
         this.gri = gri;
+        this.NO_COMPETITORS = NO_COMPETITORS;
+        this.NO_SPECTATORS = NO_SPECTATORS;
+               
         rl = new ReentrantLock(true);
         condSpectators = rl.newCondition();
         condHorses = rl.newCondition();

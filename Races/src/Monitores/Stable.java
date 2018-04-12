@@ -1,6 +1,5 @@
 package Monitores;
 
-import Main.Main;
 import Interfaces.IStable_Horse;
 import Interfaces.IStable_Broker;
 import Enum.*;
@@ -18,7 +17,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private final Condition condHorses;
     private final Condition condBroker;
     
-    private final int NO_COMPETITORS = Main.NO_COMPETITORS;
+    private final int NO_COMPETITORS;
     
     private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
     
@@ -31,8 +30,10 @@ public class Stable implements IStable_Broker, IStable_Horse{
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public Stable (GRI gri){
+    public Stable (GRI gri, int NO_COMPETITORS){
         this.gri = gri;
+        this.NO_COMPETITORS = NO_COMPETITORS;
+        
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();

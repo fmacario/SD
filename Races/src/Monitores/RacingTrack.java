@@ -1,11 +1,8 @@
 package Monitores;
 
-import Main.Main;
-import Threads.Horse;
 import Interfaces.IRacingTrack_Broker;
 import Interfaces.IRacingTrack_Horse;
 import Enum.*;
-import Threads.Broker;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -19,16 +16,15 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
-    private final Condition condSpectators;
     
-    private final int NO_COMPETITORS = Main.NO_COMPETITORS;
-    private final int TRACK_DISTANCE = Main.TRACK_DISTANCE;
+    private final int NO_COMPETITORS;
+    private final int TRACK_DISTANCE;
     
     private Map<Integer, Integer> hashHorses = new HashMap<Integer, Integer>();
     private ArrayList<Integer> winnersList = new ArrayList<>();
     
-    private int[] iterations = new int[NO_COMPETITORS];
-    private int[] positions = new int[NO_COMPETITORS];
+    private int[] iterations;
+    private int[] positions;
     private int nHorses = 0;
     private int horsesFinished = 0;
     private int noMinIterations = Integer.MAX_VALUE;
@@ -39,8 +35,13 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public RacingTrack(GRI gri){
+    public RacingTrack(GRI gri, int NO_COMPETITORS, int TRACK_DISTANCE){
         this.gri = gri;
+        this.NO_COMPETITORS = NO_COMPETITORS;
+        this.TRACK_DISTANCE = TRACK_DISTANCE;
+        
+        iterations = new int[NO_COMPETITORS];
+        positions = new int[NO_COMPETITORS];
          
         for(int i=0; i < NO_COMPETITORS; i++){
             positions[i] = 0;
@@ -53,7 +54,6 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl = new ReentrantLock();
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();
-        condSpectators = rl.newCondition();
     }
     
     /**
@@ -103,10 +103,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 positions[horseID] = 0;
                 gri.setTrackPosition(positions);
                 gri.updateStatus();
-                
-                if(nHorses == NO_COMPETITORS){
-                    condSpectators.signalAll();
-                }
+                               
                 
                 while( raceStart == false ){
                     condHorses.await();

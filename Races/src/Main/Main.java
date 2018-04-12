@@ -54,12 +54,12 @@ public class Main {
      */
     public static void main(String[] args) {
         // monitores 
-        GRI gri = new GRI();
-        Paddock paddock = new Paddock(gri);
-        Stable stable = new Stable(gri);
-        RacingTrack racingTrack = new RacingTrack(gri);
+        GRI gri = new GRI(NO_COMPETITORS, NO_SPECTATORS, TRACK_DISTANCE);
+        Paddock paddock = new Paddock(gri, NO_COMPETITORS, NO_SPECTATORS);
+        Stable stable = new Stable(gri, NO_COMPETITORS);
+        RacingTrack racingTrack = new RacingTrack(gri, NO_COMPETITORS, TRACK_DISTANCE);
         ControlCentre controlCentre = new ControlCentre(gri);
-        BettingCentre bettingCentre = new BettingCentre(gri);
+        BettingCentre bettingCentre = new BettingCentre(gri, NO_SPECTATORS, NO_COMPETITORS, MAX_BET);
 
         // threads
         Broker broker = new Broker(NO_RACES, (IBettingCentre_Broker)bettingCentre, (IControlCentre_Broker)controlCentre, (IRacingTrack_Broker)racingTrack, (IStable_Broker)stable, (IPaddock_Broker)paddock );
@@ -69,7 +69,7 @@ public class Main {
         gri.updateStatus();
         
         for (int i = 0; i < NO_COMPETITORS; i++) {
-            horses[i] = new Horse(i, (IPaddock_Horse)paddock, (IRacingTrack_Horse)racingTrack, (IStable_Horse)stable );
+            horses[i] = new Horse(NO_RACES, TRACK_DISTANCE, i, (IPaddock_Horse)paddock, (IRacingTrack_Horse)racingTrack, (IStable_Horse)stable );
             horses[i].start();
         }
 
