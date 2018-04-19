@@ -6,8 +6,11 @@
 package CL_Broker;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,17 +20,25 @@ import org.json.JSONObject;
  */
 public class Broker {
     public static void main(String[] args) throws IOException, ClassNotFoundException, JSONException {
-        Socket cliente = new Socket("localhost", 12345);
+        Socket socket = new Socket("localhost", 12345);
         //ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
         
         JSONObject json = new JSONObject();
+
+        json.put("metodo", "summonHorsesToPaddock");
+        json.put("nRace", "2");
+        Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
+        hashHorsesAgile.put(1, 10);
+        hashHorsesAgile.put(2, 20);
         
-        json.append("metodo", "queroIrPara");
-        json.append("teste", "2");
+        json.put("hash", hashHorsesAgile.toString());
         
-        PrintStream msg = new PrintStream(cliente.getOutputStream());
-        //msg.print( "OLA; ESTOU A ENVIAR MSG" );
-        msg.append( json.toString() );
+        System.out.println(json.get("hash"));
+        
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
+        o.writeObject( json.toString() );
+        out.flush();
         
     }
 }
