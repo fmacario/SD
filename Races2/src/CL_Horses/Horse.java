@@ -6,6 +6,8 @@
 package CL_Horses;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -61,35 +63,80 @@ public class Horse extends Thread{
     }
 
     private void proceedToStable(int id, int Pnk) throws JSONException, IOException {
-            JSONObject json = new JSONObject();
+        JSONObject json = new JSONObject();
+
+        json.put("entidade", "horse");
+        json.put("metodo", "proceedToStable");
+        json.put("id", id);
+        json.put("Pnk", Pnk);
         
-            json.put("entidade", "horse");
-            json.put("metodo", "proceedToStable");
-            json.put("id", id);
-            json.put("Pnk", Pnk);
-            System.out.println(json);
-            sendMessage(json);
+        sendMessage(json);
     }
 
-    private void proceedToPaddock(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void proceedToPaddock(int id) throws JSONException, IOException {
+        JSONObject json = new JSONObject();
+
+        json.put("entidade", "horse");
+        json.put("metodo", "proceedToPaddock");
+        json.put("id", id);
+        
+        sendMessage(json);
     }
 
-    private void proceedToStartLine(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void proceedToStartLine(int id) throws JSONException, IOException {
+        JSONObject json = new JSONObject();
+
+        json.put("entidade", "horse");
+        json.put("metodo", "proceedToStartLine");
+        json.put("id", id);
+        
+        sendMessage(json);
     }
 
-    private boolean hasFinishLineBeenCrossed(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean hasFinishLineBeenCrossed(int id) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+
+        json.put("entidade", "horse");
+        json.put("metodo", "hasFinishLineBeenCrossed");
+        json.put("id", id);
+        
+        sendMessage(json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
+        
+        String s = res.getString("boolean");
+        if ( s.equals("true"))
+            return true;
+        return false;
     }
 
-    private void makeAMove(int id, int Pnk) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void makeAMove(int id, int Pnk) throws JSONException, IOException {
+        JSONObject json = new JSONObject();
+
+        json.put("entidade", "horse");
+        json.put("metodo", "hasFinishLineBeenCrossed");
+        json.put("id", id);
+        json.put("Pnk", Pnk);
+        
+        sendMessage(json);
     }
     
     private void sendMessage( JSONObject json ) throws IOException{
         o.writeObject( json.toString() );
         out.flush();
         
+    }
+    
+    public JSONObject receiveMessage( Socket socket ) throws IOException, JSONException, ClassNotFoundException {
+        InputStream in = socket.getInputStream();
+        ObjectInputStream i = new ObjectInputStream(in);
+        String s = (String) i.readObject();
+        System.out.println(s);
+        //i.close();
+        JSONObject jsonObject = new JSONObject(s);
+        return jsonObject;
     }
 }
