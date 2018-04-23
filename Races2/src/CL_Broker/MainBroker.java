@@ -5,7 +5,11 @@
  */
 package CL_Broker;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -18,13 +22,14 @@ import org.json.JSONObject;
  *
  * @author fm
  */
-public class Broker {
+public class MainBroker {
     public static void main(String[] args) throws IOException, ClassNotFoundException, JSONException {
         Socket socket = new Socket("localhost", 12345);
         //ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
         
         JSONObject json = new JSONObject();
-
+        
+        json.put("entidade", "broker");
         json.put("metodo", "summonHorsesToPaddock");
         json.put("nRace", "2");
         Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
@@ -39,6 +44,13 @@ public class Broker {
         ObjectOutputStream o = new ObjectOutputStream(out);
         o.writeObject( json.toString() );
         out.flush();
+        
+        
+        BufferedReader in =
+            new BufferedReader(
+                new InputStreamReader(socket.getInputStream()));
+        String fromServer = in.readLine();
+        System.out.println(fromServer);
         
     }
 }

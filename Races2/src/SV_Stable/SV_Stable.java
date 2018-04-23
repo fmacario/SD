@@ -29,7 +29,7 @@ public class SV_Stable {
             Socket cliente = servidor.accept();
             System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
             
-            Runnable r = new MyRunnable( cliente );
+            Runnable r = new MyRunnable( stable, cliente );
             new Thread(r).start();
         }
     }

@@ -8,7 +8,8 @@ package SV_Stable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.lang.reflect.Array;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +23,11 @@ import org.json.JSONObject;
  * @author fm
  */
 public class MyRunnable implements Runnable {
+    Stable stable;
     Socket socket;
     
-    MyRunnable( Socket socket) {
+    MyRunnable( Stable stable, Socket socket) {
+        this.stable = stable;
         this.socket = socket;
     }
 
@@ -44,8 +47,11 @@ public class MyRunnable implements Runnable {
                     switch ( json.getString("metodo") ){                
                     case "summonHorsesToPaddock":
                         int nRace = json.getInt( "nRace" );
-                        hashHorsesAgile = stringToMap( json.getString("hashHorsesAgile") );
-
+                        hashHorsesAgile = stable.summonHorsesToPaddock(nRace);
+                        System.out.println(hashHorsesAgile.toString());
+                        JSONObject jsonRes = new JSONObject();
+                        jsonRes.put("hashHorsesAgile", hashHorsesAgile);
+                        sendMessage(jsonRes);
                         break;
                     case "waitForSpectators":
 
@@ -81,7 +87,13 @@ public class MyRunnable implements Runnable {
                     break;
                     
                 case "horse":
-                    
+                    switch ( json.getString("metodo") ){     
+                        case "proceedToStable":
+                            int id = json.getInt( "id" );
+                            int Pnk = json.getInt( "Pnk" );
+                            stable.proceedToStable(id, Pnk);
+                        break;
+                    }
                     break;
                     
                 case "spectator":
@@ -96,19 +108,14 @@ public class MyRunnable implements Runnable {
     }
     
     
-    public JSONObject receiveJSON() throws IOException, JSONException {
+    public JSONObject receiveJSON() throws IOException, JSONException, ClassNotFoundException {
             InputStream in = socket.getInputStream();
             ObjectInputStream i = new ObjectInputStream(in);
-            String line = null;
-            try {
-                line = (String) i.readObject();
+            String s = (String) i.readObject();
+            System.out.println(s);
+            i.close();
 
-            } catch (ClassNotFoundException e) {
-                 e.printStackTrace();
-
-            }
-
-            JSONObject jsonObject = new JSONObject(line);
+            JSONObject jsonObject = new JSONObject(s);
             System.out.println( jsonObject.getString("metodo") );
             return jsonObject;
         }
@@ -164,6 +171,13 @@ public class MyRunnable implements Runnable {
     }
     
     
+    private void sendMessage( JSONObject json ) throws IOException{
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
 
+        o.writeObject( json.toString() );
+        out.flush();
+        
+    }
     
 }

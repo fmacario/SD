@@ -62,6 +62,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 
                 //gri.setHorseState(horseID, HorseState.AT_THE_STABLE);
                 //gri.updateStatus();
+                System.out.println("Horse " + horseID + " at the stable.");
                 
                 if(nHorses == NO_COMPETITORS){
                     allHorses=true;
@@ -78,6 +79,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                     GO = false;
                     allHorses=false;
                 }
+                   System.out.println("HORSE " +horseID+ " : saí");
             } catch (Exception e) { 
                 e.printStackTrace();
             }
@@ -99,6 +101,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 //gri.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
                 //gri.setRn( nRace );
                 //gri.updateStatus();
+                System.out.println("BrokerState.ANNOUNCING_NEXT_RACE");
                 
                 while(!allHorses){
                     condBroker.await();
@@ -122,7 +125,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 }
                                 
                 condHorses.signalAll();
-                
+                   System.out.println("BROKER  saí");
                 return hashHorsesAgile;
                 
             } catch (Exception e) { 
