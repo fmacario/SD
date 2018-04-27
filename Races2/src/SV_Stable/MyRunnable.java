@@ -34,7 +34,7 @@ public class MyRunnable implements Runnable {
             
             switch ( json.getString("entidade") ){
                 case "broker":
-                    Map<Integer, Integer> hashHorsesAgile = null;
+                    Map<Integer, Integer> hashHorsesAgile;
                     ArrayList<Integer> horsesWinnersList = null, specsWinnersList = null;
                     Map<Integer, List<Integer>> mapSpec_Horse_Bet = null;
             
@@ -82,7 +82,7 @@ public class MyRunnable implements Runnable {
                 case "horse":
                     switch ( json.getString("metodo") ){     
                         case "proceedToStable":
-                            int id = json.getInt( "id" );
+                            int id = json.getInt( "horseID" );
                             int Pnk = json.getInt( "Pnk" );
                             stable.proceedToStable(id, Pnk);
                         break;

@@ -24,9 +24,9 @@ public class Horse extends Thread{
     private final int Pnk;
     private final int NO_RACES;
     private final int TRACK_DISTANCE;
-    private Socket socket;
-    private OutputStream out;
-    private ObjectOutputStream o;
+    private Socket socketStable, socketPaddock;
+    private OutputStream outStable, outPaddock;
+    private ObjectOutputStream oStable, oPaddock;
     
 
     public Horse(int NO_RACES, int TRACK_DISTANCE, int id) throws IOException{
@@ -34,9 +34,15 @@ public class Horse extends Thread{
         this.TRACK_DISTANCE = TRACK_DISTANCE;
         this.id = id;
         this.Pnk = (int )(Math.random() * (TRACK_DISTANCE/4) + 3); // Pnk
-        this.socket = new Socket("localhost", 12345);
-        this.out = socket.getOutputStream();
-        this.o = new ObjectOutputStream(out);
+        
+        this.socketStable = new Socket("localhost", 12345);
+        this.socketPaddock = new Socket("localhost", 12343);
+        
+        this.outStable = socketStable.getOutputStream();
+        this.outPaddock = socketPaddock.getOutputStream();
+        
+        this.oStable = new ObjectOutputStream(outStable);
+        this.oPaddock = new ObjectOutputStream(outPaddock);
     }
     
     /**
@@ -45,11 +51,10 @@ public class Horse extends Thread{
     @Override
     public void run(){
         try {
-            
             for (int k = 0; k < 1 ; k++) {
 
-                proceedToStable( id, Pnk );
-                //proceedToPaddock(id);
+                proceedToStable( id, Pnk, socketStable, outStable, oStable );
+                proceedToPaddock( id, socketPaddock, outPaddock, oPaddock );
                 //proceedToStartLine(id);
                 //while( !hasFinishLineBeenCrossed( id ) ){
                   //  makeAMove( id, Pnk );
@@ -62,45 +67,45 @@ public class Horse extends Thread{
         }
     }
 
-    private void proceedToStable(int id, int Pnk) throws JSONException, IOException {
+    private void proceedToStable(int id, int Pnk, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "horse");
         json.put("metodo", "proceedToStable");
-        json.put("id", id);
+        json.put("horseID", id);
         json.put("Pnk", Pnk);
         
-        sendMessage(json);
+        sendMessage(json, socket, out, o);
     }
 
-    private void proceedToPaddock(int id) throws JSONException, IOException {
+    private void proceedToPaddock(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "horse");
         json.put("metodo", "proceedToPaddock");
-        json.put("id", id);
+        json.put("horseID", id);
         
-        sendMessage(json);
+        sendMessage(json, socket, out, o);
     }
 
-    private void proceedToStartLine(int id) throws JSONException, IOException {
+    private void proceedToStartLine(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "horse");
         json.put("metodo", "proceedToStartLine");
-        json.put("id", id);
+        json.put("horseID", id);
         
-        sendMessage(json);
+        sendMessage(json, socket, out, o);
     }
 
-    private boolean hasFinishLineBeenCrossed(int id) throws JSONException, IOException, ClassNotFoundException {
+    private boolean hasFinishLineBeenCrossed(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException, ClassNotFoundException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "horse");
         json.put("metodo", "hasFinishLineBeenCrossed");
-        json.put("id", id);
+        json.put("horseID", id);
         
-        sendMessage(json);
+        sendMessage(json, socket, out, o);
         
         JSONObject res = receiveMessage( socket );
         while( res == null ){
@@ -113,18 +118,18 @@ public class Horse extends Thread{
         return false;
     }
 
-    private void makeAMove(int id, int Pnk) throws JSONException, IOException {
+    private void makeAMove(int id, int Pnk, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "horse");
         json.put("metodo", "hasFinishLineBeenCrossed");
-        json.put("id", id);
+        json.put("horseID", id);
         json.put("Pnk", Pnk);
         
-        sendMessage(json);
+        sendMessage(json, socket, out, o);
     }
     
-    private void sendMessage( JSONObject json ) throws IOException{
+    private void sendMessage( JSONObject json, Socket socket, OutputStream out, ObjectOutputStream o) throws IOException{
         o.writeObject( json.toString() );
         out.flush();
         
