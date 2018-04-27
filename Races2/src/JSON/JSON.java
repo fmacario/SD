@@ -5,6 +5,7 @@
  */
 package JSON;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -24,10 +25,23 @@ import org.json.JSONObject;
  */
 public class JSON {
     public static JSONObject receiveJSON( Socket socket ) throws IOException, JSONException, ClassNotFoundException {
+        String s = null;
+        JSONObject jsonObject = null;
+        try{
         InputStream in = socket.getInputStream();
+        
         ObjectInputStream i = new ObjectInputStream(in);
-        String s = (String) i.readObject();
-        JSONObject jsonObject = new JSONObject(s);
+        
+        
+        s = (String) i.readObject();
+        }catch(EOFException e){
+            
+        }
+        try{
+            jsonObject = new JSONObject(s);
+        }catch(NullPointerException e){
+            
+        }
         return jsonObject;
         }
     

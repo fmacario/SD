@@ -185,8 +185,10 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
-                                
-                while( mapSpec_Paid.get(spectatorID) == false ){
+                                System.out.println("mapSpec_Paid " + mapSpec_Paid.toString());
+                while( mapSpec_Paid.size() == 0)
+                    condSpectators.await();
+                while( mapSpec_Paid.get(spectatorID) == false){
                     condSpectators.await();
                 }
                                 

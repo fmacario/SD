@@ -35,14 +35,14 @@ public class MyRunnable implements Runnable {
             
             switch ( json.getString("entidade") ){
                 case "broker":
-                    ArrayList<Integer> winnersList;
+                    ArrayList<Integer> horsesWinnersList;
                     Map<Integer, List<Integer>> mapSpec_Horse_Bet;
                     switch ( json.getString("metodo") ){     
                         case "reportResults":                            
-                            winnersList = JSON.stringToArrayList(json.getString("winnersList") );
+                            horsesWinnersList = JSON.stringToArrayList(json.getString("horsesWinnersList") );
                             mapSpec_Horse_Bet = JSON.stringToMapList(json.getString("mapSpec_Horse_Bet") );
                             
-                            ArrayList<Integer> reportResults = controlCentre.reportResults(winnersList, mapSpec_Horse_Bet);
+                            ArrayList<Integer> reportResults = controlCentre.reportResults(horsesWinnersList, mapSpec_Horse_Bet);
                             
                             jsonRes = new JSONObject();
                             jsonRes.put("return", reportResults.toString());
@@ -57,8 +57,9 @@ public class MyRunnable implements Runnable {
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "entertainTheGuests":
+                            System.out.println("entertainTheGuests - msg recebida");
                             controlCentre.entertainTheGuests();
-                            
+                            System.out.println("entertainTheGuests - msg recebida e sai da funcao");
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);
@@ -82,14 +83,17 @@ public class MyRunnable implements Runnable {
                             spectatorID = json.getInt("spectatorID");
                             
                             boolean b = controlCentre.haveIWon(spectatorID);
-                            
+                            System.out.println("B: _       ___ " + b);
                             jsonRes = new JSONObject();
                             jsonRes.put("return", b);
+                            System.out.println(jsonRes.toString());
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "relaxABit":
-                            spectatorID = json.getInt("spectatorID");
                             
+                            
+                            spectatorID = json.getInt("spectatorID");
+                            System.out.println("relaxABit " +spectatorID);
                             controlCentre.relaxABit(spectatorID);
                             
                             jsonRes = new JSONObject();

@@ -17,12 +17,18 @@ public class SV_ControlCentre {
     static final int PORTA = 12341;
     
     public static void main(String[] args) throws IOException  {
+        
+        ControlCentre controlCentre = new ControlCentre();
+        
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor ControlCentre ouvindo a porta " + PORTA);
 
         while (true) {            
             Socket cliente = servidor.accept();
             System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
+            
+            Runnable r = new MyRunnable( controlCentre, cliente );
+            new Thread(r).start();
         }
     }
 }

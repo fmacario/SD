@@ -27,9 +27,15 @@ public class Broker extends Thread{
     private Map<Integer, List<Integer>> mapSpec_Horse_Bet = new HashMap<Integer, List<Integer>>();
     private ArrayList<Integer> horsesWinnersList = new ArrayList<>();
     private ArrayList<Integer> specsWinnersList = new ArrayList<>();
-    private Socket socketStable;
+    private Socket socketStable, socketBettingCentre, socketControlCentre, socketPaddock, socketRacingTrack;
     private OutputStream out;
     private ObjectOutputStream o;
+    
+    private final int BETTING_CENTRE;
+    private final int CONTROL_CENTRE;
+    private final int PADDOCK;
+    private final int RACING_TRACK;
+    private final int STABLE;
     
     /**
      *
@@ -38,9 +44,18 @@ public class Broker extends Thread{
      */
     public Broker(int NO_RACES) throws IOException{
         this.NO_RACES = NO_RACES;
-        this.socketStable = new Socket("localhost", 12345);
-        //this.out = socketStable.getOutputStream();
-        //this.o = new ObjectOutputStream(out);
+       
+        this.BETTING_CENTRE = 12340;
+        this.CONTROL_CENTRE = 12341;
+        this.PADDOCK = 12343;
+        this.RACING_TRACK = 12344;
+        this.STABLE = 12345;
+        
+        this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+        this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+        this.socketPaddock = new Socket("localhost", PADDOCK);
+        this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
+        this.socketStable = new Socket("localhost", STABLE);
     }
     
     /**
@@ -48,28 +63,35 @@ public class Broker extends Thread{
      */
     @Override
     public void run(){
-        
-        for (int k = 0; k < 1; k++) {
-            
-            try {
-                
-                hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
-                //while( !waitForSpectators()) {
-                
-                //}
-                //mapSpec_Horse_Bet = acceptTheBets(hashHorsesAgile);
-                //horsesWinnersList = startTheRace();
-                //specsWinnersList = reportResults( horsesWinnersList, mapSpec_Horse_Bet );
-                //if ( areThereAnyWinners( mapSpec_Horse_Bet ) ) {
-                //  honourTheBets( horsesWinnersList, specsWinnersList );
-                //}
-            } catch (JSONException | IOException | ClassNotFoundException ex) {
+        try {
+            for (int k = 0; k < 4; k++) {
+
+
+                    hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
+                    while( !waitForSpectators( socketPaddock )) {
+                        System.out.println("broker está no while");
+                        socketPaddock = new Socket("localhost", PADDOCK);
+                    }
+                    System.out.println("broker saiu do while e vai entrar na acceptTheBets");
+                    mapSpec_Horse_Bet = acceptTheBets( hashHorsesAgile, socketBettingCentre );
+                    horsesWinnersList = startTheRace( socketRacingTrack );
+                    specsWinnersList = reportResults( horsesWinnersList, mapSpec_Horse_Bet, socketControlCentre );
+                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    if ( areThereAnyWinners( mapSpec_Horse_Bet , socketControlCentre ) ) {
+                        socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                        socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                        honourTheBets( horsesWinnersList, specsWinnersList, socketBettingCentre);
+                    }
+            }
+            System.out.println("broker saiu do for");
+            socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+            entertainTheGuests( socketControlCentre );
+            socketStable = new Socket("localhost", STABLE);
+            end( socketStable );
+        } catch (JSONException | IOException | ClassNotFoundException ex) {
                 Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        //entertainTheGuests();
-        //end();
-        //System.out.println("Bye BROKER");
+        System.out.println("Bye BROKER");
     }
 
     private Map<Integer, Integer> summonHorsesToPaddock(Socket socket, int k) throws JSONException, IOException, ClassNotFoundException {
@@ -97,7 +119,7 @@ public class Broker extends Thread{
         json.put("hashHorsesAgile", hashHorsesAgile.toString());
         
         sendMessage(socket, json);
-        
+        System.out.println("accpet the bets: broker enviu json");
         JSONObject res = receiveMessage( socket );
         while( res == null ){
             res = receiveMessage( socket );
@@ -208,9 +230,9 @@ public class Broker extends Thread{
         
         json.put("entidade", "broker");
         json.put("metodo", "end");
-        
+        System.out.println("END ANTES DA MSG ENVIADA");
         sendMessage(socket, json);
-        
+        System.out.println("END MSG ENVIADA");
         JSONObject res = receiveMessage( socket );
         while( res == null ){
             res = receiveMessage( socket );
@@ -276,6 +298,11 @@ public class Broker extends Thread{
      public static ArrayList<Integer> stringToArrayList ( String s ){
         ArrayList<Integer> arrayList = new ArrayList<>();
         
+        if( s.length() == 2){
+            return arrayList;
+        }
+        
+        System.out.println("S:  - -- - - " + s);
         s = s.substring(1, s.length()-1);
         String parts[] = s.split(", ");
         for (String part : parts) {

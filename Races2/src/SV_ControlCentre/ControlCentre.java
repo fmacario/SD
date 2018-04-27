@@ -124,7 +124,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
             try {
                 specsWinnersList.clear();
                 this.horsesWinnersList = winnersList;
-                               
+                           System.out.println("BROKER: REPORT RESULTS");    
                 for ( Integer horseWinner : horsesWinnersList ) {                    
                     for (Map.Entry<Integer, List<Integer>> entry : mapSpec_Horse_Bet.entrySet())
                     {
@@ -156,6 +156,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     public boolean areThereAnyWinners( Map<Integer, List<Integer>> mapSpec_Horse_Bet ) {
         rl.lock();
         try {
+            System.out.println("BROKER ARE THERE ANY WINNERS");
             try {
                 if ( specsWinnersList.isEmpty() )
                     return false;

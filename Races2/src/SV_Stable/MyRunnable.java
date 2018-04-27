@@ -31,6 +31,7 @@ public class MyRunnable implements Runnable {
         
         try {
             json = JSON.receiveJSON( socket );
+            System.out.println(json.toString());
             JSONObject jsonRes;
             
             switch ( json.getString("entidade") ){

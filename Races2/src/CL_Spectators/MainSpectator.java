@@ -29,7 +29,7 @@ public class MainSpectator {
     public static Spectator[] spectators = new Spectator[NO_SPECTATORS];
     
     public static void main(String[] args) throws IOException {
-               
+        System.out.println("SPECTATOR");
         for (int i = 0; i < NO_SPECTATORS; i++) {
             spectators[i] = new Spectator( i , NO_RACES);
             spectators[i].start();

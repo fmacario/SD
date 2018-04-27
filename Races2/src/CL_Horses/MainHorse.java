@@ -45,7 +45,7 @@ public class MainHorse {
 
     
     public static void main(String[] args) throws IOException {
-               
+        System.out.println("HORSE");
         for (int i = 0; i < NO_COMPETITORS; i++) {
             horses[i] = new Horse(NO_RACES, TRACK_DISTANCE, i);
             horses[i].start();

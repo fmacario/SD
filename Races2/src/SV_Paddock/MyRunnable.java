@@ -34,10 +34,10 @@ public class MyRunnable implements Runnable {
                 case "broker":
                     switch ( json.getString("metodo") ){     
                         case "waitForSpectators":
-                            paddock.waitForSpectators();
+                            boolean b = paddock.waitForSpectators();
                             
                             jsonRes = new JSONObject();
-                            jsonRes.put("return", "void");
+                            jsonRes.put("return", b);
                             JSON.sendMessage(socket, jsonRes);
                             break;
                     }
@@ -62,7 +62,7 @@ public class MyRunnable implements Runnable {
                         case "goCheckHorses":
                             spectatorID = json.getInt("spectatorID");
                             paddock.goCheckHorses(spectatorID);
-                            
+                            System.out.println("GO CHECK ------------------");
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);

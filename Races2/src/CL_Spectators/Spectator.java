@@ -18,12 +18,13 @@ public class Spectator extends Thread{
     private final int id;
     private int money;
     private final int NO_RACES;
-    private Socket socketPaddock, socketBettingCentre;
-    private OutputStream outPaddock, outBettingCentre;
-    private ObjectOutputStream oPaddock, oBettingCentre;
+    private Socket socketPaddock, socketBettingCentre, socketControlCentre;
+    private OutputStream outPaddock, outBettingCentre, outControlCentre;
+    private ObjectOutputStream oPaddock, oBettingCentre, oControlCentre;
     
-    private final int STABLE;
+    private final int PADDOCK;
     private final int BETTING_CENTRE;
+    private final int CONTROL_CENTRE;
     
     /**
      * @param id Id do espetador.
@@ -34,16 +35,20 @@ public class Spectator extends Thread{
         this.NO_RACES = NO_RACES;
         this.money = 500;
         
-        this.STABLE = 12345;
+        this.CONTROL_CENTRE = 12341;
+        this.PADDOCK = 12343;
         this.BETTING_CENTRE = 12340;
                 
-        this.socketPaddock = new Socket("localhost", STABLE);
+        this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+        this.socketPaddock = new Socket("localhost", PADDOCK);
         this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
         
         this.outPaddock = socketPaddock.getOutputStream();
-        this.outBettingCentre = socketBettingCentre.getOutputStream();        
+        this.outControlCentre = socketControlCentre.getOutputStream();        
+        this.outBettingCentre = socketBettingCentre.getOutputStream();
         
         this.oPaddock = new ObjectOutputStream(outPaddock);
+        this.oControlCentre = new ObjectOutputStream(outControlCentre);
         this.oBettingCentre = new ObjectOutputStream(outBettingCentre);
     }
 
@@ -53,25 +58,48 @@ public class Spectator extends Thread{
     @Override
     public void run(){
         try {
-            for (int k = 0; k < 1; k++) {
+            for (int k = 0; k < 4; k++) {
 
                     waitForNextRace( id, socketPaddock, outPaddock, oPaddock );
+                    System.out.println("ANTES DO GO CHECK");
+                    socketPaddock = new Socket("localhost", PADDOCK);
+                    outPaddock = socketPaddock.getOutputStream();
+                    oPaddock = new ObjectOutputStream(outPaddock);
                     goCheckHorses( id, socketPaddock, outPaddock, oPaddock );
+                    System.out.println("DEPOIS DO GO CHECK");
                     money -= placeABet( id, money, socketBettingCentre, outBettingCentre, oBettingCentre );
-                    //goWatchTheRace( id );
-                    //if ( haveIWon( id ) ) {
-                    //     money += goCollectTheGains( id, socketBettingCentre, outBettingCentre, oBettingCentre );
-                    //}
+                    goWatchTheRace( id, socketControlCentre, outControlCentre, oControlCentre );
+                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    outControlCentre = socketControlCentre.getOutputStream();
+                    oControlCentre = new ObjectOutputStream(outControlCentre);
+                    System.out.println("vou ver se ganhei ");
+                    if ( haveIWon( id, socketControlCentre, outControlCentre, oControlCentre ) ) {
+                        System.out.println("GANHEI! vou chamar a collectTheGains " + id);
+                        socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                        outBettingCentre = socketBettingCentre.getOutputStream();
+                        oBettingCentre = new ObjectOutputStream(outBettingCentre);
+                        
+                        money += goCollectTheGains( id, socketBettingCentre, outBettingCentre, oBettingCentre );
+                        System.out.println("sai da collectTheGains " + id);
+                        socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                        outControlCentre = socketControlCentre.getOutputStream();
+                        oControlCentre = new ObjectOutputStream(outControlCentre);
+                    }
             }
-            //relaxABit( id );
+            System.out.println("spectator sai do for");
+            socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+            outControlCentre = socketControlCentre.getOutputStream();
+            oControlCentre = new ObjectOutputStream(outControlCentre);
+            relaxABit( id, socketControlCentre, outControlCentre, oControlCentre);
+            
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //System.out.println("Bye SPECTATOR " + id);
+        System.out.println("Bye SPECTATOR " + id);
     }
 
-    private void waitForNextRace(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException {
+    private void waitForNextRace(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException, ClassNotFoundException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "spectator");
@@ -79,9 +107,14 @@ public class Spectator extends Thread{
         json.put("spectatorID", id);
         
         sendMessage(json, socket, out, o);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
     }
 
-    private void goCheckHorses(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException {
+    private void goCheckHorses(int id, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException, ClassNotFoundException {
         JSONObject json = new JSONObject();
 
         json.put("entidade", "spectator");
@@ -89,6 +122,11 @@ public class Spectator extends Thread{
         json.put("spectatorID", id);
         
         sendMessage(json, socket, out, o);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
     }
     
     private int placeABet( int id, int money, Socket socket, OutputStream out, ObjectOutputStream o) throws JSONException, IOException, ClassNotFoundException {
@@ -96,6 +134,7 @@ public class Spectator extends Thread{
 
         json.put("entidade", "spectator");
         json.put("metodo", "placeABet");
+        json.put("money", money);
         json.put("spectatorID", id);
         
         sendMessage(json, socket, out, o);
@@ -116,8 +155,9 @@ public class Spectator extends Thread{
         json.put("spectatorID", id);
         
         sendMessage(json, socket, out, o);
-        
+        System.out.println("cliente enviei msg goCollectTheGains");
         JSONObject res = receiveMessage( socket );
+        System.out.println("cliente recebi msg goCollectTheGains");
         while( res == null ){
             res = receiveMessage( socket );
         }
@@ -146,10 +186,12 @@ public class Spectator extends Thread{
         json.put("entidade", "spectator");
         json.put("metodo", "relaxABit");
         json.put("spectatorID", id);
-        
+        System.out.println("spectator "+id+ " vou enviar msg relaxABit");
         sendMessage(json, socket, out, o);
-        
+        System.out.println("spectator "+id+ " enviei msg relaxABit");
         JSONObject res = receiveMessage( socket );
+        
+        System.out.println("spectator recebi resposta relaxABit");
         while( res == null ){
             res = receiveMessage( socket );
         }
@@ -159,7 +201,7 @@ public class Spectator extends Thread{
         JSONObject json = new JSONObject();
 
         json.put("entidade", "spectator");
-        json.put("metodo", "relaxABit");
+        json.put("metodo", "haveIWon");
         json.put("spectatorID", id);
         
         sendMessage(json, socket, out, o);
@@ -169,7 +211,7 @@ public class Spectator extends Thread{
             res = receiveMessage( socket );
         }
         
-       return res.getBoolean("return");
+        return res.getBoolean("return");
     }
     
      private void sendMessage( JSONObject json, Socket socket, OutputStream out, ObjectOutputStream o) throws IOException{

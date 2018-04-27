@@ -61,17 +61,32 @@ public class Horse extends Thread{
     @Override
     public void run(){
         try {
-            for (int k = 0; k < 1 ; k++) {
+            for (int k = 0; k < 4 ; k++) {
 
                 proceedToStable( id, Pnk, socketStable, outStable, oStable );
                 proceedToPaddock( id, socketPaddock, outPaddock, oPaddock );
-                //proceedToStartLine(id, socketRacingTrack, outRacingTrack, oRacingTrack );
-                //while( !hasFinishLineBeenCrossed( id, socketRacingTrack, outRacingTrack, oRacingTrack )){
-                  //  makeAMove( id, Pnk, socketRacingTrack, outRacingTrack, oRacingTrack );
-                //}
+                proceedToStartLine(id, socketRacingTrack, outRacingTrack, oRacingTrack );
+                
+                socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                outRacingTrack = socketRacingTrack.getOutputStream();
+                oRacingTrack = new ObjectOutputStream(outRacingTrack);
+                
+                    while( !hasFinishLineBeenCrossed( id, socketRacingTrack, outRacingTrack, oRacingTrack )){
+                        socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                        outRacingTrack = socketRacingTrack.getOutputStream();
+                        oRacingTrack = new ObjectOutputStream(outRacingTrack);
+                    makeAMove( id, Pnk, socketRacingTrack, outRacingTrack, oRacingTrack );
+                    
+                    socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                    outRacingTrack = socketRacingTrack.getOutputStream();
+                    oRacingTrack = new ObjectOutputStream(outRacingTrack);
+                }
             }
-            //proceedToStable( id, Pnk, socketStable, outStable, oStable );
-            //System.out.println("Bye HORSE " + id);
+            socketStable = new Socket("localhost", STABLE);
+            outStable = socketStable.getOutputStream();
+            oStable = new ObjectOutputStream(outStable);
+            proceedToStable( id, Pnk, socketStable, outStable, oStable );
+            System.out.println("Bye HORSE " + id);
         } catch (Exception e) {
             e.printStackTrace();
         }

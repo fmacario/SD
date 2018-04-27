@@ -22,6 +22,8 @@ public class MainBroker {
     public static final int NO_RACES = 4;
     
     public static void main(String[] args) throws IOException, ClassNotFoundException, JSONException {
+        System.out.println("BROKER");
+        
         Broker broker = new Broker(NO_RACES);
         broker.start();
        

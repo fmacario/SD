@@ -195,7 +195,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     
                     return true;
                 }
-                
+                System.out.println("hasFinishLineBeenCrossed? FALSE " + horseID);
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();

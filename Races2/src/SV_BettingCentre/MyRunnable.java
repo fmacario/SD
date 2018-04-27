@@ -37,13 +37,15 @@ public class MyRunnable implements Runnable {
                 case "broker":
                     Map<Integer, Integer> hashHorsesAgile;
                     ArrayList<Integer> horsesWinnersList, specsWinnersList;
-                    switch ( json.getString("metodo") ){     
+                    switch ( json.getString("metodo") ){  
                         case "acceptTheBets":
+                            System.out.println("case acceptTheBets");
                             hashHorsesAgile = JSON.stringToMap( json.getString("hashHorsesAgile") );
+                            
+                            System.out.println("antes da acceptTheBets");
                             Map<Integer, List<Integer>> acceptTheBets = bettingCentre.acceptTheBets(hashHorsesAgile);
                             
-                            bettingCentre.acceptTheBets(hashHorsesAgile);
-                            
+                            System.out.println("antes da acceptTheBets, " + acceptTheBets.toString());
                             jsonRes = new JSONObject();
                             jsonRes.put("return", acceptTheBets.toString());
                             JSON.sendMessage(socket, jsonRes);
@@ -67,17 +69,18 @@ public class MyRunnable implements Runnable {
                         case "placeABet":
                             spectatorID = json.getInt("spectatorID");
                             int money = json.getInt("money");
-                            
+                            System.out.println("antes de chamar a funcao placeABet");
                             int bet = bettingCentre.placeABet(spectatorID, money);
-                            
+                            System.out.println("depois de chamar a funcao placeABet,bet = " + spectatorID +  " , valor: " +bet);
                             jsonRes = new JSONObject();
                             jsonRes.put("return", bet);
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "goCollectTheGains":
+                            System.out.println("servidor recebi msg goCollectTheGains");
                             spectatorID = json.getInt("spectatorID");
                             int gains = bettingCentre.goCollectTheGains(spectatorID);
-                            
+                            System.out.println("servidor enviei msg goCollectTheGains");
                             jsonRes = new JSONObject();
                             jsonRes.put("return", gains);
                             JSON.sendMessage(socket, jsonRes);
