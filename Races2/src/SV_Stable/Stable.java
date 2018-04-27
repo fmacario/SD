@@ -79,7 +79,6 @@ public class Stable implements IStable_Broker, IStable_Horse{
                     GO = false;
                     allHorses=false;
                 }
-                   System.out.println("HORSE " +horseID+ " : saí");
             } catch (Exception e) { 
                 e.printStackTrace();
             }
@@ -125,7 +124,6 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 }
                                 
                 condHorses.signalAll();
-                   System.out.println("BROKER  saí");
                 return hashHorsesAgile;
                 
             } catch (Exception e) { 

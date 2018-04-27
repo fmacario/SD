@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package SV_Paddock;
+package SV_RacingTrack;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import org.json.JSONObject;
 import JSON.*;
 
@@ -14,11 +15,11 @@ import JSON.*;
  * @author fm
  */
 public class MyRunnable implements Runnable {
-    Paddock paddock;
+    RacingTrack racingTrack;
     Socket socket;
     
-    MyRunnable( Paddock paddock, Socket socket) {
-        this.paddock = paddock;
+    MyRunnable( RacingTrack racingTrack, Socket socket) {
+        this.racingTrack = racingTrack;
         this.socket = socket;
     }
 
@@ -32,44 +33,42 @@ public class MyRunnable implements Runnable {
             
             switch ( json.getString("entidade") ){
                 case "broker":
-                    switch ( json.getString("metodo") ){     
-                        case "waitForSpectators":
-                            paddock.waitForSpectators();
-                            
-                            jsonRes = new JSONObject();
-                            jsonRes.put("return", "void");
-                            JSON.sendMessage(socket, jsonRes);
-                            break;
-                    }
-                    break;
+                    ArrayList<Integer> winnersList = new ArrayList<>();
                     
-                case "horse":
-                    switch ( json.getString("metodo") ){     
-                        case "proceedToPaddock":
-                            int horseID = json.getInt("horseID");
-                            paddock.proceedToPaddock(horseID);
+                    switch ( json.getString("metodo") ){      
+                        case "startTheRace":
+                            ArrayList<Integer> startTheRace = racingTrack.startTheRace();
                             
                             jsonRes = new JSONObject();
-                            jsonRes.put("return", "void");
+                            jsonRes.put("return", startTheRace.toString());
                             JSON.sendMessage(socket, jsonRes);                            
                             break;
                     }
                     break;
                     
-                case "spectator":
-                    int spectatorID;
+                case "horse":
+                    int id;
                     switch ( json.getString("metodo") ){     
-                        case "goCheckHorses":
-                            spectatorID = json.getInt("spectatorID");
-                            paddock.goCheckHorses(spectatorID);
+                        case "proceedToStartLine":
+                            id = json.getInt( "horseID" );
+                            racingTrack.proceedToStartLine(id);
                             
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);
                             break;
-                        case "waitForNextRace":
-                            spectatorID = json.getInt("spectatorID");
-                            paddock.waitForNextRace(spectatorID);
+                        case "hasFinishLineBeenCrossed":
+                            id = json.getInt( "horseID" );
+                            boolean b = racingTrack.hasFinishLineBeenCrossed(id);
+                            
+                            jsonRes = new JSONObject();
+                            jsonRes.put("return", b);
+                            JSON.sendMessage(socket, jsonRes);
+                            break;
+                        case "makeAMove":
+                            id = json.getInt( "horseID" );
+                            int Pnk = json.getInt( "Pnk" );
+                            racingTrack.makeAMove(id, Pnk);
                             
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");

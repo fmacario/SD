@@ -19,8 +19,8 @@ public interface IBettingCentre_Broker {
 
     /**
      *
-     * @param winnersList
+     * @param horsesWinnersList
      * @param specsWinnersList
      */
-    void honourTheBets( ArrayList<Integer> winnersList, ArrayList<Integer> specsWinnersList);
+    void honourTheBets( ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList);
 }

@@ -3,28 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package SV_Paddock;
+package SV_BettingCentre;
 
 import java.net.Socket;
 import org.json.JSONObject;
 import JSON.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author fm
  */
 public class MyRunnable implements Runnable {
-    Paddock paddock;
+    BettingCentre bettingCentre;
     Socket socket;
     
-    MyRunnable( Paddock paddock, Socket socket) {
-        this.paddock = paddock;
+    MyRunnable( BettingCentre bettingCentre, Socket socket) {
+        this.bettingCentre = bettingCentre;
         this.socket = socket;
     }
 
     @Override
     public void run() {
-        JSONObject json = null;
+        JSONObject json;
         JSONObject jsonRes;
         
         try {
@@ -32,26 +35,28 @@ public class MyRunnable implements Runnable {
             
             switch ( json.getString("entidade") ){
                 case "broker":
+                    Map<Integer, Integer> hashHorsesAgile;
+                    ArrayList<Integer> horsesWinnersList, specsWinnersList;
                     switch ( json.getString("metodo") ){     
-                        case "waitForSpectators":
-                            paddock.waitForSpectators();
+                        case "acceptTheBets":
+                            hashHorsesAgile = JSON.stringToMap( json.getString("hashHorsesAgile") );
+                            Map<Integer, List<Integer>> acceptTheBets = bettingCentre.acceptTheBets(hashHorsesAgile);
+                            
+                            bettingCentre.acceptTheBets(hashHorsesAgile);
+                            
+                            jsonRes = new JSONObject();
+                            jsonRes.put("return", acceptTheBets.toString());
+                            JSON.sendMessage(socket, jsonRes);
+                            break;
+                        case "honourTheBets":
+                            horsesWinnersList = JSON.stringToArrayList( json.getString("horsesWinnersList") );
+                            specsWinnersList = JSON.stringToArrayList( json.getString("specsWinnersList") );
+                            
+                            bettingCentre.honourTheBets(horsesWinnersList, specsWinnersList);
                             
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);
-                            break;
-                    }
-                    break;
-                    
-                case "horse":
-                    switch ( json.getString("metodo") ){     
-                        case "proceedToPaddock":
-                            int horseID = json.getInt("horseID");
-                            paddock.proceedToPaddock(horseID);
-                            
-                            jsonRes = new JSONObject();
-                            jsonRes.put("return", "void");
-                            JSON.sendMessage(socket, jsonRes);                            
                             break;
                     }
                     break;
@@ -59,20 +64,22 @@ public class MyRunnable implements Runnable {
                 case "spectator":
                     int spectatorID;
                     switch ( json.getString("metodo") ){     
-                        case "goCheckHorses":
+                        case "placeABet":
                             spectatorID = json.getInt("spectatorID");
-                            paddock.goCheckHorses(spectatorID);
+                            int money = json.getInt("money");
+                            
+                            int bet = bettingCentre.placeABet(spectatorID, money);
                             
                             jsonRes = new JSONObject();
-                            jsonRes.put("return", "void");
+                            jsonRes.put("return", bet);
                             JSON.sendMessage(socket, jsonRes);
                             break;
-                        case "waitForNextRace":
+                        case "goCollectTheGains":
                             spectatorID = json.getInt("spectatorID");
-                            paddock.waitForNextRace(spectatorID);
+                            int gains = bettingCentre.goCollectTheGains(spectatorID);
                             
                             jsonRes = new JSONObject();
-                            jsonRes.put("return", "void");
+                            jsonRes.put("return", gains);
                             JSON.sendMessage(socket, jsonRes);
                             break;
                     }

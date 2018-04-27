@@ -54,7 +54,6 @@ public class Broker extends Thread{
             try {
                 
                 hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
-                System.out.println(hashHorsesAgile.toString());
                 //while( !waitForSpectators()) {
                 
                 //}
@@ -79,46 +78,143 @@ public class Broker extends Thread{
         json.put("entidade", "broker");
         json.put("metodo", "summonHorsesToPaddock");
         json.put("nRace", k);
-        System.out.println(json);
+        
         sendMessage(socket, json);
+        
         JSONObject res = receiveMessage( socket );
         while( res == null ){
             res = receiveMessage( socket );
         }
         
-        return stringToMap( res.getString("hashHorsesAgile") );
+        return stringToMap( res.getString("return") );
     }
 
-    private Map<Integer, List<Integer>> acceptTheBets(Map<Integer, Integer> hashHorsesAgile) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Map<Integer, List<Integer>> acceptTheBets(Map<Integer, Integer> hashHorsesAgile, Socket socket) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "acceptTheBets");
+        json.put("hashHorsesAgile", hashHorsesAgile.toString());
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
+        
+        return stringToMapList( res.getString("return") );
     }
 
-    private boolean waitForSpectators() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean waitForSpectators( Socket socket ) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "waitForSpectators");
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
+        
+        return res.getBoolean("return");
     }
 
-    private ArrayList<Integer> startTheRace() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private ArrayList<Integer> startTheRace( Socket socket ) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "startTheRace");
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
+        
+        return stringToArrayList( res.getString("return") );
     }
 
-    private ArrayList<Integer> reportResults(ArrayList<Integer> horsesWinnersList, Map<Integer, List<Integer>> mapSpec_Horse_Bet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private ArrayList<Integer> reportResults(ArrayList<Integer> horsesWinnersList, Map<Integer, List<Integer>> mapSpec_Horse_Bet, Socket socket) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "reportResults");
+        json.put("horsesWinnersList", horsesWinnersList.toString());
+        json.put("mapSpec_Horse_Bet", mapSpec_Horse_Bet.toString());
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
+        
+        return stringToArrayList( res.getString("return") );
     }
 
-    private boolean areThereAnyWinners(Map<Integer, List<Integer>> mapSpec_Horse_Bet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean areThereAnyWinners(Map<Integer, List<Integer>> mapSpec_Horse_Bet, Socket socket) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "areThereAnyWinners");
+        json.put("mapSpec_Horse_Bet", mapSpec_Horse_Bet.toString());
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
+        
+        return res.getBoolean("return");
     }
 
-    private void honourTheBets(ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void honourTheBets(ArrayList<Integer> horsesWinnersList, ArrayList<Integer> specsWinnersList, Socket socket) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "honourTheBets");
+        json.put("horsesWinnersList", horsesWinnersList.toString());
+        json.put("specsWinnersList", specsWinnersList.toString());
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
     }
 
-    private void entertainTheGuests() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void entertainTheGuests(Socket socket) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "entertainTheGuests");
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
     }
 
-    private void end() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void end( Socket socket ) throws JSONException, IOException, ClassNotFoundException {
+        JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "end");
+        
+        sendMessage(socket, json);
+        
+        JSONObject res = receiveMessage( socket );
+        while( res == null ){
+            res = receiveMessage( socket );
+        }
     }
     
     private void sendMessage(Socket socket, JSONObject json ) throws IOException{
@@ -153,4 +249,40 @@ public class Broker extends Thread{
         }
         return map;
     }
+    
+    public static Map<Integer, List<Integer>> stringToMapList( String s ){
+        Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
+        
+        s = s.substring(1, s.length()-2);
+        String parts[] = s.split("], ");
+        
+        for (String part : parts) {
+            String[] split = part.split("=");
+            
+            split[1] = split[1].substring(1);
+            
+            String[] splitLista = split[1].split(", ");
+            
+            List<Integer> lista = new ArrayList<Integer>();
+            lista.add(0, Integer.parseInt(splitLista[0]));
+            lista.add(1, Integer.parseInt(splitLista[1]));
+            
+            map.put(Integer.parseInt(split[0]), lista);
+        }
+        
+        return map;
+    }
+    
+     public static ArrayList<Integer> stringToArrayList ( String s ){
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        
+        s = s.substring(1, s.length()-1);
+        String parts[] = s.split(", ");
+        for (String part : parts) {
+            String[] split = part.split("=");
+            arrayList.add( Integer.parseInt(split[0]));
+        }
+        return arrayList;
+    }
+    
 }
