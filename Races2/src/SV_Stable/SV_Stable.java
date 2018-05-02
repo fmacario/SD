@@ -5,6 +5,7 @@
  */
 package SV_Stable;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -16,25 +17,35 @@ import java.util.Properties;
  * @author fm
  */
 public class SV_Stable {
-    static final int PORTA = 12345;
-    static final int NO_COMPETITORS = 4;
-    
-    private static Properties properties = new Properties();
-    private static String propertiesFileName = "myProperties.properties";
-    private static InputStream inputStream;
-    
+    static int PORTA;
+    static int NO_COMPETITORS;
+
     public static void main(String[] args) throws IOException  {
+        Properties prop = new Properties();
+	InputStream input = null;
         
-        try { 
-            inputStream =  SV_Stable.class.getClassLoader().getResourceAsStream(propertiesFileName);
-            properties.load(inputStream);              
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        int PORTA = Integer.parseInt(properties.getProperty("PORT_BETTING_CENTRE"));
-        
-        
+        try {
+            input = new FileInputStream("myProperties.properties");
+
+            // load a properties file
+            prop.load(input);
+
+            // get the property value and print it out
+            PORTA = Integer.parseInt( prop.getProperty("IP_STABLE") );
+            NO_COMPETITORS = Integer.parseInt( prop.getProperty("NO_COMPETITORS") );
+
+	} catch (IOException ex) {
+            ex.printStackTrace();
+	} finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+	}
+
         Stable stable = new Stable( NO_COMPETITORS );
         
         ServerSocket servidor = new ServerSocket( PORTA );
