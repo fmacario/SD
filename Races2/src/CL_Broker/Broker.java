@@ -84,7 +84,9 @@ public class Broker extends Thread{
         //this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
         //this.socketPaddock = new Socket("localhost", PADDOCK);
         //this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
+        System.out.println("1");
         this.socketStable = new Socket(IP_STABLE, PORT_STABLE);
+        System.out.println("2");
     }
     
     /**

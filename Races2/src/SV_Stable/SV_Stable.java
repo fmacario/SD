@@ -8,6 +8,7 @@ package SV_Stable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
@@ -50,7 +51,11 @@ public class SV_Stable {
         
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor Stable ouvindo a porta " + PORTA);
-
+        
+        InetAddress iAddress = InetAddress.getLocalHost();
+        String server_IP = iAddress.getHostAddress();
+        System.out.println("Server IP address : " +server_IP);
+        
         while (true) {            
             Socket cliente = servidor.accept();
             System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
