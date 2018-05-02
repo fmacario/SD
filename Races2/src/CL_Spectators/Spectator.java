@@ -59,34 +59,53 @@ public class Spectator extends Thread{
     public void run(){
         try {
             for (int k = 0; k < 4; k++) {
-
+                    System.out.println("Comecei nova corrida!!");
+                    
+                    //waitForNextRace
+                    socketPaddock = new Socket("localhost", PADDOCK);
+                    outPaddock = socketPaddock.getOutputStream();
+                    oPaddock = new ObjectOutputStream(outPaddock);
                     waitForNextRace( id, socketPaddock, outPaddock, oPaddock );
                     System.out.println("ANTES DO GO CHECK");
+                    
+                    //goCheckHorses
                     socketPaddock = new Socket("localhost", PADDOCK);
                     outPaddock = socketPaddock.getOutputStream();
                     oPaddock = new ObjectOutputStream(outPaddock);
                     goCheckHorses( id, socketPaddock, outPaddock, oPaddock );
                     System.out.println("DEPOIS DO GO CHECK");
+                    
+                    //placeABet
+                    socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                    outBettingCentre = socketBettingCentre.getOutputStream();
+                    oBettingCentre = new ObjectOutputStream(outBettingCentre);
                     money -= placeABet( id, money, socketBettingCentre, outBettingCentre, oBettingCentre );
+                    
+                    //goWatchRace
+                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    outControlCentre = socketControlCentre.getOutputStream();
+                    oControlCentre = new ObjectOutputStream(outControlCentre);
                     goWatchTheRace( id, socketControlCentre, outControlCentre, oControlCentre );
+                    
+                    //haveIWon
                     socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
                     outControlCentre = socketControlCentre.getOutputStream();
                     oControlCentre = new ObjectOutputStream(outControlCentre);
                     System.out.println("vou ver se ganhei ");
                     if ( haveIWon( id, socketControlCentre, outControlCentre, oControlCentre ) ) {
                         System.out.println("GANHEI! vou chamar a collectTheGains " + id);
+                        
+                        //goCollectGains
                         socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
                         outBettingCentre = socketBettingCentre.getOutputStream();
                         oBettingCentre = new ObjectOutputStream(outBettingCentre);
-                        
                         money += goCollectTheGains( id, socketBettingCentre, outBettingCentre, oBettingCentre );
                         System.out.println("sai da collectTheGains " + id);
-                        socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
-                        outControlCentre = socketControlCentre.getOutputStream();
-                        oControlCentre = new ObjectOutputStream(outControlCentre);
                     }
             }
             System.out.println("spectator sai do for");
+            
+            //relaxABit
             socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
             outControlCentre = socketControlCentre.getOutputStream();
             oControlCentre = new ObjectOutputStream(outControlCentre);
@@ -223,7 +242,7 @@ public class Spectator extends Thread{
         InputStream in = socket.getInputStream();
         ObjectInputStream i = new ObjectInputStream(in);
         String s = (String) i.readObject();
-        System.out.println(s);
+        //System.out.println(s);
         //i.close();
         JSONObject jsonObject = new JSONObject(s);
         return jsonObject;

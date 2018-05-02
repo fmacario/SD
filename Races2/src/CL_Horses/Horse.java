@@ -62,30 +62,54 @@ public class Horse extends Thread{
     public void run(){
         try {
             for (int k = 0; k < 4 ; k++) {
-
+                System.out.println("comecei nova corrida!");
+                
+                //proceedToStable
+                socketStable = new Socket("localhost", STABLE);
+                outStable = socketStable.getOutputStream();
+                oStable = new ObjectOutputStream(outStable);
                 proceedToStable( id, Pnk, socketStable, outStable, oStable );
+                System.out.println("sai da proceedToStable!");
+                
+                //proceedToPaddock
+                socketPaddock = new Socket("localhost", PADDOCK);
+                outPaddock = socketPaddock.getOutputStream();
+                oPaddock = new ObjectOutputStream(outPaddock);
                 proceedToPaddock( id, socketPaddock, outPaddock, oPaddock );
+                System.out.println("estou no paddock - chamar proceedToStartLine");
+                
+                //proceedToStartLine
+                socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                outRacingTrack = socketRacingTrack.getOutputStream();
+                oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 proceedToStartLine(id, socketRacingTrack, outRacingTrack, oRacingTrack );
                 
+                //hasFinishLineBeenCrossed
                 socketRacingTrack = new Socket("localhost", RACING_TRACK);
                 outRacingTrack = socketRacingTrack.getOutputStream();
                 oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 
-                    while( !hasFinishLineBeenCrossed( id, socketRacingTrack, outRacingTrack, oRacingTrack )){
-                        socketRacingTrack = new Socket("localhost", RACING_TRACK);
-                        outRacingTrack = socketRacingTrack.getOutputStream();
-                        oRacingTrack = new ObjectOutputStream(outRacingTrack);
+                while( !hasFinishLineBeenCrossed( id, socketRacingTrack, outRacingTrack, oRacingTrack )){
+                    
+                    //makeAMove
+                    socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                    outRacingTrack = socketRacingTrack.getOutputStream();
+                    oRacingTrack = new ObjectOutputStream(outRacingTrack);
                     makeAMove( id, Pnk, socketRacingTrack, outRacingTrack, oRacingTrack );
                     
                     socketRacingTrack = new Socket("localhost", RACING_TRACK);
                     outRacingTrack = socketRacingTrack.getOutputStream();
                     oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 }
+                    System.out.println("acabei a corrida!");
             }
+            
+            //proceedToStable
             socketStable = new Socket("localhost", STABLE);
             outStable = socketStable.getOutputStream();
-            oStable = new ObjectOutputStream(outStable);
+            oStable = new ObjectOutputStream(outStable);         
             proceedToStable( id, Pnk, socketStable, outStable, oStable );
+            
             System.out.println("Bye HORSE " + id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,7 +200,7 @@ public class Horse extends Thread{
         InputStream in = socket.getInputStream();
         ObjectInputStream i = new ObjectInputStream(in);
         String s = (String) i.readObject();
-        System.out.println(s);
+        //System.out.println(s);
         //i.close();
         JSONObject jsonObject = new JSONObject(s);
         return jsonObject;

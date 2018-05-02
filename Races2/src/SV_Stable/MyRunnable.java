@@ -59,6 +59,7 @@ public class MyRunnable implements Runnable {
                 case "horse":
                     switch ( json.getString("metodo") ){     
                         case "proceedToStable":
+                            System.out.println("MyRunnable : proceedToStable");
                             int id = json.getInt( "horseID" );
                             int Pnk = json.getInt( "Pnk" );
                             stable.proceedToStable(id, Pnk);
