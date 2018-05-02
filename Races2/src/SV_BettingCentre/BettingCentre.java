@@ -199,7 +199,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 //gri.addMoney(spectatorID, mapSpec_MoneyToReceive.get(spectatorID));
                 //gri.updateStatus();
-                canGO = false;
+                
                 return mapSpec_MoneyToReceive.get(spectatorID);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -252,6 +252,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     //gri.setBetSelection( i , -1 );
                 }
                 betsHonoured = 0;
+                canGO = false;
                 
             } catch (Exception e) {
                 e.printStackTrace();

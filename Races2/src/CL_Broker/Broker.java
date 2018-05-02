@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -37,6 +38,13 @@ public class Broker extends Thread{
     private final int RACING_TRACK;
     private final int STABLE;
     
+    private final String IP_STABLE;
+    private int PORT_STABLE;
+    
+    private static Properties properties = new Properties();
+    private static String propertiesFileName = "myProperties.properties";
+    private static InputStream inputStream;
+    
     /**
      *
      * @param NO_RACES Número de corridas.
@@ -51,11 +59,22 @@ public class Broker extends Thread{
         this.RACING_TRACK = 12344;
         this.STABLE = 12345;
         
-        this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
-        this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
-        this.socketPaddock = new Socket("localhost", PADDOCK);
-        this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
-        this.socketStable = new Socket("localhost", STABLE);
+        try { 
+            inputStream =  Broker.class.getClassLoader().getResourceAsStream(propertiesFileName);
+            properties.load(inputStream);              
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        IP_STABLE = properties.getProperty("IP_STABLE");
+        PORT_STABLE = Integer.parseInt(properties.getProperty("PORT_STABLE"));
+        
+        
+        //this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+        //this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+        //this.socketPaddock = new Socket("localhost", PADDOCK);
+        //this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
+        this.socketStable = new Socket(IP_STABLE, PORT_STABLE);
     }
     
     /**
@@ -68,10 +87,10 @@ public class Broker extends Thread{
                     System.out.println("Vou comecar nova corrida!");
                     
                     //summonHorsesToPaddock
-                    socketStable = new Socket("localhost", STABLE);
+                    socketStable = new Socket(IP_STABLE, PORT_STABLE);
                     hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
                     System.out.println("sai da summonHorsesToPaddock!");
-                    
+                    /*
                     //waitForSpectators
                     socketPaddock = new Socket("localhost", PADDOCK);
                     while( !waitForSpectators( socketPaddock )) {
@@ -104,9 +123,9 @@ public class Broker extends Thread{
                         socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
                         honourTheBets( horsesWinnersList, specsWinnersList, socketBettingCentre);
                         System.out.println("SAI HonourBets");
-                    }
+                    }*/
             }
-            System.out.println("broker saiu do for");
+           /* System.out.println("broker saiu do for");
             
             //entertainTheGuests
             socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
@@ -115,7 +134,7 @@ public class Broker extends Thread{
             //end
             socketStable = new Socket("localhost", STABLE);
             end( socketStable );
-            
+            */
         } catch (JSONException | IOException | ClassNotFoundException ex) {
                 Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -6,6 +6,8 @@
 package CL_Broker;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import org.json.JSONException;
 
 
@@ -15,6 +17,9 @@ import org.json.JSONException;
  * @author fm
  */
 public class MainBroker {
+    private static Properties properties = new Properties();
+    private static String propertiesFileName = "myProperties.properties";
+    private static InputStream inputStream;
     
     /**
      * Número de corridas (K).
