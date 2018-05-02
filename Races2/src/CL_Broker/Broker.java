@@ -1,5 +1,6 @@
 package CL_Broker;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -21,7 +22,7 @@ import org.json.JSONObject;
  * @author fm
  */
 public class Broker extends Thread{
-    private final int NO_RACES;
+    private int NO_RACES;
     
     private Map<Integer, Integer> hashHorsesAgile = new HashMap<Integer, Integer>();
     
@@ -32,18 +33,17 @@ public class Broker extends Thread{
     private OutputStream out;
     private ObjectOutputStream o;
     
-    private final int BETTING_CENTRE;
-    private final int CONTROL_CENTRE;
-    private final int PADDOCK;
-    private final int RACING_TRACK;
-    private final int STABLE;
-    
-    private final String IP_STABLE;
+    private int PORT_BETTING_CENTRE;
+    private int PORT_CONTROL_CENTRE;
+    private int PORT_PADDOCK;
+    private int PORT_RACING_TRACK;
     private int PORT_STABLE;
     
-    private static Properties properties = new Properties();
-    private static String propertiesFileName = "myProperties.properties";
-    private static InputStream inputStream;
+    private String IP_BETTING_CENTRE;
+    private String IP_CONTROL_CENTRE;
+    private String IP_PADDOCK;
+    private String IP_RACING_TRACK;
+    private String IP_STABLE;
     
     /**
      *
@@ -51,24 +51,34 @@ public class Broker extends Thread{
      * @throws java.io.IOException
      */
     public Broker(int NO_RACES) throws IOException{
-        this.NO_RACES = NO_RACES;
-       
-        this.BETTING_CENTRE = 12340;
-        this.CONTROL_CENTRE = 12341;
-        this.PADDOCK = 12343;
-        this.RACING_TRACK = 12344;
-        this.STABLE = 12345;
+        Properties prop = new Properties();
+	InputStream input = null;
         
-        try { 
-            inputStream =  Broker.class.getClassLoader().getResourceAsStream(propertiesFileName);
-            properties.load(inputStream);              
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        IP_STABLE = properties.getProperty("IP_STABLE");
-        PORT_STABLE = Integer.parseInt(properties.getProperty("PORT_STABLE"));
-        
+        try {
+            input = new FileInputStream("myProperties.properties");
+            prop.load(input);
+            this.NO_RACES = Integer.parseInt( prop.getProperty("NO_RACES") );
+            
+            this.PORT_BETTING_CENTRE = Integer.parseInt( prop.getProperty("PORT_BETTING_CENTRE") );
+            this.PORT_CONTROL_CENTRE = Integer.parseInt( prop.getProperty("PORT_CONTROL_CENTRE") );
+            this.PORT_PADDOCK = Integer.parseInt( prop.getProperty("PORT_PADDOCK") );
+            this.PORT_RACING_TRACK = Integer.parseInt( prop.getProperty("PORT_RACING_TRACK") );
+            this.PORT_STABLE = Integer.parseInt( prop.getProperty("PORT_STABLE") );
+            
+            this.IP_STABLE =  prop.getProperty("IP_STABLE");
+
+	} catch (IOException ex) {
+            ex.printStackTrace();
+	} finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+	}
+
         
         //this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
         //this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
