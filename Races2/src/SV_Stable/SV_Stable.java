@@ -31,7 +31,7 @@ public class SV_Stable {
             prop.load(input);
 
             // get the property value and print it out
-            PORTA = Integer.parseInt( prop.getProperty("IP_STABLE") );
+            PORTA = Integer.parseInt( prop.getProperty("PORT_STABLE") );
             NO_COMPETITORS = Integer.parseInt( prop.getProperty("NO_COMPETITORS") );
 
 	} catch (IOException ex) {
