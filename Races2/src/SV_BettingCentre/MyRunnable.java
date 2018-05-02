@@ -51,6 +51,7 @@ public class MyRunnable implements Runnable {
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "honourTheBets":
+                            System.out.println("case honourTheBets");
                             horsesWinnersList = JSON.stringToArrayList( json.getString("horsesWinnersList") );
                             specsWinnersList = JSON.stringToArrayList( json.getString("specsWinnersList") );
                             

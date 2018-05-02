@@ -68,7 +68,7 @@ public class Broker extends Thread{
                     System.out.println("Vou comecar nova corrida!");
                     
                     //summonHorsesToPaddock
-                    socketPaddock = new Socket("localhost", PADDOCK);
+                    socketStable = new Socket("localhost", STABLE);
                     hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
                     System.out.println("sai da summonHorsesToPaddock!");
                     
@@ -87,16 +87,18 @@ public class Broker extends Thread{
                     //startTheRace
                     socketRacingTrack = new Socket("localhost", RACING_TRACK);
                     horsesWinnersList = startTheRace( socketRacingTrack );
+                    System.out.println("sai da startTheRace");
                     
                     //reportResults
                     socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
                     specsWinnersList = reportResults( horsesWinnersList, mapSpec_Horse_Bet, socketControlCentre );
+                    System.out.println("sai da reportResults");
                     
                     //areThereAnyWinners
                     socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
                     if ( areThereAnyWinners( mapSpec_Horse_Bet , socketControlCentre ) ) {
                         System.out.println("Há Winners!");
-                        socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                        //socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
                         
                         //honourTheBets
                         socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
@@ -230,8 +232,9 @@ public class Broker extends Thread{
         json.put("specsWinnersList", specsWinnersList.toString());
         
         sendMessage(socket, json);
-        
+        System.out.println("envio honourTheBets");
         JSONObject res = receiveMessage( socket );
+        System.out.println("recebo honourTheBets");
         while( res == null ){
             res = receiveMessage( socket );
         }

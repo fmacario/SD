@@ -96,6 +96,7 @@ public class Horse extends Thread{
                     outRacingTrack = socketRacingTrack.getOutputStream();
                     oRacingTrack = new ObjectOutputStream(outRacingTrack);
                     makeAMove( id, Pnk, socketRacingTrack, outRacingTrack, oRacingTrack );
+                    System.out.println("make a move " + id);
                     
                     socketRacingTrack = new Socket("localhost", RACING_TRACK);
                     outRacingTrack = socketRacingTrack.getOutputStream();

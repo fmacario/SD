@@ -35,6 +35,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean betDone = false;
     private boolean wantToBet = false;
     private boolean[] betSpec;    
+    private boolean canGO = false;
     
     /**
      * 
@@ -186,8 +187,9 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
                                 System.out.println("mapSpec_Paid " + mapSpec_Paid.toString());
-                while( mapSpec_Paid.size() == 0)
+                while( !canGO )
                     condSpectators.await();
+                System.out.println("mapSpec_Paid : "+ mapSpec_Paid.toString());
                 while( mapSpec_Paid.get(spectatorID) == false){
                     condSpectators.await();
                 }
@@ -197,7 +199,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 //gri.addMoney(spectatorID, mapSpec_MoneyToReceive.get(spectatorID));
                 //gri.updateStatus();
-                
+                canGO = false;
                 return mapSpec_MoneyToReceive.get(spectatorID);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -230,8 +232,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     double odd = (double)hashHorsesAgile.get(id_cavalo) / 100;
                     mapSpec_MoneyToReceive.put(winner, (int)Math.round(aposta * (1/odd)));
                     mapSpec_Paid.put(winner, false);
+                    System.out.println("mapSpec_Paid PUTTTT : " + winner);
                 }
-                                
+                
+                canGO = true;
+                
                 while( betsHonoured != mapSpec_Paid.size() ){
                     
                     if( !fifoSpectators.isEmpty() ){
