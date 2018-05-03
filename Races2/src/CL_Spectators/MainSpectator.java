@@ -5,7 +5,10 @@
  */
 package CL_Spectators;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  *
@@ -16,20 +19,46 @@ public class MainSpectator {
     /**
      * Número de corridas (K).
      */
-    public static final int NO_RACES = 4;
+    private static int NO_RACES;
     
     /**
      * Número de espetadores (M).
      */
-    public static final int NO_SPECTATORS = 4;
+    private static int NO_SPECTATORS;
     
     /**
      * Array de espetadores.
      */
-    public static Spectator[] spectators = new Spectator[NO_SPECTATORS];
+    private static Spectator[] spectators;// = new Spectator[NO_SPECTATORS];
     
     public static void main(String[] args) throws IOException {
+        Properties prop = new Properties();
+	InputStream input = null;
+        
+        try {
+            input = new FileInputStream("myProperties.properties");
+
+            prop.load(input);
+
+            NO_SPECTATORS = Integer.parseInt( prop.getProperty("NO_SPECTATORS") );
+            NO_RACES = Integer.parseInt( prop.getProperty("NO_RACES") );
+
+	} catch (IOException ex) {
+            ex.printStackTrace();
+	} finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+	}
+        
         System.out.println("SPECTATOR");
+        
+        spectators = new Spectator[NO_SPECTATORS];
+        
         for (int i = 0; i < NO_SPECTATORS; i++) {
             spectators[i] = new Spectator( i , NO_RACES);
             spectators[i].start();

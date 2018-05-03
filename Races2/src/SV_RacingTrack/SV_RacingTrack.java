@@ -5,28 +5,54 @@
  */
 package SV_RacingTrack;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
 /**
  *
  * @author fm
  */
 public class SV_RacingTrack {
-    static final int PORTA = 12344;
+    private static int PORTA;
 
     /**
      * Número de espetadores (M).
      */
-    public static final int NO_SPECTATORS = 4;
+    private static int NO_SPECTATORS;
 
     /**
      * Distância da pista de corrida (D).
      */
-    public static final int TRACK_DISTANCE = 50;
+    private static int TRACK_DISTANCE;
     
     public static void main(String[] args) throws IOException  {
+        Properties prop = new Properties();
+	InputStream input = null;
+        
+        try {
+            input = new FileInputStream("myProperties.properties");
+
+            prop.load(input);
+
+            PORTA = Integer.parseInt( prop.getProperty("PORT_RACING_TRACK") );
+            NO_SPECTATORS = Integer.parseInt( prop.getProperty("NO_SPECTATORS") );
+            TRACK_DISTANCE = Integer.parseInt( prop.getProperty("TRACK_DISTANCE") );
+
+	} catch (IOException ex) {
+            ex.printStackTrace();
+	} finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+	}
         
         RacingTrack racingTrack = new RacingTrack(NO_SPECTATORS, TRACK_DISTANCE);
         

@@ -58,7 +58,7 @@ public class Spectator extends Thread{
     @Override
     public void run(){
         try {
-            for (int k = 0; k < 4; k++) {
+            for (int k = 0; k < NO_RACES; k++) {
                     System.out.println("Comecei nova corrida!!");
                     
                     //waitForNextRace

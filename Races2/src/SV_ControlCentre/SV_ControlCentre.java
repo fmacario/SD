@@ -5,18 +5,43 @@
  */
 package SV_ControlCentre;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
 /**
  *
  * @author fm
  */
 public class SV_ControlCentre {
-    static final int PORTA = 12341;
+    private static int PORTA;
     
     public static void main(String[] args) throws IOException  {
+        Properties prop = new Properties();
+	InputStream input = null;
+        
+        try {
+            input = new FileInputStream("myProperties.properties");
+
+            prop.load(input);
+
+            PORTA = Integer.parseInt( prop.getProperty("PORT_CONTROL_CENTRE") );
+
+	} catch (IOException ex) {
+            ex.printStackTrace();
+	} finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+	}
+        
         
         ControlCentre controlCentre = new ControlCentre();
         

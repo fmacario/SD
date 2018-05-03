@@ -18,8 +18,8 @@ import java.util.Properties;
  * @author fm
  */
 public class SV_Stable {
-    static int PORTA;
-    static int NO_COMPETITORS;
+    private static int PORTA;
+    private static int NO_COMPETITORS;
 
     public static void main(String[] args) throws IOException  {
         Properties prop = new Properties();
@@ -28,10 +28,8 @@ public class SV_Stable {
         try {
             input = new FileInputStream("myProperties.properties");
 
-            // load a properties file
             prop.load(input);
 
-            // get the property value and print it out
             PORTA = Integer.parseInt( prop.getProperty("PORT_STABLE") );
             NO_COMPETITORS = Integer.parseInt( prop.getProperty("NO_COMPETITORS") );
 
