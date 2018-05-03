@@ -1,6 +1,5 @@
 package SV_RacingTrack;
 
-import Enum.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -37,10 +36,6 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private String IP_GRI;
     private int PORT_GRI;
         
-    /**
-     * 
-     * @param gri General Repository of Information (GRI).
-     */
     public RacingTrack(int NO_COMPETITORS, int TRACK_DISTANCE, String IP_GRI, int PORT_GRI){
         //this.gri = gri;
         this.NO_COMPETITORS = NO_COMPETITORS;
@@ -73,9 +68,18 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         try {
             try {
+                JSONObject json = new JSONObject();
                 
                 //gri.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+                json.put("metodo", "setBrokerState");
+                json.put("BrokerState", "SUPERVISING_THE_RACE");
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("BrokerState.SUPERVISING_THE_RACE");
                 
                 raceStart = true;
@@ -106,12 +110,28 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         try{
             try {
-                nHorses++;
-                                
-                //gri.setHorseState( horseID, HorseState.AT_THE_START_LINE);
+                JSONObject json;
+                
+                nHorses++;    
                 positions[horseID] = 0;
+                
+                //gri.setHorseState( horseID, HorseState.AT_THE_START_LINE);
+                json = new JSONObject();
+                json.put("metodo", "setHorseState");
+                json.put("HorseState", "AT_THE_START_LINE");
+                sendMessage(json);
+                
                 //gri.setTrackPosition(positions);
+                json = new JSONObject();
+                json.put("metodo", "setTrackPosition");
+                json.put("trackPosition", Arrays.toString(positions));
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("HorseState.AT_THE_START_LINE " +horseID);
                                
                 
@@ -140,8 +160,19 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         try {
             try {
+                JSONObject json;
+                
                 //gri.setHorseState(horseID, HorseState.RUNNING);
+                json = new JSONObject();
+                json.put("metodo", "setHorseState");
+                json.put("HorseState", "RUNNING");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("HorseState.RUNNING " +horseID);
                 
                 condHorses.signalAll();
@@ -151,8 +182,21 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     iterations[horseID] += 1;
                     
                     //gri.setTrackPosition(positions);
+                    json = new JSONObject();
+                    json.put("metodo", "setTrackPosition");
+                    json.put("trackPosition", Arrays.toString(positions));
+                    sendMessage(json);
+                    
                     //gri.setIterationNumber(iterations);
+                    json = new JSONObject();
+                    json.put("metodo", "setIterationNumber");
+                    json.put("iterationNumber", Arrays.toString(iterations));
+                    sendMessage(json);
+                    
                     //gri.updateStatus();
+                    json = new JSONObject();
+                    json.put("metodo", "updateStatus");
+                    sendMessage(json);
                     
                     if(horsesFinished != (NO_COMPETITORS-1)){
                         condHorses.await();
@@ -179,16 +223,31 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         rl.lock();
         try{
             try {
+                JSONObject json;
                 if( positions[horseID] >= TRACK_DISTANCE){
                     horsesFinished++;
                     
                     //gri.setStandingAtTheEnd( horseID , horsesFinished );
+                    json = new JSONObject();
+                    json.put("metodo", "setStandingAtTheEnd");
+                    json.put("id", horseID);
+                    json.put("standingAtTheEnd", horsesFinished);
+                    sendMessage(json);
                     
                     if ( iterations[horseID] < noMinIterations)
                         noMinIterations = iterations[horseID];
                                         
                     //gri.setHorseState(horseID, HorseState.AT_THE_FINNISH_LINE);
+                    json = new JSONObject();
+                    json.put("metodo", "setHorseState");
+                    json.put("HorseState", "AT_THE_FINNISH_LINE");
+                    sendMessage(json);
+
                     //gri.updateStatus();
+                    json = new JSONObject();
+                    json.put("metodo", "updateStatus");
+                    sendMessage(json);
+                    
                     System.out.println("HorseState.AT_THE_FINNISH_LINE " +horseID);
                                                          
                     if(horsesFinished == NO_COMPETITORS){

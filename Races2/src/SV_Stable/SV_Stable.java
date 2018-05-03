@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
+import org.json.JSONException;
 
 /**
  *
@@ -23,7 +24,7 @@ public class SV_Stable {
     private static String IP_GRI;
     private static int PORT_GRI;
 
-    public static void main(String[] args) throws IOException  {
+    public static void main(String[] args) throws IOException, JSONException  {
         Properties prop = new Properties();
 	InputStream input = null;
         

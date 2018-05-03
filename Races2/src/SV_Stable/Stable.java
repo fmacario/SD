@@ -1,6 +1,5 @@
 package SV_Stable;
 
-import Enum.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -8,14 +7,14 @@ import java.net.Socket;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
+import org.json.JSONException;
 import org.json.JSONObject;
         
 /**
  * Métodos do Estábulo.
  * @author fm
  */
-public class Stable implements IStable_Broker, IStable_Horse{    
-    //private GRI gri;
+public class Stable implements IStable_Broker, IStable_Horse{ 
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condBroker;
@@ -29,11 +28,11 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private boolean allHorses = false;
     private boolean end = false;
     
-    private String IP_GRI;
-    private int PORT_GRI;
+    private final String IP_GRI;
+    private final int PORT_GRI;
     
 
-    public Stable (int NO_COMPETITORS, String IP_GRI, int PORT_GRI){
+    public Stable (int NO_COMPETITORS, String IP_GRI, int PORT_GRI) throws JSONException, IOException{
         this.NO_COMPETITORS = NO_COMPETITORS;
         this.IP_GRI = IP_GRI;
         this.PORT_GRI = PORT_GRI;
@@ -41,6 +40,11 @@ public class Stable implements IStable_Broker, IStable_Horse{
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
         condBroker = rl.newCondition();
+        
+        JSONObject json = new JSONObject();
+        json.put("metodo", "setBrokerState");
+        json.put("BrokerState", "OPENING_THE_EVENT");
+        sendMessage(json);
     }
     
     /**
@@ -53,13 +57,22 @@ public class Stable implements IStable_Broker, IStable_Horse{
         rl.lock();
         try{
             try{
-                JSONObject json = new JSONObject();
+                JSONObject json;
                 nHorses++;
                 
                 hashHorsesAgile.put( horseID, agile );
                 
                 //gri.setHorseState(horseID, HorseState.AT_THE_STABLE);
+                json = new JSONObject();
+                json.put("metodo", "setHorseState");
+                json.put("HorseState", "AT_THE_STABLE");
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Horse " + horseID + " at the stable.");
                 
                 if(nHorses == NO_COMPETITORS){
@@ -95,11 +108,12 @@ public class Stable implements IStable_Broker, IStable_Horse{
         rl.lock();
         try {
             try{
-                JSONObject json = new JSONObject();
+                JSONObject json;
                 
                 //gri.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                json = new JSONObject();
                 json.put("metodo", "setBrokerState");
-                json.put("BrokerState", BrokerState.ANNOUNCING_NEXT_RACE);
+                json.put("BrokerState", "ANNOUNCING_NEXT_RACE");
                 sendMessage(json);
                 
                 //gri.setRn( nRace );
@@ -131,8 +145,20 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 for (int i = 0; i < NO_COMPETITORS; i++) {
                     int odd = hashHorsesAgile.get(i)*100 / totalAgile;
                     double o = (double)odd/100;
+                    
                     //gri.setHorseMaxDistance(i, hashHorsesAgile.get(i));
+                    json = new JSONObject();
+                    json.put("metodo", "setHorseMaxDistance");
+                    json.put("id", i);
+                    json.put("dist", hashHorsesAgile.get(i));
+                    sendMessage(json);
+                
                     //gri.setHorseWinningProb(i, o);
+                    json = new JSONObject();
+                    json.put("metodo", "setHorseWinningProb");
+                    json.put("id", i);
+                    json.put("odd", o);
+                    sendMessage(json);
                     hashHorsesAgile.put(i, odd);
                 }
                                 

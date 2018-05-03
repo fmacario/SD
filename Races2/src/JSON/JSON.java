@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,20 @@ public class JSON {
             arrayList.add( Integer.parseInt(split[0]));
         }
         return arrayList;
+    }
+    
+    public static int[] stringToArrayInt ( String s ){
+        
+        s = s.substring(1, s.length()-1);
+        System.out.println(s);
+        String parts[] = s.split(", ");
+        
+        int array[] = new int[parts.length];
+        for(int i = 0; i < array.length; i++){
+            array[i] = Integer.parseInt( parts[i] );
+        }
+            
+        return array;
     }
     
     

@@ -1,6 +1,5 @@
 package SV_Paddock;
 
-import Enum.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -30,8 +29,8 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
     private boolean allHorses = false;
     private boolean lastHorse = false;
     
-    private String IP_GRI;
-    private int PORT_GRI;
+    private final String IP_GRI;
+    private final int PORT_GRI;
     
     /**
      * 
@@ -59,9 +58,20 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         rl.lock();
         try{
             try{
+                JSONObject json;
                 nHorses++;
+                
                 //gri.setHorseState(horseID, HorseState.AT_THE_PADDOCK);
+                json = new JSONObject();
+                json.put("metodo", "setHorseState");
+                json.put("HorseState", "AT_THE_PADDOCK");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Horse " + horseID + " at the paddock.");
                 
                 if(nHorses == NO_COMPETITORS){
@@ -96,10 +106,20 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         rl.lock();
         try{
             try{
+                JSONObject json;
                 nSpectators++;
                 
                 //gri.setSpectatorState(spectatorID, SpectatorState.APPRAISING_THE_HORSES);
+                json = new JSONObject();
+                json.put("metodo", "setSpectatorState");
+                json.put("SpectatorState", "APPRAISING_THE_HORSES");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Spectator " + spectatorID + " goCheckHorses.");
                 
                 if(nSpectators == NO_SPECTATORS){
@@ -134,8 +154,19 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         
         try {
             try{
+                JSONObject json;
+                
                 //gri.setSpectatorState(spectatorID, SpectatorState.WAITING_FOR_A_RACE_TO_START);
+                json = new JSONObject();
+                json.put("metodo", "setSpectatorState");
+                json.put("SpectatorState", "WAITING_FOR_A_RACE_TO_START");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Spectator " + spectatorID + " waitForNextRace.");
                 
                 while ( !allHorses ) {

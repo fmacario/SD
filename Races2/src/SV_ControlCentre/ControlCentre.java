@@ -1,6 +1,5 @@
 package SV_ControlCentre;
 
-import Enum.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -19,7 +18,6 @@ import org.json.JSONObject;
  * @author fm
  */
 public class ControlCentre implements IControlCentre_Spectator, IControlCentre_Broker{
-    //private GRI gri;
     private final ReentrantLock rl;
     private final Condition condHorses;
     private final Condition condSpectators;
@@ -30,13 +28,9 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private boolean wakeSpecs = false;
     private int nSpec = 0;
     
-    private String IP_GRI;
-    private int PORT_GRI;
-    
-    /**
-     * 
-     * @param gri General Repository of Information (GRI).
-     */
+    private final String IP_GRI;
+    private final int PORT_GRI;
+
     public ControlCentre(String IP_GRI, int PORT_GRI){
         this.IP_GRI = IP_GRI;
         this.PORT_GRI = PORT_GRI;
@@ -58,8 +52,19 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
             try {
                 nSpec++;
                 
+                JSONObject json;
+                
                 //gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
+                json = new JSONObject();
+                json.put("metodo", "setSpectatorState");
+                json.put("SpectatorState", "WATCHING_A_RACE");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Spectator "+ specId + " WATCHING_A_RACE");
                 
                 while ( !wakeSpecs ) {
@@ -111,8 +116,19 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
+                JSONObject json;
+                
                 //gri.setSpectatorState(specId, SpectatorState.CELEBRATING);
+                json = new JSONObject();
+                json.put("metodo", "setSpectatorState");
+                json.put("SpectatorState", "CELEBRATING");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Spectator "+ specId + " CELEBRATING");
                 
             } catch (Exception e) {
@@ -191,8 +207,18 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         rl.lock();
         try {
             try {
+                JSONObject json = new JSONObject();
+                
                 //gri.setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
+                json.put("metodo", "setBrokerState");
+                json.put("BrokerState", "PLAYING_HOST_AT_THE_BAR");
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("BrokerState.PLAYING_HOST_AT_THE_BAR");
                 
                 condHorses.signalAll();

@@ -44,12 +44,16 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean[] betSpec;    
     private boolean canGO = false;
     
-    private String IP_GRI;
-    private int PORT_GRI;
+    private final String IP_GRI;
+    private final int PORT_GRI;
     
     /**
      * 
-     * @param gri General Repository of Information (GRI).
+     * @param NO_SPECTATORS
+     * @param NO_COMPETITORS
+     * @param MAX_BET
+     * @param IP_GRI
+     * @param PORT_GRI
      */
     public BettingCentre( int NO_SPECTATORS, int NO_COMPETITORS, double MAX_BET, String IP_GRI, int PORT_GRI){
         this.NO_SPECTATORS = NO_SPECTATORS;
@@ -79,13 +83,23 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         
         try{
             try {
+                JSONObject json;
                 nSpectators++;
                 
                 fifoSpectators.add( spectatorID );
                 mapSpec_Money.put( spectatorID, money );
                 
                 //gri.setSpectatorState( spectatorID, SpectatorState.PLACING_A_BET);
+                json = new JSONObject();
+                json.put("metodo", "setSpectatorState");
+                json.put("SpectatorState", "PLACING_A_BET");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Spectator "+ spectatorID + " PLACING_A_BET");
                 
                 wantToBet = true;
@@ -98,11 +112,31 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 int id = fifoSpectators.remove();
                                                 
                 //gri.setMoney(id, mapSpec_Money.get(id) - mapSpec_Horse_Bet.get(id).get(1));
+                json = new JSONObject();
+                json.put("metodo", "setMoney");
+                json.put("id", id);
+                json.put("money", mapSpec_Money.get(id) - mapSpec_Horse_Bet.get(id).get(1));
+                sendMessage(json);
 
                 //gri.setBetSelection(id, mapSpec_Horse_Bet.get(id).get(0) );
+                json = new JSONObject();
+                json.put("metodo", "setBetSelection");
+                json.put("id", id);
+                json.put("betSelection", mapSpec_Horse_Bet.get(id).get(0) );
+                sendMessage(json);
+                
                 //gri.setBetAmount(id, mapSpec_Horse_Bet.get(id).get(1) );
+                json = new JSONObject();
+                json.put("metodo", "setBetAmount");
+                json.put("id", id);
+                json.put("betAmount", mapSpec_Horse_Bet.get(id).get(1) );
+                sendMessage(json);
 
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 --nSpectators;  
                 condBroker.signal();
                 
@@ -137,8 +171,18 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 this.hashHorsesAgile = hashHorsesAgile;
                 int bets = 0;
                 
+                JSONObject json = new JSONObject();
+                
                 //gri.setBrokerState(BrokerState.WAITING_FOR_BETS);
+                json.put("metodo", "setBrokerState");
+                json.put("BrokerState", "WAITING_FOR_BETS");
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("BrokerState.WAITING_FOR_BETS");
                 
                 while (bets != NO_SPECTATORS){
@@ -191,8 +235,19 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         rl.lock();
         try {
             try {
+                JSONObject json;
+                
                 //gri.setSpectatorState(spectatorID, SpectatorState.COLLECTING_THE_GAINS);
+                json = new JSONObject();
+                json.put("metodo", "setSpectatorState");
+                json.put("SpectatorState", "COLLECTING_THE_GAINS");
+                sendMessage(json);
+
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("Spectator "+ spectatorID + " COLLECTING_THE_GAINS");
                 
                 fifoSpectators.add(spectatorID);
@@ -209,7 +264,16 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 condBroker.signal();
                 
                 //gri.addMoney(spectatorID, mapSpec_MoneyToReceive.get(spectatorID));
+                json = new JSONObject();
+                json.put("metodo", "addMoney");
+                json.put("id", spectatorID );
+                json.put("money", mapSpec_MoneyToReceive.get(spectatorID) );
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
                 
                 return mapSpec_MoneyToReceive.get(spectatorID);
             } catch (Exception e) {
@@ -232,8 +296,20 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
         try {
             try {
                 mapSpec_Paid.clear();
+                
+                JSONObject json;
+                
                 //gri.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
+                json = new JSONObject();
+                json.put("metodo", "setBrokerState");
+                json.put("BrokerState", "SETTLING_ACCOUNTS");
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("BrokerState.SETTLING_ACCOUNTS");
                 
                 // calcular valor a distribuir para cada vencedor
@@ -260,7 +336,18 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 
                 for (int i = 0; i < NO_SPECTATORS; i++) {
                     //gri.setBetAmount( i, -1 );
+                    json = new JSONObject();
+                    json.put("metodo", "setBetAmount");
+                    json.put("id", i);
+                    json.put("betAmount", -1);
+                    sendMessage(json);
+                
                     //gri.setBetSelection( i , -1 );
+                    json = new JSONObject();
+                    json.put("metodo", "setBetSelection");
+                    json.put("id", i);
+                    json.put("betSelection", -1);
+                    sendMessage(json);
                 }
                 betsHonoured = 0;
                 canGO = false;
