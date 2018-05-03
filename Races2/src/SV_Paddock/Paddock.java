@@ -1,5 +1,7 @@
 package SV_Paddock;
 
+import Enum.*;
+
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 

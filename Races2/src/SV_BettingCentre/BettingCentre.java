@@ -1,5 +1,7 @@
 package SV_BettingCentre;
 
+import Enum.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

@@ -1,5 +1,7 @@
 package SV_RacingTrack;
 
+import Enum.*;
+
 import java.util.*;
 import java.util.concurrent.locks.*;
 

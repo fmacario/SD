@@ -1,9 +1,10 @@
 package SV_Stable;
 
-//import Enum.*;
+import Enum.*;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
+import org.json.JSONObject;
         
 /**
  * Métodos do Estábulo.
@@ -97,6 +98,12 @@ public class Stable implements IStable_Broker, IStable_Horse{
         rl.lock();
         try {
             try{
+                JSONObject json = new JSONObject();
+        
+        json.put("entidade", "broker");
+        json.put("metodo", "waitForSpectators");
+        
+        sendMessage(socket, json);
                 //gri.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
                 //gri.setRn( nRace );
                 //gri.updateStatus();
