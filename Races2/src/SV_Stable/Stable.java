@@ -1,6 +1,10 @@
 package SV_Stable;
 
 import Enum.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -25,22 +29,14 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private boolean allHorses = false;
     private boolean end = false;
     
-    /**
-     * 
-     * @param gri General Repository of Information (GRI).
-     */
-    /*
-    public Stable (GRI gri, int NO_COMPETITORS){
-        this.gri = gri;
+    private String IP_GRI;
+    private int PORT_GRI;
+    
+
+    public Stable (int NO_COMPETITORS, String IP_GRI, int PORT_GRI){
         this.NO_COMPETITORS = NO_COMPETITORS;
-        
-        rl = new ReentrantLock(true);
-        condHorses = rl.newCondition();
-        condBroker = rl.newCondition();
-    }
-    */
-    public Stable (int NO_COMPETITORS){
-        this.NO_COMPETITORS = NO_COMPETITORS;
+        this.IP_GRI = IP_GRI;
+        this.PORT_GRI = PORT_GRI;
         
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
@@ -57,6 +53,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
         rl.lock();
         try{
             try{
+                JSONObject json = new JSONObject();
                 nHorses++;
                 
                 hashHorsesAgile.put( horseID, agile );
@@ -99,14 +96,23 @@ public class Stable implements IStable_Broker, IStable_Horse{
         try {
             try{
                 JSONObject json = new JSONObject();
-        
-        json.put("entidade", "broker");
-        json.put("metodo", "waitForSpectators");
-        
-        sendMessage(socket, json);
+                
                 //gri.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                json.put("metodo", "setBrokerState");
+                json.put("BrokerState", BrokerState.ANNOUNCING_NEXT_RACE);
+                sendMessage(json);
+                
                 //gri.setRn( nRace );
+                json = new JSONObject();
+                json.put("metodo", "setRn");
+                json.put("nRace", nRace);
+                sendMessage(json);
+                
                 //gri.updateStatus();
+                json = new JSONObject();
+                json.put("metodo", "updateStatus");
+                sendMessage(json);
+                
                 System.out.println("BrokerState.ANNOUNCING_NEXT_RACE");
                 
                 while(!allHorses){
@@ -158,6 +164,15 @@ public class Stable implements IStable_Broker, IStable_Horse{
         } finally {
             rl.unlock();
         }
+    }
+
+    private void sendMessage(JSONObject json) throws IOException {
+        Socket socket = new Socket( IP_GRI, PORT_GRI );
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
+        
+        o.writeObject( json.toString() );
+        out.flush();
     }
 
 }

@@ -8,10 +8,7 @@ package SV_GRI;
 import java.net.Socket;
 import org.json.JSONObject;
 import JSON.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import Enum.*;
 /**
  *
  * @author fm
@@ -37,19 +34,18 @@ public class MyRunnable implements Runnable {
                 case "updateStatus":
                     System.out.println("case updateStatus");
                     gri.updateStatus();
-                    
-                    
                     break;
                     
                 case "setBrokerState":
                     System.out.println("case setBrokerState");
-                    
-                    json.getString("");
-                    
+                    BrokerState brokerState = (BrokerState)json.get("BrokerState");
+                    gri.setBrokerState(brokerState);
                     break;
                     
                 case "setSpectatorState":
-                    System.out.println("case setSpectatorState");
+                    System.out.println("case setBrokerState");
+                    SpectatorState spectatorState = (SpectatorState)json.get("SpectatorState");
+                    gri.setSpectatorState(json.getInt("id"), spectatorState);
                     break;
                     
                 case "setMoney":

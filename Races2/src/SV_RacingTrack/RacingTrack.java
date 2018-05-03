@@ -1,9 +1,14 @@
 package SV_RacingTrack;
 
 import Enum.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
+import org.json.JSONObject;
 
 /**
  * Métodos da Racing Track.
@@ -28,15 +33,20 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private int noMinIterations = Integer.MAX_VALUE;
     private boolean raceFinished = false;
     private boolean raceStart = false;
+    
+    private String IP_GRI;
+    private int PORT_GRI;
         
     /**
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public RacingTrack(int NO_COMPETITORS, int TRACK_DISTANCE){
+    public RacingTrack(int NO_COMPETITORS, int TRACK_DISTANCE, String IP_GRI, int PORT_GRI){
         //this.gri = gri;
         this.NO_COMPETITORS = NO_COMPETITORS;
         this.TRACK_DISTANCE = TRACK_DISTANCE;
+        this.IP_GRI = IP_GRI;
+        this.PORT_GRI = PORT_GRI;
         
         iterations = new int[NO_COMPETITORS];
         positions = new int[NO_COMPETITORS];
@@ -208,4 +218,12 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
         }
     }
 
+    private void sendMessage(JSONObject json) throws IOException {
+        Socket socket = new Socket( IP_GRI, PORT_GRI );
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
+        
+        o.writeObject( json.toString() );
+        out.flush();
+    }
 }

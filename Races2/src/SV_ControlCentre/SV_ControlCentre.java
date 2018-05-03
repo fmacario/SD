@@ -18,6 +18,8 @@ import java.util.Properties;
  */
 public class SV_ControlCentre {
     private static int PORTA;
+    private static String IP_GRI;
+    private static int PORT_GRI;
     
     public static void main(String[] args) throws IOException  {
         Properties prop = new Properties();
@@ -29,6 +31,8 @@ public class SV_ControlCentre {
             prop.load(input);
 
             PORTA = Integer.parseInt( prop.getProperty("PORT_CONTROL_CENTRE") );
+            IP_GRI = prop.getProperty("IP_GRI");
+            PORT_GRI = Integer.parseInt( prop.getProperty("PORT_GRI") );
 
 	} catch (IOException ex) {
             ex.printStackTrace();
@@ -43,7 +47,7 @@ public class SV_ControlCentre {
 	}
         
         
-        ControlCentre controlCentre = new ControlCentre();
+        ControlCentre controlCentre = new ControlCentre(IP_GRI, PORT_GRI );
         
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor ControlCentre ouvindo a porta " + PORTA);

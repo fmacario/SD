@@ -30,6 +30,9 @@ public class SV_BettingCentre {
      */
     private static int MAX_BET;
     
+    private static String IP_GRI;
+    private static int PORT_GRI;
+    
     public static void main(String[] args) throws IOException  {
         Properties prop = new Properties();
 	InputStream input = null;
@@ -43,6 +46,8 @@ public class SV_BettingCentre {
             NO_SPECTATORS = Integer.parseInt( prop.getProperty("NO_SPECTATORS") );
             NO_COMPETITORS = Integer.parseInt( prop.getProperty("NO_COMPETITORS") );
             MAX_BET = Integer.parseInt( prop.getProperty("MAX_BET") );
+            IP_GRI = prop.getProperty("IP_GRI");
+            PORT_GRI = Integer.parseInt( prop.getProperty("PORT_GRI") );
 
 	} catch (IOException ex) {
             ex.printStackTrace();
@@ -56,7 +61,7 @@ public class SV_BettingCentre {
             }
 	}
         
-        BettingCentre bettingCentre = new BettingCentre(NO_SPECTATORS, NO_COMPETITORS, MAX_BET);
+        BettingCentre bettingCentre = new BettingCentre(NO_SPECTATORS, NO_COMPETITORS, MAX_BET, IP_GRI, PORT_GRI );
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor BettingCentre ouvindo a porta " + PORTA);
 

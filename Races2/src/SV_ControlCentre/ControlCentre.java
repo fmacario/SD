@@ -1,6 +1,10 @@
 package SV_ControlCentre;
 
 import Enum.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +12,7 @@ import java.util.Map;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import org.json.JSONObject;
 
 /**
  * Métodos do Control Centre.
@@ -25,12 +30,17 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private boolean wakeSpecs = false;
     private int nSpec = 0;
     
+    private String IP_GRI;
+    private int PORT_GRI;
+    
     /**
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public ControlCentre( ){
-        //this.gri = gri;
+    public ControlCentre(String IP_GRI, int PORT_GRI){
+        this.IP_GRI = IP_GRI;
+        this.PORT_GRI = PORT_GRI;
+        
         rl = new ReentrantLock(true);
         condHorses = rl.newCondition();
         condSpectators = rl.newCondition();
@@ -195,4 +205,12 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
         }
     }
 
+    private void sendMessage(JSONObject json) throws IOException {
+        Socket socket = new Socket( IP_GRI, PORT_GRI );
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
+        
+        o.writeObject( json.toString() );
+        out.flush();
+    }
 }

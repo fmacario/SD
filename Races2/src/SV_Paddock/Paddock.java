@@ -1,9 +1,14 @@
 package SV_Paddock;
 
 import Enum.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import org.json.JSONObject;
 
 /**
  * Métodos do Paddock.
@@ -25,14 +30,19 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
     private boolean allHorses = false;
     private boolean lastHorse = false;
     
+    private String IP_GRI;
+    private int PORT_GRI;
+    
     /**
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public Paddock(int NO_COMPETITORS, int NO_SPECTATORS){
+    public Paddock(int NO_COMPETITORS, int NO_SPECTATORS, String IP_GRI, int PORT_GRI){
         //this.gri = gri;
         this.NO_COMPETITORS = NO_COMPETITORS;
         this.NO_SPECTATORS = NO_SPECTATORS;
+        this.IP_GRI = IP_GRI;
+        this.PORT_GRI = PORT_GRI;
                
         rl = new ReentrantLock(true);
         condSpectators = rl.newCondition();
@@ -164,4 +174,12 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
         }
     }
 
+    private void sendMessage(JSONObject json) throws IOException {
+        Socket socket = new Socket( IP_GRI, PORT_GRI );
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
+        
+        o.writeObject( json.toString() );
+        out.flush();
+    }
 }

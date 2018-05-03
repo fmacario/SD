@@ -1,6 +1,10 @@
 package SV_BettingCentre;
 
 import Enum.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.locks.*;
+import org.json.JSONObject;
 
 /**
  * Métodos do Betting Centre.
@@ -39,15 +44,19 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     private boolean[] betSpec;    
     private boolean canGO = false;
     
+    private String IP_GRI;
+    private int PORT_GRI;
+    
     /**
      * 
      * @param gri General Repository of Information (GRI).
      */
-    public BettingCentre( int NO_SPECTATORS, int NO_COMPETITORS, double MAX_BET){
-        //this.gri = gri;
+    public BettingCentre( int NO_SPECTATORS, int NO_COMPETITORS, double MAX_BET, String IP_GRI, int PORT_GRI){
         this.NO_SPECTATORS = NO_SPECTATORS;
         this.NO_COMPETITORS = NO_COMPETITORS; 
         this.MAX_BET = MAX_BET;
+        this.IP_GRI = IP_GRI;
+        this.PORT_GRI = PORT_GRI;
         
         betSpec = new boolean[NO_SPECTATORS];
         for(int i=0; i< NO_SPECTATORS; i++){
@@ -263,5 +272,13 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
             rl.unlock();
         }
     }
-
+    
+    private void sendMessage(JSONObject json) throws IOException {
+        Socket socket = new Socket( IP_GRI, PORT_GRI );
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(out);
+        
+        o.writeObject( json.toString() );
+        out.flush();
+    }
 }

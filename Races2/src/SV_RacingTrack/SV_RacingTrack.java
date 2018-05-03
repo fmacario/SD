@@ -29,6 +29,9 @@ public class SV_RacingTrack {
      */
     private static int TRACK_DISTANCE;
     
+    private static String IP_GRI;
+    private static int PORT_GRI;
+    
     public static void main(String[] args) throws IOException  {
         Properties prop = new Properties();
 	InputStream input = null;
@@ -41,6 +44,8 @@ public class SV_RacingTrack {
             PORTA = Integer.parseInt( prop.getProperty("PORT_RACING_TRACK") );
             NO_SPECTATORS = Integer.parseInt( prop.getProperty("NO_SPECTATORS") );
             TRACK_DISTANCE = Integer.parseInt( prop.getProperty("TRACK_DISTANCE") );
+            IP_GRI = prop.getProperty("IP_GRI");
+            PORT_GRI = Integer.parseInt( prop.getProperty("PORT_GRI") );
 
 	} catch (IOException ex) {
             ex.printStackTrace();
@@ -54,7 +59,7 @@ public class SV_RacingTrack {
             }
 	}
         
-        RacingTrack racingTrack = new RacingTrack(NO_SPECTATORS, TRACK_DISTANCE);
+        RacingTrack racingTrack = new RacingTrack(NO_SPECTATORS, TRACK_DISTANCE, IP_GRI, PORT_GRI );
         
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor RacingTrack ouvindo a porta " + PORTA);
