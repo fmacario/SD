@@ -5,12 +5,14 @@
  */
 package CL_Horses;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Properties;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,31 +30,60 @@ public class Horse extends Thread{
     private OutputStream outStable, outPaddock, outRacingTrack;
     private ObjectOutputStream oStable, oPaddock, oRacingTrack;
     
-    private final int STABLE;
-    private final int PADDOCK;
-    private final int RACING_TRACK;
+    
+    private int PORT_PADDOCK;
+    private int PORT_RACING_TRACK;
+    private int PORT_STABLE;
+    
+    private String IP_PADDOCK;
+    private String IP_RACING_TRACK;
+    private String IP_STABLE;
 
     public Horse(int NO_RACES, int TRACK_DISTANCE, int id) throws IOException{
+        Properties prop = new Properties();
+	InputStream input = null;
+        
         this.NO_RACES = NO_RACES;
         this.TRACK_DISTANCE = TRACK_DISTANCE;
         this.id = id;
         this.Pnk = (int )(Math.random() * (TRACK_DISTANCE/4) + 3); // Pnk
         
-        this.STABLE = 12345;
-        this.PADDOCK = 12343;
-        this.RACING_TRACK = 12344;
-        
-        this.socketStable = new Socket("localhost", STABLE);
-        this.socketPaddock = new Socket("localhost", PADDOCK);
-        this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
-        
-        this.outStable = socketStable.getOutputStream();
-        this.outPaddock = socketPaddock.getOutputStream();
-        this.outRacingTrack = socketRacingTrack.getOutputStream();
-        
-        this.oStable = new ObjectOutputStream(outStable);
-        this.oPaddock = new ObjectOutputStream(outPaddock);
-        this.oRacingTrack = new ObjectOutputStream(outRacingTrack);
+        try {
+            input = new FileInputStream("myProperties.properties");
+            prop.load(input);
+            
+            this.PORT_PADDOCK = Integer.parseInt( prop.getProperty("PORT_PADDOCK") );
+            this.PORT_RACING_TRACK = Integer.parseInt( prop.getProperty("PORT_RACING_TRACK") );
+            this.PORT_STABLE = Integer.parseInt( prop.getProperty("PORT_STABLE") );
+            
+            this.IP_PADDOCK =  prop.getProperty("IP_PADDOCK");
+            this.IP_RACING_TRACK =  prop.getProperty("IP_RACING_TRACK");
+            this.IP_STABLE =  prop.getProperty("IP_STABLE");
+            /*
+            this.socketStable = new Socket("localhost", STABLE);
+            this.socketPaddock = new Socket("localhost", PADDOCK);
+            this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
+
+            this.outStable = socketStable.getOutputStream();
+            this.outPaddock = socketPaddock.getOutputStream();
+            this.outRacingTrack = socketRacingTrack.getOutputStream();
+
+            this.oStable = new ObjectOutputStream(outStable);
+            this.oPaddock = new ObjectOutputStream(outPaddock);
+            this.oRacingTrack = new ObjectOutputStream(outRacingTrack);
+            */
+            
+            } catch (IOException ex) {
+            ex.printStackTrace();
+	} finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+	}
     }
     
     /**
@@ -61,44 +92,44 @@ public class Horse extends Thread{
     @Override
     public void run(){
         try {
-            for (int k = 0; k < 4 ; k++) {
+            for (int k = 0; k < NO_RACES ; k++) {
                 System.out.println("comecei nova corrida!");
                 
                 //proceedToStable
-                socketStable = new Socket("localhost", STABLE);
+                socketStable = new Socket(IP_STABLE, PORT_STABLE);
                 outStable = socketStable.getOutputStream();
                 oStable = new ObjectOutputStream(outStable);
                 proceedToStable( id, Pnk, socketStable, outStable, oStable );
                 System.out.println("sai da proceedToStable!");
                 
                 //proceedToPaddock
-                socketPaddock = new Socket("localhost", PADDOCK);
+                socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                 outPaddock = socketPaddock.getOutputStream();
                 oPaddock = new ObjectOutputStream(outPaddock);
                 proceedToPaddock( id, socketPaddock, outPaddock, oPaddock );
                 System.out.println("estou no paddock - chamar proceedToStartLine");
                 
                 //proceedToStartLine
-                socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                 outRacingTrack = socketRacingTrack.getOutputStream();
                 oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 proceedToStartLine(id, socketRacingTrack, outRacingTrack, oRacingTrack );
                 
                 //hasFinishLineBeenCrossed
-                socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                 outRacingTrack = socketRacingTrack.getOutputStream();
                 oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 
                 while( !hasFinishLineBeenCrossed( id, socketRacingTrack, outRacingTrack, oRacingTrack )){
                     
                     //makeAMove
-                    socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                    socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                     outRacingTrack = socketRacingTrack.getOutputStream();
                     oRacingTrack = new ObjectOutputStream(outRacingTrack);
                     makeAMove( id, Pnk, socketRacingTrack, outRacingTrack, oRacingTrack );
                     System.out.println("make a move " + id);
                     
-                    socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                    socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                     outRacingTrack = socketRacingTrack.getOutputStream();
                     oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 }
@@ -106,7 +137,7 @@ public class Horse extends Thread{
             }
             
             //proceedToStable
-            socketStable = new Socket("localhost", STABLE);
+            socketStable = new Socket(IP_STABLE, PORT_STABLE);
             outStable = socketStable.getOutputStream();
             oStable = new ObjectOutputStream(outStable);         
             proceedToStable( id, Pnk, socketStable, outStable, oStable );
