@@ -1,11 +1,13 @@
 package CL_Spectators;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Properties;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,34 +24,63 @@ public class Spectator extends Thread{
     private OutputStream outPaddock, outBettingCentre, outControlCentre;
     private ObjectOutputStream oPaddock, oBettingCentre, oControlCentre;
     
-    private final int PADDOCK;
-    private final int BETTING_CENTRE;
-    private final int CONTROL_CENTRE;
+    private int PORT_BETTING_CENTRE;
+    private int PORT_CONTROL_CENTRE;
+    private int PORT_PADDOCK;
+    
+    private String IP_BETTING_CENTRE;
+    private String IP_CONTROL_CENTRE;
+    private String IP_PADDOCK;
     
     /**
      * @param id Id do espetador.
      * @param NO_RACES Número de corridas.
      */
     public Spectator( int id, int NO_RACES ) throws IOException{
+        
+        Properties prop = new Properties();
+	InputStream input = null;
+        
         this.id = id;
         this.NO_RACES = NO_RACES;
         this.money = 500;
         
-        this.CONTROL_CENTRE = 12341;
-        this.PADDOCK = 12343;
-        this.BETTING_CENTRE = 12340;
-                
-        this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
-        this.socketPaddock = new Socket("localhost", PADDOCK);
-        this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+        try {
+            input = new FileInputStream("myProperties.properties");
+            prop.load(input);
+
+            this.PORT_BETTING_CENTRE = Integer.parseInt( prop.getProperty("PORT_BETTING_CENTRE") );
+            this.PORT_CONTROL_CENTRE = Integer.parseInt( prop.getProperty("PORT_CONTROL_CENTRE") );
+            this.PORT_PADDOCK = Integer.parseInt( prop.getProperty("PORT_PADDOCK") );
+            
+            this.IP_BETTING_CENTRE =  prop.getProperty("IP_BETTING_CENTRE");
+            this.IP_CONTROL_CENTRE =  prop.getProperty("IP_CONTROL_CENTRE");
+            this.IP_PADDOCK =  prop.getProperty("IP_PADDOCK");
         
-        this.outPaddock = socketPaddock.getOutputStream();
-        this.outControlCentre = socketControlCentre.getOutputStream();        
-        this.outBettingCentre = socketBettingCentre.getOutputStream();
-        
-        this.oPaddock = new ObjectOutputStream(outPaddock);
-        this.oControlCentre = new ObjectOutputStream(outControlCentre);
-        this.oBettingCentre = new ObjectOutputStream(outBettingCentre);
+            /*        
+            this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+            this.socketPaddock = new Socket("localhost", PADDOCK);
+            this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+
+            this.outPaddock = socketPaddock.getOutputStream();
+            this.outControlCentre = socketControlCentre.getOutputStream();        
+            this.outBettingCentre = socketBettingCentre.getOutputStream();
+
+            this.oPaddock = new ObjectOutputStream(outPaddock);
+            this.oControlCentre = new ObjectOutputStream(outControlCentre);
+            this.oBettingCentre = new ObjectOutputStream(outBettingCentre);
+            */
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -62,33 +93,33 @@ public class Spectator extends Thread{
                     System.out.println("Comecei nova corrida!!");
                     
                     //waitForNextRace
-                    socketPaddock = new Socket("localhost", PADDOCK);
+                    socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     outPaddock = socketPaddock.getOutputStream();
                     oPaddock = new ObjectOutputStream(outPaddock);
                     waitForNextRace( id, socketPaddock, outPaddock, oPaddock );
                     System.out.println("ANTES DO GO CHECK");
                     
                     //goCheckHorses
-                    socketPaddock = new Socket("localhost", PADDOCK);
+                    socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     outPaddock = socketPaddock.getOutputStream();
                     oPaddock = new ObjectOutputStream(outPaddock);
                     goCheckHorses( id, socketPaddock, outPaddock, oPaddock );
                     System.out.println("DEPOIS DO GO CHECK");
                     
                     //placeABet
-                    socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                    socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
                     outBettingCentre = socketBettingCentre.getOutputStream();
                     oBettingCentre = new ObjectOutputStream(outBettingCentre);
                     money -= placeABet( id, money, socketBettingCentre, outBettingCentre, oBettingCentre );
                     
                     //goWatchRace
-                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     outControlCentre = socketControlCentre.getOutputStream();
                     oControlCentre = new ObjectOutputStream(outControlCentre);
                     goWatchTheRace( id, socketControlCentre, outControlCentre, oControlCentre );
                     
                     //haveIWon
-                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     outControlCentre = socketControlCentre.getOutputStream();
                     oControlCentre = new ObjectOutputStream(outControlCentre);
                     System.out.println("vou ver se ganhei ");
@@ -96,7 +127,7 @@ public class Spectator extends Thread{
                         System.out.println("GANHEI! vou chamar a collectTheGains " + id);
                         
                         //goCollectGains
-                        socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                        socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
                         outBettingCentre = socketBettingCentre.getOutputStream();
                         oBettingCentre = new ObjectOutputStream(outBettingCentre);
                         money += goCollectTheGains( id, socketBettingCentre, outBettingCentre, oBettingCentre );
@@ -106,7 +137,7 @@ public class Spectator extends Thread{
             System.out.println("spectator sai do for");
             
             //relaxABit
-            socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+            socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
             outControlCentre = socketControlCentre.getOutputStream();
             oControlCentre = new ObjectOutputStream(outControlCentre);
             relaxABit( id, socketControlCentre, outControlCentre, oControlCentre);
