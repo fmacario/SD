@@ -40,6 +40,7 @@ public class MyRunnable implements Runnable {
             
                     switch ( json.getString("metodo") ){                
                         case "summonHorsesToPaddock":
+                            System.out.println("CHEGUEEEEI");
                             hashHorsesAgile = stable.summonHorsesToPaddock(json.getInt( "nRace" ));
 
                             jsonRes = new JSONObject();
