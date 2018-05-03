@@ -57,7 +57,8 @@ public class Broker extends Thread{
         try {
             input = new FileInputStream("myProperties.properties");
             prop.load(input);
-            this.NO_RACES = Integer.parseInt( prop.getProperty("NO_RACES") );
+            
+            this.NO_RACES = NO_RACES;
             
             this.PORT_BETTING_CENTRE = Integer.parseInt( prop.getProperty("PORT_BETTING_CENTRE") );
             this.PORT_CONTROL_CENTRE = Integer.parseInt( prop.getProperty("PORT_CONTROL_CENTRE") );
@@ -65,6 +66,10 @@ public class Broker extends Thread{
             this.PORT_RACING_TRACK = Integer.parseInt( prop.getProperty("PORT_RACING_TRACK") );
             this.PORT_STABLE = Integer.parseInt( prop.getProperty("PORT_STABLE") );
             
+            this.IP_BETTING_CENTRE =  prop.getProperty("IP_BETTING_CENTRE");
+            this.IP_CONTROL_CENTRE =  prop.getProperty("IP_CONTROL_CENTRE");
+            this.IP_PADDOCK =  prop.getProperty("IP_PADDOCK");
+            this.IP_RACING_TRACK =  prop.getProperty("IP_RACING_TRACK");
             this.IP_STABLE =  prop.getProperty("IP_STABLE");
 
 	} catch (IOException ex) {
@@ -95,58 +100,58 @@ public class Broker extends Thread{
     @Override
     public void run(){
         try {
-            for (int k = 0; k < 4; k++) {
+            for (int k = 0; k < NO_RACES; k++) {
                     System.out.println("Vou comecar nova corrida!");
                     
                     //summonHorsesToPaddock
                     socketStable = new Socket(IP_STABLE, PORT_STABLE);
                     hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
                     System.out.println("sai da summonHorsesToPaddock!");
-                    /*
+                    
                     //waitForSpectators
-                    socketPaddock = new Socket("localhost", PADDOCK);
+                    socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     while( !waitForSpectators( socketPaddock )) {
                         System.out.println("broker está no while");
-                        socketPaddock = new Socket("localhost", PADDOCK);
+                        socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     }
                     System.out.println("broker saiu do while e vai entrar na acceptTheBets");
                     
                     //acceptTheBets
-                    socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                    socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
                     mapSpec_Horse_Bet = acceptTheBets( hashHorsesAgile, socketBettingCentre );
                     
                     //startTheRace
-                    socketRacingTrack = new Socket("localhost", RACING_TRACK);
+                    socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                     horsesWinnersList = startTheRace( socketRacingTrack );
                     System.out.println("sai da startTheRace");
                     
                     //reportResults
-                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     specsWinnersList = reportResults( horsesWinnersList, mapSpec_Horse_Bet, socketControlCentre );
                     System.out.println("sai da reportResults");
                     
                     //areThereAnyWinners
-                    socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+                    socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     if ( areThereAnyWinners( mapSpec_Horse_Bet , socketControlCentre ) ) {
                         System.out.println("Há Winners!");
                         //socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
                         
                         //honourTheBets
-                        socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
+                        socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
                         honourTheBets( horsesWinnersList, specsWinnersList, socketBettingCentre);
                         System.out.println("SAI HonourBets");
-                    }*/
+                    }
             }
-           /* System.out.println("broker saiu do for");
+            System.out.println("broker saiu do for");
             
             //entertainTheGuests
-            socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
+            socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
             entertainTheGuests( socketControlCentre );
             
             //end
-            socketStable = new Socket("localhost", STABLE);
+            socketStable = new Socket(IP_STABLE, PORT_STABLE);
             end( socketStable );
-            */
+            
         } catch (JSONException | IOException | ClassNotFoundException ex) {
                 Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
             }
