@@ -34,6 +34,7 @@ public class JSON {
         
         
         s = (String) i.readObject();
+            System.out.println("s: " +s);
         }catch(EOFException e){
             
         }
