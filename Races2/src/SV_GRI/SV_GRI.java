@@ -52,12 +52,12 @@ public class SV_GRI {
         
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor GRI ouvindo a porta " + PORTA);
-        
+        boolean b = false;
         while (true) {            
             Socket cliente = servidor.accept();
             System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
             
-            Runnable r = new MyRunnable( gri, cliente );
+            Runnable r = new MyRunnable( gri, cliente);
             new Thread(r).start();
         }
     }

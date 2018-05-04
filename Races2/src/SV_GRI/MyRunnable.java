@@ -29,7 +29,7 @@ public class MyRunnable implements Runnable {
         
         try {
             json = JSON.receiveJSON( socket );
-            
+            boolean end = false;
             switch ( json.getString("metodo") ){
                 case "updateStatus":
                     System.out.println("case updateStatus");
@@ -49,6 +49,7 @@ public class MyRunnable implements Runnable {
                         break;
                         case "PLAYING_HOST_AT_THE_BAR":
                             brokerState = BrokerState.PLAYING_HOST_AT_THE_BAR;
+                            end = true;
                         break;
                         case "SETTLING_ACCOUNTS":
                             brokerState = BrokerState.SETTLING_ACCOUNTS;
@@ -62,6 +63,8 @@ public class MyRunnable implements Runnable {
                     }
                     
                     gri.setBrokerState(brokerState);
+                    if(end)
+                        System.exit(1);
                     break;
                     
                 case "setSpectatorState":
