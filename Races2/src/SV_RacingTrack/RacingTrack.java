@@ -242,6 +242,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     //gri.setHorseState(horseID, HorseState.AT_THE_FINNISH_LINE);
                     json = new JSONObject();
                     json.put("metodo", "setHorseState");
+                    json.put("id", horseID);
                     json.put("HorseState", "AT_THE_FINNISH_LINE");
                     sendMessage(json);
 

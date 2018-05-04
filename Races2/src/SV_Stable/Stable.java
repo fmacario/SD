@@ -120,7 +120,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 //gri.setRn( nRace );
                 json = new JSONObject();
                 json.put("metodo", "setRn");
-                json.put("nRace", nRace);
+                json.put("Rn", nRace);
                 sendMessage(json);
                 
                 //gri.updateStatus();
