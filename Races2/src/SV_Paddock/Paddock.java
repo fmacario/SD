@@ -64,6 +64,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
                 //gri.setHorseState(horseID, HorseState.AT_THE_PADDOCK);
                 json = new JSONObject();
                 json.put("metodo", "setHorseState");
+                json.put("id", horseID);
                 json.put("HorseState", "AT_THE_PADDOCK");
                 sendMessage(json);
 
@@ -112,6 +113,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
                 //gri.setSpectatorState(spectatorID, SpectatorState.APPRAISING_THE_HORSES);
                 json = new JSONObject();
                 json.put("metodo", "setSpectatorState");
+                json.put("id", spectatorID);
                 json.put("SpectatorState", "APPRAISING_THE_HORSES");
                 sendMessage(json);
 
@@ -159,6 +161,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
                 //gri.setSpectatorState(spectatorID, SpectatorState.WAITING_FOR_A_RACE_TO_START);
                 json = new JSONObject();
                 json.put("metodo", "setSpectatorState");
+                json.put("id", spectatorID);
                 json.put("SpectatorState", "WAITING_FOR_A_RACE_TO_START");
                 sendMessage(json);
 

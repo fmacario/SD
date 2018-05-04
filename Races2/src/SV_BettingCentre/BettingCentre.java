@@ -1,6 +1,5 @@
 package SV_BettingCentre;
 
-import Enum.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -92,6 +91,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 //gri.setSpectatorState( spectatorID, SpectatorState.PLACING_A_BET);
                 json = new JSONObject();
                 json.put("metodo", "setSpectatorState");
+                json.put("id", spectatorID);
                 json.put("SpectatorState", "PLACING_A_BET");
                 sendMessage(json);
 
@@ -240,6 +240,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 //gri.setSpectatorState(spectatorID, SpectatorState.COLLECTING_THE_GAINS);
                 json = new JSONObject();
                 json.put("metodo", "setSpectatorState");
+                json.put("id", spectatorID);
                 json.put("SpectatorState", "COLLECTING_THE_GAINS");
                 sendMessage(json);
 

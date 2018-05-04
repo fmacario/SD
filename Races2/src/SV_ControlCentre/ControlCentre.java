@@ -57,6 +57,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 //gri.setSpectatorState(specId, SpectatorState.WATCHING_A_RACE);
                 json = new JSONObject();
                 json.put("metodo", "setSpectatorState");
+                json.put("id", specId);
                 json.put("SpectatorState", "WATCHING_A_RACE");
                 sendMessage(json);
 
@@ -121,6 +122,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 //gri.setSpectatorState(specId, SpectatorState.CELEBRATING);
                 json = new JSONObject();
                 json.put("metodo", "setSpectatorState");
+                json.put("id", specId);
                 json.put("SpectatorState", "CELEBRATING");
                 sendMessage(json);
 
