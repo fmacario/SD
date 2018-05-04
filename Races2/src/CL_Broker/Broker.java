@@ -148,6 +148,15 @@ public class Broker extends Thread{
             socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
             entertainTheGuests( socketControlCentre );
             
+            socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
+            end( socketRacingTrack );
+            socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
+            end( socketPaddock );
+            socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
+            end( socketControlCentre );
+            socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
+            end( socketBettingCentre );
+            
             //end
             socketStable = new Socket(IP_STABLE, PORT_STABLE);
             end( socketStable );

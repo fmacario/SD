@@ -53,6 +53,7 @@ public class MyRunnable implements Runnable {
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);
+                            System.exit(1);
                             break;
                     }
                     break;
