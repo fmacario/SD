@@ -13,8 +13,7 @@ import org.json.JSONObject;
  * Métodos do Paddock.
  * @author fm
  */
-public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Broker{    
-    //private GRI gri;
+public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Broker{  
     private final Condition condSpectators;
     private final Condition condHorses;
     private final Condition condBroker;
@@ -76,7 +75,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Horse " + horseID + " at the paddock.");
+                //System.out.println("Horse " + horseID + " at the paddock.");
                 
                 if(nHorses == NO_COMPETITORS){
                     allHorses = true;
@@ -125,7 +124,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Spectator " + spectatorID + " goCheckHorses.");
+                //System.out.println("Spectator " + spectatorID + " goCheckHorses.");
                 
                 if(nSpectators == NO_SPECTATORS){
                     GO = true;
@@ -173,7 +172,7 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Spectator " + spectatorID + " waitForNextRace.");
+                //System.out.println("Spectator " + spectatorID + " waitForNextRace.");
                 
                 while ( !allHorses ) {
                     condSpectators.await();

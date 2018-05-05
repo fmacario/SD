@@ -87,7 +87,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("BrokerState.SUPERVISING_THE_RACE");
+                //System.out.println("BrokerState.SUPERVISING_THE_RACE");
                 
                 raceStart = true;
                 condHorses.signalAll();
@@ -140,7 +140,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("HorseState.AT_THE_START_LINE " +horseID);
+                //System.out.println("HorseState.AT_THE_START_LINE " +horseID);
                                
                 
                 while( raceStart == false ){
@@ -182,7 +182,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("HorseState.RUNNING " +horseID);
+                //System.out.println("HorseState.RUNNING " +horseID);
                 
                 condHorses.signalAll();
                 
@@ -258,7 +258,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     json.put("metodo", "updateStatus");
                     sendMessage(json);
                     
-                    System.out.println("HorseState.AT_THE_FINNISH_LINE " +horseID);
+                    //System.out.println("HorseState.AT_THE_FINNISH_LINE " +horseID);
                                                          
                     if(horsesFinished == NO_COMPETITORS){
                         raceFinished = true;
@@ -276,7 +276,7 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
                     
                     return true;
                 }
-                System.out.println("hasFinishLineBeenCrossed? FALSE " + horseID);
+                //System.out.println("hasFinishLineBeenCrossed? FALSE " + horseID);
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();

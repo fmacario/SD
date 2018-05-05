@@ -71,7 +71,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Spectator "+ specId + " WATCHING_A_RACE");
+                //System.out.println("Spectator "+ specId + " WATCHING_A_RACE");
                 
                 while ( !wakeSpecs ) {
                     condSpectators.await();
@@ -136,7 +136,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Spectator "+ specId + " CELEBRATING");
+                //System.out.println("Spectator "+ specId + " CELEBRATING");
                 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -159,7 +159,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
             try {
                 specsWinnersList.clear();
                 this.horsesWinnersList = winnersList;
-                           System.out.println("BROKER: REPORT RESULTS");    
+                //System.out.println("BROKER: REPORT RESULTS");    
                 for ( Integer horseWinner : horsesWinnersList ) {                    
                     for (Map.Entry<Integer, List<Integer>> entry : mapSpec_Horse_Bet.entrySet())
                     {
@@ -191,7 +191,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     public boolean areThereAnyWinners( Map<Integer, List<Integer>> mapSpec_Horse_Bet ) {
         rl.lock();
         try {
-            System.out.println("BROKER ARE THERE ANY WINNERS");
+            //System.out.println("BROKER ARE THERE ANY WINNERS");
             try {
                 if ( specsWinnersList.isEmpty() )
                     return false;
@@ -226,7 +226,7 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("BrokerState.PLAYING_HOST_AT_THE_BAR");
+                //System.out.println("BrokerState.PLAYING_HOST_AT_THE_BAR");
                 
                 condHorses.signalAll();
                 

@@ -81,7 +81,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Horse " + horseID + " at the stable.");
+                //System.out.println("Horse " + horseID + " at the stable.");
                 
                 if(nHorses == NO_COMPETITORS){
                     allHorses=true;
@@ -135,7 +135,7 @@ public class Stable implements IStable_Broker, IStable_Horse{
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("BrokerState.ANNOUNCING_NEXT_RACE");
+                //System.out.println("BrokerState.ANNOUNCING_NEXT_RACE");
                 
                 while(!allHorses){
                     condBroker.await();

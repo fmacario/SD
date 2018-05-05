@@ -124,7 +124,7 @@ public class Broker extends Thread{
                     //areThereAnyWinners
                     socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     if ( areThereAnyWinners( mapSpec_Horse_Bet , socketControlCentre ) ) {
-                        System.out.println("Há Winners!");
+                        //System.out.println("Há Winners!");
                         //socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
                         
                         //honourTheBets
@@ -183,7 +183,7 @@ public class Broker extends Thread{
         json.put("hashHorsesAgile", hashHorsesAgile.toString());
         
         sendMessage(socket, json);
-        System.out.println("accpet the bets: broker enviu json");
+        //System.out.println("accpet the bets: broker enviu json");
         JSONObject res = receiveMessage( socket );
         while( res == null ){
             res = receiveMessage( socket );
@@ -268,9 +268,9 @@ public class Broker extends Thread{
         json.put("specsWinnersList", specsWinnersList.toString());
         
         sendMessage(socket, json);
-        System.out.println("envio honourTheBets");
+        //System.out.println("envio honourTheBets");
         JSONObject res = receiveMessage( socket );
-        System.out.println("recebo honourTheBets");
+        //System.out.println("recebo honourTheBets");
         while( res == null ){
             res = receiveMessage( socket );
         }
@@ -295,9 +295,9 @@ public class Broker extends Thread{
         
         json.put("entidade", "broker");
         json.put("metodo", "end");
-        System.out.println("END ANTES DA MSG ENVIADA");
+        //System.out.println("END ANTES DA MSG ENVIADA");
         sendMessage(socket, json);
-        System.out.println("END MSG ENVIADA");
+        //System.out.println("END MSG ENVIADA");
         JSONObject res = receiveMessage( socket );
         while( res == null ){
             res = receiveMessage( socket );
@@ -325,7 +325,7 @@ public class Broker extends Thread{
         InputStream in = socket.getInputStream();
         ObjectInputStream i = new ObjectInputStream(in);
         String s = (String) i.readObject();
-        System.out.println(s);
+        //System.out.println(s);
         //i.close();
         JSONObject jsonObject = new JSONObject(s);
         return jsonObject;
@@ -389,7 +389,7 @@ public class Broker extends Thread{
             return arrayList;
         }
         
-        System.out.println("S:  - -- - - " + s);
+        //System.out.println("S:  - -- - - " + s);
         s = s.substring(1, s.length()-1);
         String parts[] = s.split(", ");
         for (String part : parts) {

@@ -121,7 +121,7 @@ public class Spectator extends Thread{
                         //System.out.println("sai da collectTheGains " + id);
                     }
             }
-            System.out.println("spectator sai do for");
+            //System.out.println("spectator sai do for");
             
             //relaxABit
             socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
@@ -192,9 +192,9 @@ public class Spectator extends Thread{
         json.put("spectatorID", id);
         
         sendMessage(json, socket, out, o);
-        System.out.println("cliente enviei msg goCollectTheGains");
+        //System.out.println("cliente enviei msg goCollectTheGains");
         JSONObject res = receiveMessage( socket );
-        System.out.println("cliente recebi msg goCollectTheGains");
+        //System.out.println("cliente recebi msg goCollectTheGains");
         while( res == null ){
             res = receiveMessage( socket );
         }
@@ -223,12 +223,12 @@ public class Spectator extends Thread{
         json.put("entidade", "spectator");
         json.put("metodo", "relaxABit");
         json.put("spectatorID", id);
-        System.out.println("spectator "+id+ " vou enviar msg relaxABit");
+        //System.out.println("spectator "+id+ " vou enviar msg relaxABit");
         sendMessage(json, socket, out, o);
-        System.out.println("spectator "+id+ " enviei msg relaxABit");
+        //System.out.println("spectator "+id+ " enviei msg relaxABit");
         JSONObject res = receiveMessage( socket );
         
-        System.out.println("spectator recebi resposta relaxABit");
+        //System.out.println("spectator recebi resposta relaxABit");
         while( res == null ){
             res = receiveMessage( socket );
         }

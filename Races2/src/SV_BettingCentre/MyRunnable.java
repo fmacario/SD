@@ -39,19 +39,19 @@ public class MyRunnable implements Runnable {
                     ArrayList<Integer> horsesWinnersList, specsWinnersList;
                     switch ( json.getString("metodo") ){  
                         case "acceptTheBets":
-                            System.out.println("case acceptTheBets");
+                            //System.out.println("case acceptTheBets");
                             hashHorsesAgile = JSON.stringToMap( json.getString("hashHorsesAgile") );
                             
-                            System.out.println("antes da acceptTheBets");
+                            //System.out.println("antes da acceptTheBets");
                             Map<Integer, List<Integer>> acceptTheBets = bettingCentre.acceptTheBets(hashHorsesAgile);
                             
-                            System.out.println("antes da acceptTheBets, " + acceptTheBets.toString());
+                            //System.out.println("antes da acceptTheBets, " + acceptTheBets.toString());
                             jsonRes = new JSONObject();
                             jsonRes.put("return", acceptTheBets.toString());
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "honourTheBets":
-                            System.out.println("case honourTheBets");
+                            //System.out.println("case honourTheBets");
                             horsesWinnersList = JSON.stringToArrayList( json.getString("horsesWinnersList") );
                             specsWinnersList = JSON.stringToArrayList( json.getString("specsWinnersList") );
                             

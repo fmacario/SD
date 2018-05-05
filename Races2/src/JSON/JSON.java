@@ -38,7 +38,7 @@ public class JSON {
         
         
         s = (String) i.readObject();
-            System.out.println("s: " +s);
+            //System.out.println("s: " +s);
         }catch(EOFException e){
             
         }
@@ -120,7 +120,7 @@ public class JSON {
     public static int[] stringToArrayInt ( String s ){
         
         s = s.substring(1, s.length()-1);
-        System.out.println(s);
+        //System.out.println(s);
         String parts[] = s.split(", ");
         
         int array[] = new int[parts.length];
@@ -138,7 +138,7 @@ public class JSON {
      * @throws IOException
      */
     public static void sendMessage( Socket socket, JSONObject json ) throws IOException{
-        System.out.println(json.toString());
+        //System.out.println(json.toString());
         OutputStream out = socket.getOutputStream();
         ObjectOutputStream o = new ObjectOutputStream(out);
 

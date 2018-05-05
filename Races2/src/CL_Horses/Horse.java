@@ -136,7 +136,7 @@ public class Horse extends Thread{
             oStable = new ObjectOutputStream(outStable);         
             proceedToStable( id, Pnk, socketStable, outStable, oStable );
             
-            //System.out.println("Bye HORSE " + id);
+            System.out.println("Bye HORSE " + id);
         } catch (Exception e) {
             e.printStackTrace();
         }

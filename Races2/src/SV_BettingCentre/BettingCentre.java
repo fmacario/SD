@@ -99,7 +99,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Spectator "+ spectatorID + " PLACING_A_BET");
+                //System.out.println("Spectator "+ spectatorID + " PLACING_A_BET");
                 
                 wantToBet = true;
                 condBroker.signal();
@@ -182,7 +182,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("BrokerState.WAITING_FOR_BETS");
+                //System.out.println("BrokerState.WAITING_FOR_BETS");
                 
                 while (bets != NO_SPECTATORS){
                     if( wantToBet ){ 
@@ -248,14 +248,14 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("Spectator "+ spectatorID + " COLLECTING_THE_GAINS");
+                //System.out.println("Spectator "+ spectatorID + " COLLECTING_THE_GAINS");
                 
                 fifoSpectators.add(spectatorID);
                 condBroker.signal();
-                                System.out.println("mapSpec_Paid " + mapSpec_Paid.toString());
+                //System.out.println("mapSpec_Paid " + mapSpec_Paid.toString());
                 while( !canGO )
                     condSpectators.await();
-                System.out.println("mapSpec_Paid : "+ mapSpec_Paid.toString());
+                //System.out.println("mapSpec_Paid : "+ mapSpec_Paid.toString());
                 while( mapSpec_Paid.get(spectatorID) == false){
                     condSpectators.await();
                 }
@@ -310,7 +310,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                 json.put("metodo", "updateStatus");
                 sendMessage(json);
                 
-                System.out.println("BrokerState.SETTLING_ACCOUNTS");
+                //System.out.println("BrokerState.SETTLING_ACCOUNTS");
                 
                 // calcular valor a distribuir para cada vencedor
                 for ( Integer winner :  specsWinnersList) {
@@ -319,7 +319,7 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
                     double odd = (double)hashHorsesAgile.get(id_cavalo) / 100;
                     mapSpec_MoneyToReceive.put(winner, (int)Math.round(aposta * (1/odd)));
                     mapSpec_Paid.put(winner, false);
-                    System.out.println("mapSpec_Paid PUTTTT : " + winner);
+                    //System.out.println("mapSpec_Paid PUTTTT : " + winner);
                 }
                 
                 canGO = true;
