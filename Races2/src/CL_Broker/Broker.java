@@ -83,15 +83,6 @@ public class Broker extends Thread{
                 }
             }
 	}
-
-        
-        //this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
-        //this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
-        //this.socketPaddock = new Socket("localhost", PADDOCK);
-        //this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
-        System.out.println("1");
-        //this.socketStable = new Socket(IP_STABLE, PORT_STABLE);
-        System.out.println("2");
     }
     
     /**
@@ -101,12 +92,12 @@ public class Broker extends Thread{
     public void run(){
         try {
             for (int k = 0; k < NO_RACES; k++) {
-                    System.out.println("Vou comecar nova corrida!");
+                    //System.out.println("Vou comecar nova corrida!");
                     
                     //summonHorsesToPaddock
                     socketStable = new Socket(IP_STABLE, PORT_STABLE);
                     hashHorsesAgile = summonHorsesToPaddock(socketStable, k+1 );
-                    System.out.println("sai da summonHorsesToPaddock!");
+                    //System.out.println("sai da summonHorsesToPaddock!");
                     
                     //waitForSpectators
                     socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
@@ -114,7 +105,7 @@ public class Broker extends Thread{
                         System.out.println("broker está no while");
                         socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     }
-                    System.out.println("broker saiu do while e vai entrar na acceptTheBets");
+                    //System.out.println("broker saiu do while e vai entrar na acceptTheBets");
                     
                     //acceptTheBets
                     socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
@@ -123,12 +114,12 @@ public class Broker extends Thread{
                     //startTheRace
                     socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                     horsesWinnersList = startTheRace( socketRacingTrack );
-                    System.out.println("sai da startTheRace");
+                    //System.out.println("sai da startTheRace");
                     
                     //reportResults
                     socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     specsWinnersList = reportResults( horsesWinnersList, mapSpec_Horse_Bet, socketControlCentre );
-                    System.out.println("sai da reportResults");
+                    //System.out.println("sai da reportResults");
                     
                     //areThereAnyWinners
                     socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
@@ -139,10 +130,10 @@ public class Broker extends Thread{
                         //honourTheBets
                         socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
                         honourTheBets( horsesWinnersList, specsWinnersList, socketBettingCentre);
-                        System.out.println("SAI HonourBets");
+                        //System.out.println("SAI HonourBets");
                     }
             }
-            System.out.println("broker saiu do for");
+            //System.out.println("broker saiu do for");
             
             //entertainTheGuests
             socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
@@ -322,7 +313,14 @@ public class Broker extends Thread{
         
     }
     
-    
+    /**
+     *
+     * @param socket
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     * @throws ClassNotFoundException
+     */
     public JSONObject receiveMessage( Socket socket ) throws IOException, JSONException, ClassNotFoundException {
         InputStream in = socket.getInputStream();
         ObjectInputStream i = new ObjectInputStream(in);
@@ -333,6 +331,11 @@ public class Broker extends Thread{
         return jsonObject;
     }
     
+    /**
+     *
+     * @param s
+     * @return
+     */
     public Map<Integer, Integer> stringToMap( String s ){
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         
@@ -346,6 +349,11 @@ public class Broker extends Thread{
         return map;
     }
     
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static Map<Integer, List<Integer>> stringToMapList( String s ){
         Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
         
@@ -369,7 +377,12 @@ public class Broker extends Thread{
         return map;
     }
     
-     public static ArrayList<Integer> stringToArrayList ( String s ){
+    /**
+     *
+     * @param s
+     * @return
+     */
+    public static ArrayList<Integer> stringToArrayList ( String s ){
         ArrayList<Integer> arrayList = new ArrayList<>();
         
         if( s.length() == 2){

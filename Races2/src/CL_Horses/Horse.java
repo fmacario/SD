@@ -39,6 +39,13 @@ public class Horse extends Thread{
     private String IP_RACING_TRACK;
     private String IP_STABLE;
 
+    /**
+     *
+     * @param NO_RACES
+     * @param TRACK_DISTANCE
+     * @param id
+     * @throws IOException
+     */
     public Horse(int NO_RACES, int TRACK_DISTANCE, int id) throws IOException{
         Properties prop = new Properties();
 	InputStream input = null;
@@ -59,19 +66,6 @@ public class Horse extends Thread{
             this.IP_PADDOCK =  prop.getProperty("IP_PADDOCK");
             this.IP_RACING_TRACK =  prop.getProperty("IP_RACING_TRACK");
             this.IP_STABLE =  prop.getProperty("IP_STABLE");
-            /*
-            this.socketStable = new Socket("localhost", STABLE);
-            this.socketPaddock = new Socket("localhost", PADDOCK);
-            this.socketRacingTrack = new Socket("localhost", RACING_TRACK);
-
-            this.outStable = socketStable.getOutputStream();
-            this.outPaddock = socketPaddock.getOutputStream();
-            this.outRacingTrack = socketRacingTrack.getOutputStream();
-
-            this.oStable = new ObjectOutputStream(outStable);
-            this.oPaddock = new ObjectOutputStream(outPaddock);
-            this.oRacingTrack = new ObjectOutputStream(outRacingTrack);
-            */
             
             } catch (IOException ex) {
             ex.printStackTrace();
@@ -93,21 +87,21 @@ public class Horse extends Thread{
     public void run(){
         try {
             for (int k = 0; k < NO_RACES ; k++) {
-                System.out.println("comecei nova corrida!");
+                //System.out.println("comecei nova corrida!");
                 
                 //proceedToStable
                 socketStable = new Socket(IP_STABLE, PORT_STABLE);
                 outStable = socketStable.getOutputStream();
                 oStable = new ObjectOutputStream(outStable);
                 proceedToStable( id, Pnk, socketStable, outStable, oStable );
-                System.out.println("sai da proceedToStable!");
+                //System.out.println("sai da proceedToStable!");
                 
                 //proceedToPaddock
                 socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                 outPaddock = socketPaddock.getOutputStream();
                 oPaddock = new ObjectOutputStream(outPaddock);
                 proceedToPaddock( id, socketPaddock, outPaddock, oPaddock );
-                System.out.println("estou no paddock - chamar proceedToStartLine");
+                //System.out.println("estou no paddock - chamar proceedToStartLine");
                 
                 //proceedToStartLine
                 socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
@@ -127,13 +121,13 @@ public class Horse extends Thread{
                     outRacingTrack = socketRacingTrack.getOutputStream();
                     oRacingTrack = new ObjectOutputStream(outRacingTrack);
                     makeAMove( id, Pnk, socketRacingTrack, outRacingTrack, oRacingTrack );
-                    System.out.println("make a move " + id);
+                    //System.out.println("make a move " + id);
                     
                     socketRacingTrack = new Socket(IP_RACING_TRACK, PORT_RACING_TRACK);
                     outRacingTrack = socketRacingTrack.getOutputStream();
                     oRacingTrack = new ObjectOutputStream(outRacingTrack);
                 }
-                    System.out.println("acabei a corrida!");
+                    //System.out.println("acabei a corrida!");
             }
             
             //proceedToStable
@@ -142,7 +136,7 @@ public class Horse extends Thread{
             oStable = new ObjectOutputStream(outStable);         
             proceedToStable( id, Pnk, socketStable, outStable, oStable );
             
-            System.out.println("Bye HORSE " + id);
+            //System.out.println("Bye HORSE " + id);
         } catch (Exception e) {
             e.printStackTrace();
         }

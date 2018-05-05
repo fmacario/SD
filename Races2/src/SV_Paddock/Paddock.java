@@ -34,7 +34,10 @@ public class Paddock implements IPaddock_Horse, IPaddock_Spectator, IPaddock_Bro
     
     /**
      * 
-     * @param gri General Repository of Information (GRI).
+     * @param NO_COMPETITORS Número de competidores.
+     * @param IP_GRI IP do GRI.
+     * @param NO_SPECTATORS Número de espetadores.
+     * @param PORT_GRI Porta do GRI.
      */
     public Paddock(int NO_COMPETITORS, int NO_SPECTATORS, String IP_GRI, int PORT_GRI){
         //this.gri = gri;

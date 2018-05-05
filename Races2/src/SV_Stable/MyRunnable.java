@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SV_Stable;
 
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
 import JSON.*;
+import java.io.IOException;
+import org.json.JSONException;
 
 /**
- *
+ * class MyRunnable.
  * @author fm
  */
 public class MyRunnable implements Runnable {
@@ -25,13 +20,16 @@ public class MyRunnable implements Runnable {
         this.socket = socket;
     }
 
+    /**
+     * Recebe, descodifica a mensagem, chama o método pretendido e envia resposta.
+     */
     @Override
     public void run() {
         JSONObject json = null;
         
         try {
             json = JSON.receiveJSON( socket );
-            System.out.println(json.toString());
+            //System.out.println(json.toString());
             JSONObject jsonRes;
             
             switch ( json.getString("entidade") ){
@@ -40,7 +38,6 @@ public class MyRunnable implements Runnable {
             
                     switch ( json.getString("metodo") ){                
                         case "summonHorsesToPaddock":
-                            System.out.println("CHEGUEEEEI");
                             hashHorsesAgile = stable.summonHorsesToPaddock(json.getInt( "nRace" ));
 
                             jsonRes = new JSONObject();
@@ -61,7 +58,7 @@ public class MyRunnable implements Runnable {
                 case "horse":
                     switch ( json.getString("metodo") ){     
                         case "proceedToStable":
-                            System.out.println("MyRunnable : proceedToStable");
+                            //System.out.println("MyRunnable : proceedToStable");
                             int id = json.getInt( "horseID" );
                             int Pnk = json.getInt( "Pnk" );
                             stable.proceedToStable(id, Pnk);
@@ -75,7 +72,7 @@ public class MyRunnable implements Runnable {
             }
 
             
-        } catch ( Exception e ){
+        } catch ( IOException | ClassNotFoundException | JSONException e ){
             e.printStackTrace();
         }
     }

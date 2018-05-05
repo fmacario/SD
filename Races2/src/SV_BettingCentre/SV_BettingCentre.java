@@ -8,11 +8,14 @@ import java.net.Socket;
 import java.util.Properties;
 
 /**
- *
+ * class SV_BettingCentre.
  * @author fm
  */
 public class SV_BettingCentre {
     
+    /**
+     * Porta usada pelo BettingCentre.
+     */
     private static int PORTA;
     
     /**
@@ -30,9 +33,21 @@ public class SV_BettingCentre {
      */
     private static int MAX_BET;
     
+    /**
+     * IP do GRI.
+     */
     private static String IP_GRI;
+    
+    /**
+     * Porta do GRI.
+     */
     private static int PORT_GRI;
     
+    /**
+     * main SV_BettingCentre.
+     * @param args Não usado.
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException  {
         Properties prop = new Properties();
 	InputStream input = null;

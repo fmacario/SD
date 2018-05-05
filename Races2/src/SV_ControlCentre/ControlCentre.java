@@ -31,6 +31,11 @@ public class ControlCentre implements IControlCentre_Spectator, IControlCentre_B
     private final String IP_GRI;
     private final int PORT_GRI;
 
+    /**
+     *
+     * @param IP_GRI IP do GRI.
+     * @param PORT_GRI Porta do GRI.
+     */
     public ControlCentre(String IP_GRI, int PORT_GRI){
         this.IP_GRI = IP_GRI;
         this.PORT_GRI = PORT_GRI;

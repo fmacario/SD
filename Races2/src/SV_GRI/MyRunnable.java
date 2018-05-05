@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SV_GRI;
 
 import java.net.Socket;
 import org.json.JSONObject;
 import JSON.*;
 import Enum.*;
+import java.io.IOException;
+import org.json.JSONException;
+
 /**
- *
+ * class MyRunnable
  * @author fm
  */
 public class MyRunnable implements Runnable {
@@ -22,6 +20,9 @@ public class MyRunnable implements Runnable {
         this.socket = socket;
     }
 
+    /**
+     * Recebe, descodifica a mensagem, e chama o método pretendido.
+     */
     @Override
     public void run() {
         JSONObject json;
@@ -32,13 +33,13 @@ public class MyRunnable implements Runnable {
             boolean end = false;
             switch ( json.getString("metodo") ){
                 case "updateStatus":
-                    System.out.println("case updateStatus");
+                    //System.out.println("case updateStatus");
                     
                     gri.updateStatus();
                     break;
                     
                 case "setBrokerState":
-                    System.out.println("case setBrokerState");
+                    //System.out.println("case setBrokerState");
                     BrokerState brokerState = null;
                     switch (json.getString("BrokerState")){
                         case "ANNOUNCING_NEXT_RACE":
@@ -68,7 +69,7 @@ public class MyRunnable implements Runnable {
                     break;
                     
                 case "setSpectatorState":
-                    System.out.println("case setSpectatorState");
+                    //System.out.println("case setSpectatorState");
                     SpectatorState spectatorState = null;
                     switch (json.getString("SpectatorState")){
                         case "APPRAISING_THE_HORSES":
@@ -95,25 +96,25 @@ public class MyRunnable implements Runnable {
                     break;
                     
                 case "setMoney":
-                    System.out.println("case setMoney");
+                    //System.out.println("case setMoney");
                     
                     gri.setMoney(json.getInt("id"), json.getInt("money"));
                     break;
                     
                 case "addMoney":
-                    System.out.println("case addMoney");
+                    //System.out.println("case addMoney");
                     
                     gri.addMoney(json.getInt("id"), json.getInt("money"));
                     break;
                     
                 case "setRn":
-                    System.out.println("case setRn");
+                    //System.out.println("case setRn");
                     
                     gri.setRn(json.getInt("Rn"));
                     break;
                     
                 case "setHorseState":
-                    System.out.println("case setHorseState");
+                    //System.out.println("case setHorseState");
                     HorseState horseState = null;
                     switch (json.getString("HorseState")){
                         case "AT_THE_FINNISH_LINE":
@@ -137,51 +138,51 @@ public class MyRunnable implements Runnable {
                     break;
                     
                 case "setHorseMaxDistance":
-                    System.out.println("case setHorseMaxDistance");
+                    //System.out.println("case setHorseMaxDistance");
                     
                     gri.setHorseMaxDistance(json.getInt("id"), json.getInt("dist"));
                     break;
                     
                 case "setRaceTrackDistance":
-                    System.out.println("case setRaceTrackDistance");
+                    //System.out.println("case setRaceTrackDistance");
                     
                     gri.setRaceTrackDistance( json.getInt("raceTrackDistance") );
                     break;
                     
                 case "setBetSelection":
-                    System.out.println("case setBetSelection");
+                    //System.out.println("case setBetSelection");
                     
                     gri.setBetSelection(json.getInt("id"), json.getInt("betSelection"));
                     break;
                     
                 case "setBetAmount":
-                    System.out.println("case setBetAmount");
+                    //System.out.println("case setBetAmount");
                     
                     gri.setBetAmount(json.getInt("id"), json.getInt("betAmount"));
                     break;
                     
                 case "setHorseWinningProb":
-                    System.out.println("case setHorseWinningProb");
+                    //System.out.println("case setHorseWinningProb");
                     
                     gri.setHorseWinningProb(json.getInt("id"), json.getDouble("odd"));
                     break;
                     
                 case "setIterationNumber":
-                    System.out.println("case setIterationNumber");
+                    //System.out.println("case setIterationNumber");
                     
                     int iterationNumber[] = JSON.stringToArrayInt( json.getString("iterationNumber") );
                     gri.setIterationNumber(iterationNumber);
                     break;
                     
                 case "setTrackPosition":
-                    System.out.println("case setTrackPosition");
+                    //System.out.println("case setTrackPosition");
                     
                     int trackPosition[] = JSON.stringToArrayInt( json.getString("trackPosition") );
                     gri.setTrackPosition(trackPosition);
                     break;
                     
                 case "setStandingAtTheEnd":
-                    System.out.println("case setStandingAtTheEnd");
+                    //System.out.println("case setStandingAtTheEnd");
                     
                     gri.setStandingAtTheEnd(json.getInt("id"), json.getInt("standingAtTheEnd"));
                     break;
@@ -189,7 +190,7 @@ public class MyRunnable implements Runnable {
                 
 
             
-        } catch ( Exception e ){
+        } catch ( IOException | ClassNotFoundException | JSONException e ){
             e.printStackTrace();
         }
     }

@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SV_Paddock;
 
 import java.net.Socket;
 import org.json.JSONObject;
 import JSON.*;
+import java.io.IOException;
+import org.json.JSONException;
 
 /**
- *
+ * class MYRunnable
  * @author fm
  */
 public class MyRunnable implements Runnable {
@@ -22,6 +19,9 @@ public class MyRunnable implements Runnable {
         this.socket = socket;
     }
 
+    /**
+     * Recebe, descodifica a mensagem, chama o método pretendido e envia resposta.
+     */
     @Override
     public void run() {
         JSONObject json = null;
@@ -68,7 +68,7 @@ public class MyRunnable implements Runnable {
                         case "goCheckHorses":
                             spectatorID = json.getInt("spectatorID");
                             paddock.goCheckHorses(spectatorID);
-                            System.out.println("GO CHECK ------------------");
+                            //System.out.println("GO CHECK ------------------");
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);
@@ -86,7 +86,7 @@ public class MyRunnable implements Runnable {
             }
 
             
-        } catch ( Exception e ){
+        } catch ( IOException | ClassNotFoundException | JSONException e ){
             e.printStackTrace();
         }
     }

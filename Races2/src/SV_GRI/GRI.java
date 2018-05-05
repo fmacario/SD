@@ -40,6 +40,9 @@ public class GRI {
        
     /**
      *
+     * @param NO_COMPETITORS Número de competidores.
+     * @param NO_SPECTATORS Número de espetadores.
+     * @param TRACK_DISTANCE Distância da pista.
      */
     public GRI(int NO_COMPETITORS, int NO_SPECTATORS, int TRACK_DISTANCE){
         this.NO_COMPETITORS = NO_COMPETITORS;

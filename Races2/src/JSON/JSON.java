@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package JSON;
 
 import java.io.EOFException;
@@ -13,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +19,15 @@ import org.json.JSONObject;
  * @author fm
  */
 public class JSON {
+
+    /**
+     * Receber JSONObject.
+     * @param socket Socket onde se pretende receber o JSONObject.
+     * @return JSONObject recebido.
+     * @throws IOException
+     * @throws JSONException
+     * @throws ClassNotFoundException
+     */
     public static JSONObject receiveJSON( Socket socket ) throws IOException, JSONException, ClassNotFoundException {
         String s = null;
         JSONObject jsonObject = null;
@@ -47,6 +50,11 @@ public class JSON {
         return jsonObject;
         }
     
+    /**
+     * Converter String em Map<Integer,Integer>.
+     * @param s String para conversão.
+     * @return Map<Integer,Integer> obtido através da string s.
+     */
     public static Map<Integer, Integer> stringToMap( String s ){
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         
@@ -59,6 +67,11 @@ public class JSON {
         return map;
     }
     
+    /**
+     * Converter String em Map<Integer, List<Integer>>.
+     * @param s String para conversão.
+     * @return Map<Integer, List<Integer>> obtido através da string s.
+     */
     public static Map<Integer, List<Integer>> stringToMapList( String s ){
         Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
         
@@ -82,8 +95,11 @@ public class JSON {
         return map;
     }
             
-    
-    
+    /**
+     * Converter String em ArrayList<Integer>.
+     * @param s String para conversão.
+     * @return ArrayList<Integer> obtido através da string s.
+     */
     public static ArrayList<Integer> stringToArrayList ( String s ){
         ArrayList<Integer> arrayList = new ArrayList<>();
         
@@ -96,6 +112,11 @@ public class JSON {
         return arrayList;
     }
     
+    /**
+     * Converter String em int[].
+     * @param s String para conversão.
+     * @return int[] obtido através da string s.
+     */
     public static int[] stringToArrayInt ( String s ){
         
         s = s.substring(1, s.length()-1);
@@ -110,7 +131,12 @@ public class JSON {
         return array;
     }
     
-    
+    /**
+     * Enviar JSONObject.
+     * @param socket Socket onde se pretende enviar o JSONObject.
+     * @param json JSONObject a ser enviado.
+     * @throws IOException
+     */
     public static void sendMessage( Socket socket, JSONObject json ) throws IOException{
         System.out.println(json.toString());
         OutputStream out = socket.getOutputStream();

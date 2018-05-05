@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SV_RacingTrack;
 
 import java.io.FileInputStream;
@@ -13,7 +8,7 @@ import java.net.Socket;
 import java.util.Properties;
 
 /**
- *
+ * class SV_RacingTrack
  * @author fm
  */
 public class SV_RacingTrack {
@@ -32,6 +27,11 @@ public class SV_RacingTrack {
     private static String IP_GRI;
     private static int PORT_GRI;
     
+    /**
+     * main SV_RacingTrack.
+     * @param args Não usado.
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException  {
         Properties prop = new Properties();
 	InputStream input = null;

@@ -31,7 +31,14 @@ public class Stable implements IStable_Broker, IStable_Horse{
     private final String IP_GRI;
     private final int PORT_GRI;
     
-
+    /**
+     *
+     * @param NO_COMPETITORS Número de competidores.
+     * @param IP_GRI IP do GRI.
+     * @param PORT_GRI Porta do Gri.
+     * @throws JSONException
+     * @throws IOException
+     */
     public Stable (int NO_COMPETITORS, String IP_GRI, int PORT_GRI) throws JSONException, IOException{
         this.NO_COMPETITORS = NO_COMPETITORS;
         this.IP_GRI = IP_GRI;

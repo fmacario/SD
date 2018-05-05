@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SV_Stable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
 import org.json.JSONException;
 
 /**
- *
+ * class SV_Stable
  * @author fm
  */
 public class SV_Stable {
@@ -24,6 +18,12 @@ public class SV_Stable {
     private static String IP_GRI;
     private static int PORT_GRI;
 
+    /**
+     * main SV_Stable
+     * @param args Não usado.
+     * @throws IOException
+     * @throws JSONException
+     */
     public static void main(String[] args) throws IOException, JSONException  {
         Properties prop = new Properties();
 	InputStream input = null;
@@ -54,10 +54,6 @@ public class SV_Stable {
         
         ServerSocket servidor = new ServerSocket( PORTA );
         System.out.println("Servidor Stable ouvindo a porta " + PORTA);
-        
-        InetAddress iAddress = InetAddress.getLocalHost();
-        String server_IP = iAddress.getHostAddress();
-        System.out.println("Server IP address : " +server_IP);
         
         while (true) {            
             Socket cliente = servidor.accept();

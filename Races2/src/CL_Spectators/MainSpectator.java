@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package CL_Spectators;
 
 import java.io.FileInputStream;
@@ -11,7 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- *
+ * Main dos Spectators
  * @author fm
  */
 public class MainSpectator {
@@ -31,6 +26,11 @@ public class MainSpectator {
      */
     private static Spectator[] spectators;// = new Spectator[NO_SPECTATORS];
     
+    /**
+     *
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         Properties prop = new Properties();
 	InputStream input = null;

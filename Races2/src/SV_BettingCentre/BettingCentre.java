@@ -20,7 +20,6 @@ import org.json.JSONObject;
  * @author fm
  */
 public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_Broker{  
-    //private GRI gri;
     private final ReentrantLock rl;
     private final Condition condBroker;
     private final Condition condSpectators;
@@ -48,11 +47,11 @@ public class BettingCentre implements IBettingCentre_Spectator, IBettingCentre_B
     
     /**
      * 
-     * @param NO_SPECTATORS
-     * @param NO_COMPETITORS
-     * @param MAX_BET
-     * @param IP_GRI
-     * @param PORT_GRI
+     * @param NO_SPECTATORS Número de espetadores.
+     * @param NO_COMPETITORS Número de competidores.
+     * @param MAX_BET Aposta máxima.
+     * @param IP_GRI IP do GRI.
+     * @param PORT_GRI Porta do GRI.
      */
     public BettingCentre( int NO_SPECTATORS, int NO_COMPETITORS, double MAX_BET, String IP_GRI, int PORT_GRI){
         this.NO_SPECTATORS = NO_SPECTATORS;

@@ -33,9 +33,16 @@ public class RacingTrack implements IRacingTrack_Broker, IRacingTrack_Horse{
     private boolean raceFinished = false;
     private boolean raceStart = false;
     
-    private String IP_GRI;
-    private int PORT_GRI;
+    private final String IP_GRI;
+    private final int PORT_GRI;
         
+    /**
+     *
+     * @param NO_COMPETITORS Número de competidores.
+     * @param TRACK_DISTANCE Distância da pista.
+     * @param IP_GRI IP do GRI.
+     * @param PORT_GRI Porta do GRI.
+     */
     public RacingTrack(int NO_COMPETITORS, int TRACK_DISTANCE, String IP_GRI, int PORT_GRI){
         //this.gri = gri;
         this.NO_COMPETITORS = NO_COMPETITORS;

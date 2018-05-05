@@ -1,19 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SV_ControlCentre;
 
 import java.net.Socket;
 import org.json.JSONObject;
 import JSON.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.json.JSONException;
 
 /**
- *
+ * class MyRunnable.
  * @author fm
  */
 public class MyRunnable implements Runnable {
@@ -25,6 +22,9 @@ public class MyRunnable implements Runnable {
         this.socket = socket;
     }
 
+    /**
+     * Recebe, descodifica a mensagem, chama o método pretendido e envia resposta.
+     */
     @Override
     public void run() {
         JSONObject json = null;
@@ -57,9 +57,9 @@ public class MyRunnable implements Runnable {
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "entertainTheGuests":
-                            System.out.println("entertainTheGuests - msg recebida");
+                            //System.out.println("entertainTheGuests - msg recebida");
                             controlCentre.entertainTheGuests();
-                            System.out.println("entertainTheGuests - msg recebida e sai da funcao");
+                            //System.out.println("entertainTheGuests - msg recebida e sai da funcao");
                             jsonRes = new JSONObject();
                             jsonRes.put("return", "void");
                             JSON.sendMessage(socket, jsonRes);
@@ -89,17 +89,17 @@ public class MyRunnable implements Runnable {
                             spectatorID = json.getInt("spectatorID");
                             
                             boolean b = controlCentre.haveIWon(spectatorID);
-                            System.out.println("B: _       ___ " + b);
+                            //System.out.println("B: _       ___ " + b);
                             jsonRes = new JSONObject();
                             jsonRes.put("return", b);
-                            System.out.println(jsonRes.toString());
+                            //System.out.println(jsonRes.toString());
                             JSON.sendMessage(socket, jsonRes);
                             break;
                         case "relaxABit":
                             
                             
                             spectatorID = json.getInt("spectatorID");
-                            System.out.println("relaxABit " +spectatorID);
+                            //System.out.println("relaxABit " +spectatorID);
                             controlCentre.relaxABit(spectatorID);
                             
                             jsonRes = new JSONObject();
@@ -111,7 +111,7 @@ public class MyRunnable implements Runnable {
             }
 
             
-        } catch ( Exception e ){
+        } catch ( IOException | ClassNotFoundException | JSONException e ){
             e.printStackTrace();
         }
     }

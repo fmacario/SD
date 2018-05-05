@@ -35,6 +35,7 @@ public class Spectator extends Thread{
     /**
      * @param id Id do espetador.
      * @param NO_RACES Número de corridas.
+     * @throws java.io.IOException
      */
     public Spectator( int id, int NO_RACES ) throws IOException{
         
@@ -56,20 +57,6 @@ public class Spectator extends Thread{
             this.IP_BETTING_CENTRE =  prop.getProperty("IP_BETTING_CENTRE");
             this.IP_CONTROL_CENTRE =  prop.getProperty("IP_CONTROL_CENTRE");
             this.IP_PADDOCK =  prop.getProperty("IP_PADDOCK");
-        
-            /*        
-            this.socketControlCentre = new Socket("localhost", CONTROL_CENTRE);
-            this.socketPaddock = new Socket("localhost", PADDOCK);
-            this.socketBettingCentre = new Socket("localhost", BETTING_CENTRE);
-
-            this.outPaddock = socketPaddock.getOutputStream();
-            this.outControlCentre = socketControlCentre.getOutputStream();        
-            this.outBettingCentre = socketBettingCentre.getOutputStream();
-
-            this.oPaddock = new ObjectOutputStream(outPaddock);
-            this.oControlCentre = new ObjectOutputStream(outControlCentre);
-            this.oBettingCentre = new ObjectOutputStream(outBettingCentre);
-            */
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -90,21 +77,21 @@ public class Spectator extends Thread{
     public void run(){
         try {
             for (int k = 0; k < NO_RACES; k++) {
-                    System.out.println("Comecei nova corrida!!");
+                    //System.out.println("Comecei nova corrida!!");
                     
                     //waitForNextRace
                     socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     outPaddock = socketPaddock.getOutputStream();
                     oPaddock = new ObjectOutputStream(outPaddock);
                     waitForNextRace( id, socketPaddock, outPaddock, oPaddock );
-                    System.out.println("ANTES DO GO CHECK");
+                    //System.out.println("ANTES DO GO CHECK");
                     
                     //goCheckHorses
                     socketPaddock = new Socket(IP_PADDOCK, PORT_PADDOCK);
                     outPaddock = socketPaddock.getOutputStream();
                     oPaddock = new ObjectOutputStream(outPaddock);
                     goCheckHorses( id, socketPaddock, outPaddock, oPaddock );
-                    System.out.println("DEPOIS DO GO CHECK");
+                    //System.out.println("DEPOIS DO GO CHECK");
                     
                     //placeABet
                     socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
@@ -122,16 +109,16 @@ public class Spectator extends Thread{
                     socketControlCentre = new Socket(IP_CONTROL_CENTRE, PORT_CONTROL_CENTRE);
                     outControlCentre = socketControlCentre.getOutputStream();
                     oControlCentre = new ObjectOutputStream(outControlCentre);
-                    System.out.println("vou ver se ganhei ");
+                    //System.out.println("vou ver se ganhei ");
                     if ( haveIWon( id, socketControlCentre, outControlCentre, oControlCentre ) ) {
-                        System.out.println("GANHEI! vou chamar a collectTheGains " + id);
+                        //System.out.println("GANHEI! vou chamar a collectTheGains " + id);
                         
                         //goCollectGains
                         socketBettingCentre = new Socket(IP_BETTING_CENTRE, PORT_BETTING_CENTRE);
                         outBettingCentre = socketBettingCentre.getOutputStream();
                         oBettingCentre = new ObjectOutputStream(outBettingCentre);
                         money += goCollectTheGains( id, socketBettingCentre, outBettingCentre, oBettingCentre );
-                        System.out.println("sai da collectTheGains " + id);
+                        //System.out.println("sai da collectTheGains " + id);
                     }
             }
             System.out.println("spectator sai do for");
