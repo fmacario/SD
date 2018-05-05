@@ -4,6 +4,9 @@ import java.net.Socket;
 import org.json.JSONObject;
 import JSON.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.json.JSONException;
 
 /**
@@ -31,7 +34,41 @@ public class MyRunnable implements Runnable {
             json = JSON.receiveJSON( socket );
             
             switch ( json.getString("entidade") ){
-                
+                case "broker":
+                    Map<Integer, Integer> hashHorsesAgile;
+                    ArrayList<Integer> horsesWinnersList, specsWinnersList;
+                    switch ( json.getString("metodo") ){  
+                        case "acceptTheBets":
+                            System.out.println("case acceptTheBets");
+                            hashHorsesAgile = JSON.stringToMap( json.getString("hashHorsesAgile") );
+                            
+                            System.out.println("antes da acceptTheBets");
+                            Map<Integer, List<Integer>> acceptTheBets = bettingCentre.acceptTheBets(hashHorsesAgile);
+                            
+                            System.out.println("antes da acceptTheBets, " + acceptTheBets.toString());
+                            jsonRes = new JSONObject();
+                            jsonRes.put("return", acceptTheBets.toString());
+                            JSON.sendMessage(socket, jsonRes);
+                            break;
+                        case "honourTheBets":
+                            System.out.println("case honourTheBets");
+                            horsesWinnersList = JSON.stringToArrayList( json.getString("horsesWinnersList") );
+                            specsWinnersList = JSON.stringToArrayList( json.getString("specsWinnersList") );
+                            
+                            bettingCentre.honourTheBets(horsesWinnersList, specsWinnersList);
+                            
+                            jsonRes = new JSONObject();
+                            jsonRes.put("return", "void");
+                            JSON.sendMessage(socket, jsonRes);
+                            break;
+                        case "end":
+                            jsonRes = new JSONObject();
+                            jsonRes.put("return", "void");
+                            JSON.sendMessage(socket, jsonRes);
+                            System.exit(1);
+                            break;
+                    }
+                break;
                     
                 case "spectator":
                     int spectatorID;
